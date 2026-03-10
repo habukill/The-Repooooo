@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bro's Epic Japan Road Trip 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #111827; color: #f3f4f6; }
+        .glass-panel { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .tab-btn.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+        .gradient-text { background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; color: transparent; }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-8">
+
+    <header class="max-w-4xl mx-auto mb-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase tracking-wide"><span class="gradient-text">Japan</span> 2026</h1>
+        <p class="text-gray-400 text-lg">30 May - 7 Jun | 3 Pax | Kanto ➔ Chubu</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-blue-400">9</span>
+                <span class="text-xs text-gray-400 uppercase">Days</span>
+            </div>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-green-400">1,000+</span>
+                <span class="text-xs text-gray-400 uppercase">KM Driven</span>
+            </div>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-purple-400">Corolla</span>
+                <span class="text-xs text-gray-400 uppercase">Touring Hybrid</span>
+            </div>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-red-400">Tabata</span>
+                <span class="text-xs text-gray-400 uppercase">Basecamp</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto">
+        <div class="flex overflow-x-auto space-x-2 pb-4 mb-4 snap-x" id="tabs">
+            </div>
+
+        <div id="content-area" class="glass-panel rounded-2xl p-6 shadow-2xl transition-all duration-300">
+            </div>
+    </main>
+
+    <script>
+        const tripData = [
+            {
+                day: "Day 1", date: "30 May", title: "The Beginning (NRT ➔ Nikko)",
+                route: "Narita Airport ➔ Nikko",
+                sleep: "Nikko",
+                activities: [
+                    "รับรถ Toyota Rent a Car (Terminal 1 North Wing)",
+                    "ยิงยาวขึ้นทางด่วนเข้า Nikko (แวะพัก Michi-no-Eki กลางทาง)",
+                    "เดินเล่นศาลเจ้า Toshogu หรือโซนสะพานแดง Shinkyo"
+                ],
+                navi: [
+                    { name: "Toyota Rent a Car NRT", code: "Phone: 0476-32-1020" },
+                    { name: "Toshogu Shrine", code: "Mapcode: 267 122 361*33" }
+                ],
+                food: "🥢 Yuba Soba (โซบะฟองเต้าหู้) & Yuba Croquette หน้าสถานี"
+            },
+            {
+                day: "Day 2", date: "31 May", title: "Mountain Cruising (Nikko ➔ Matsumoto)",
+                route: "Nikko ➔ Matsumoto",
+                sleep: "Airbnb @ Matsumoto",
+                activities: [
+                    "ขับรถข้ามเขา ทะลุ Japan Romantic Road",
+                    "ถึง Matsumoto ช่วงบ่าย/เย็น Check-in Airbnb",
+                    "เดินเล่นรอบปราสาท Matsumoto ตอนเย็น"
+                ],
+                navi: [
+                    { name: "Matsumoto Castle", code: "Mapcode: 75 861 462*26" },
+                    { name: "Sanzoku-yaki Restaurant Zone", code: "Phone: 0263-32-2902 (รอบปราสาท)" }
+                ],
+                food: "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขาชิ้นยักษ์) แกล้มเบียร์เย็นๆ"
+            },
+            {
+                day: "Day 3", date: "1 Jun", title: "Into the Alps (Kamikochi)",
+                route: "Matsumoto ➔ Sawando ➔ Kamikochi",
+                sleep: "Hotel @ Kamikochi",
+                activities: [
+                    "ทิ้งกระเป๋าใหญ่ไว้ Airbnb จัดแค่เป้เล็ก",
+                    "เอารถไปจอดลาน Sawando Parking",
+                    "นั่ง Taxi เหมา หรือ Bus เข้าอุทยาน Kamikochi",
+                    "เดินป่าโซนสะพาน Kappa-bashi ➔ Taisho Pond"
+                ],
+                navi: [
+                    { name: "Sawando Parking (จอดรถ)", code: "Mapcode: 406 312 878*85" }
+                ],
+                food: "🥧 Apple Pie อบใหม่ที่ Trois Cinq & ฝากท้องมื้อเย็นกับโรงแรม"
+            },
+            {
+                day: "Day 4", date: "2 Jun", title: "Alps Retreat (Kamikochi ➔ Matsumoto)",
+                route: "Kamikochi ➔ Matsumoto",
+                sleep: "Airbnb @ Matsumoto",
+                activities: [
+                    "ตื่นเช้าสูดอากาศ ถ่ายรูปสะพาน Kappa-bashi แบบไร้ผู้คน",
+                    "สายๆ นั่งบัส/แท็กซี่ กลับมาเอารถที่ Sawando",
+                    "ขับกลับเข้าเมือง Matsumoto ช้อปปิ้งหรือหาคาเฟ่ชิลๆ"
+                ],
+                navi: [
+                    { name: "Matsumoto City Center", code: "Mapcode: 75 861 345*11" }
+                ],
+                food: "🍜 Shinshu Soba (โซบะเส้นสดทำมือ) ร้านโลคอลในเมือง"
+            },
+            {
+                day: "Day 5", date: "3 Jun", title: "The Snow Wall (Tateyama ➔ Hakuba)",
+                route: "Matsumoto ➔ Ogizawa ➔ Murodo ➔ Hakuba",
+                sleep: "Hakuba",
+                activities: [
+                    "08:00 ขับรถไป Ogizawa จอดรถที่ลานแบบเสียตังค์",
+                    "10:00 นั่งบัสไฟฟ้าขึ้นเขื่อน Kurobe ทะลุไป Murodo",
+                    "ถ่ายรูป Yuki-no-Otani (กำแพงหิมะ)",
+                    "15:00 นั่งกลับลงมาเอารถ ขับไป Hakuba"
+                ],
+                navi: [
+                    { name: "Ogizawa Station (จอดรถ)", code: "Mapcode: 695 125 101*55" },
+                    { name: "Kurobe Dam (จุดแวะ)", code: "Use Web Ticket QR Code" }
+                ],
+                food: "🍛 Kurobe Dam Curry (แกงกะหรี่เขื่อน) & 🥩 Shinshu Beef Yakiniku มื้อเย็นที่ Hakuba"
+            },
+            {
+                day: "Day 6", date: "4 Jun", title: "The Long Drive (Hakuba ➔ Tokyo)",
+                route: "Hakuba ➔ Tokyo (Nishi-Nippori)",
+                sleep: "Hotel @ Tabata",
+                activities: [
+                    "เช้าขึ้นกระเช้าไป Hakuba Mountain Harbor ดูวิวภูเขา",
+                    "13:00 ยิงยาวเข้าโตเกียว (ล้อต้องหมุน!)",
+                    "Drop เพื่อนและกระเป๋าที่โรงแรม Tabata",
+                    "ขับไปคืนรถที่ Nishi-Nippori ก่อน 20:00 น."
+                ],
+                navi: [
+                    { name: "Hakuba Mountain Harbor", code: "Phone: 0261-72-3150" },
+                    { name: "Toyota Rent a Car Nishi-Nippori", code: "Phone: 03-3823-0100" }
+                ],
+                food: "🥐 แวะจิบกาแฟ City Bakery ที่ Hakuba & ดึกๆ ซัดของเสียบไม้แถว Tabata"
+            },
+            {
+                day: "Day 7", date: "5 Jun", title: "The Magic Kingdom (Disney)",
+                route: "Tabata ➔ Maihama (Disneyland)",
+                sleep: "Hotel @ Tabata",
+                activities: [
+                    "นั่งรถไฟไป Tokyo Station ต่อสาย Keiyo Line ลง Maihama",
+                    "ลุย Disneyland แบบเต็มสตรีม (กด DPA รัวๆ)",
+                    "ดูพาเหรดและพลุปิดท้าย"
+                ],
+                navi: [
+                    { name: "Public Transport", code: "ใช้ Suica/Pasmo แตะผ่านโลด" }
+                ],
+                food: "🍗 Smoked Turkey Leg (น่องไก่งวง) & 🍡 Alien Mochi"
+            },
+            {
+                day: "Day 8", date: "6 Jun", title: "Otaku & Shopping (Tokyo)",
+                route: "Tabata ➔ Harajuku/Tokyo Station",
+                sleep: "Hotel @ Tabata",
+                activities: [
+                    "ไปลุย Chiikawa Land (ต้องจองคิวผ่าน LivePocket ล่วงหน้า)",
+                    "ละลายทรัพย์ช้อปปิ้งของฝาก",
+                    "เก็บตกย่านฮิตในโตเกียว"
+                ],
+                navi: [
+                    { name: "Train System", code: "Yamanote Line is your best friend" }
+                ],
+                food: "🍣 ซูเปอร์มาร์เก็ตป้ายเหลืองลด 50% แถว Tabata ซื้อมากินบนห้อง"
+            },
+            {
+                day: "Day 9", date: "7 Jun", title: "Game Over (Return)",
+                route: "Tabata ➔ Nippori ➔ Narita Airport",
+                sleep: "Home Sweet Home",
+                activities: [
+                    "ตื่นสายๆ แพ็คกระเป๋า (ระวังน้ำหนักเกิน)",
+                    "นั่งรถไฟไป Nippori ต่อ Keisei Skyliner (40 นาทีถึง)",
+                    "ถึงสนามบิน 12:30 รอขึ้นเครื่อง ZIPAIR รอบ 15:00"
+                ],
+                navi: [
+                    { name: "Keisei Skyliner", code: "จองตั๋วออนไลน์หรือซื้อตู้ที่สถานี" }
+                ],
+                food: "🍱 เบนโตะสถานีรถไฟ (Ekiben) หรือหาอะไรกินที่สนามบิน"
+            }
+        ];
+
+        const tabsContainer = document.getElementById('tabs');
+        const contentArea = document.getElementById('content-area');
+
+        function renderContent(dayIndex) {
+            const data = tripData[dayIndex];
+            
+            // Render Navis/Mapcodes
+            const naviHTML = data.navi.map(n => `
+                <div class="bg-gray-800 p-3 rounded-lg border border-gray-700 flex justify-between items-center">
+                    <span class="text-sm text-gray-300">${n.name}</span>
+                    <span class="text-sm font-mono text-green-400 bg-gray-900 px-2 py-1 rounded">${n.code}</span>
+                </div>
+            `).join('');
+
+            // Render Activities
+            const activitiesHTML = data.activities.map(a => `
+                <li class="flex items-start mb-2">
+                    <span class="text-blue-500 mr-2">⚡</span>
+                    <span class="text-gray-200">${a}</span>
+                </li>
+            `).join('');
+
+            contentArea.innerHTML = `
+                <div class="flex justify-between items-start mb-6 border-b border-gray-700 pb-4">
+                    <div>
+                        <span class="text-blue-400 font-bold tracking-wider uppercase text-sm">${data.date}</span>
+                        <h2 class="text-2xl font-bold mt-1 text-white">${data.title}</h2>
+                    </div>
+                    <div class="text-right">
+                        <span class="bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full border border-gray-600">🛌 ${data.sleep}</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3 text-purple-400 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Mission / Plan
+                        </h3>
+                        <ul class="text-sm">
+                            ${activitiesHTML}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3 text-blue-400 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                            GPS & Navigation
+                        </h3>
+                        <div class="space-y-2 mb-4">
+                            ${naviHTML}
+                            <p class="text-xs text-gray-500 mt-2">* ทริค: GPS ญี่ปุ่นพิมเบอร์โทรศัพท์ลงไปเลย แม่นกว่าพิมพ์ชื่อภาษาอังกฤษ 100%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-gray-800/50 p-4 rounded-xl border border-yellow-900/30">
+                    <h3 class="text-lg font-semibold mb-2 text-yellow-500 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
+                        Target Food
+                    </h3>
+                    <p class="text-gray-300 text-sm">${data.food}</p>
+                </div>
+            `;
+
+            // Update tab styles
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === dayIndex) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
+                    btn.classList.remove('bg-gray-800', 'text-gray-400', 'border-gray-700');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
+                    btn.classList.add('bg-gray-800', 'text-gray-400', 'border-gray-700');
+                }
+            });
+        }
+
+        // Initialize Tabs
+        tripData.forEach((data, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-btn snap-center whitespace-nowrap px-4 py-2 rounded-lg border text-sm font-medium transition-colors duration-200';
+            btn.innerText = data.day;
+            btn.onclick = () => renderContent(index);
+            tabsContainer.appendChild(btn);
+        });
+
+        // Load Day 1 by default
+        renderContent(0);
+    </script>
+</body>
+</html>
