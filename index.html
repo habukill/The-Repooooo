@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>June&Buay Travel Hub ✈️</title>
+    <style>
+        :root {
+            --bg: #f5f6fa;
+            --text: #2d3436;
+            --card-bg: #ffffff;
+            --taiwan-color: #0984e3;
+            --japan-color: #e84393;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+        .header p {
+            color: #636e72;
+            font-size: 1.1rem;
+            margin-top: 8px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+        .taiwan-tag { background: #e3f2fd; color: var(--taiwan-color); }
+        .japan-tag { background: #fce4ec; color: var(--japan-color); }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+        .card-date {
+            font-size: 0.95rem;
+            color: #636e72;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-desc {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+        .card-btn {
+            margin-top: auto;
+            display: inline-block;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .taiwan-btn { background: var(--taiwan-color); color: white; }
+        .taiwan-btn:hover { background: #074b83; }
+        .japan-btn { background: var(--japan-color); color: white; }
+        .japan-btn:hover { background: #a82e69; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Travel Master Plan 🗺️</h1>
+        <p>Choose our next destination</p>
+    </div>
+
+    <div class="grid-container">
+        <a href="taiwan.html" class="card">
+            <img src="https://images.unsplash.com/photo-1558005530-cb61e2cb985a?q=80&w=800&auto=format&fit=crop" class="card-img" alt="Taiwan">
+            <div class="card-content">
+                <span class="tag taiwan-tag">Ready to Choose</span>
+                <h2 class="card-title">Taiwan 2026 🇹🇼</h2>
+                <div class="card-date">🗓️ 11 - 18 April 2026</div>
+                <div class="card-desc">Cinematic Hehuanshan หรือ Chill Hualien? เข้ามาจิ้ม Vibe ที่ชอบได้เลย</div>
+                <div class="card-btn taiwan-btn">เปิดดูแพลนไต้หวัน ➔</div>
+            </div>
+        </a>
+
+        <a href="japan.html" class="card">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800&auto=format&fit=crop" class="card-img" alt="Japan">
+            <div class="card-content">
+                <span class="tag japan-tag">In Progress</span>
+                <h2 class="card-title">Tokyo - Kamikochi 🇯🇵</h2>
+                <div class="card-date">🗓️ 30 May - 7 June 2026</div>
+                <div class="card-desc">ทริปล่ากำแพงหิมะ Tateyama และเดินเทรลสุดชิลที่ Kamikochi (กำลังปั้นแพลน)</div>
+                <div class="card-btn japan-btn">เปิดดูแพลนญี่ปุ่น ➔</div>
+            </div>
+        </a>
+    </div>
+
+</body>
+</html>
