@@ -68,7 +68,6 @@
             padding: 24px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
             animation: fadeIn 0.4s ease;
-            box-sizing: border-box;
         }
         .plan-container.active {
             display: block;
@@ -96,7 +95,7 @@
         .timeline li {
             position: relative;
             padding-left: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .timeline li::before {
             content: '';
@@ -114,7 +113,7 @@
             left: 3px;
             top: 18px;
             width: 2px;
-            height: calc(100% + 15px);
+            height: calc(100% + 5px);
             background: #dfe6e9;
         }
         .timeline li:last-child::after {
@@ -123,46 +122,41 @@
         .date {
             font-weight: 700;
             color: var(--secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: block;
-            margin-bottom: 5px;
         }
         .detail {
+            margin-top: 5px;
             font-size: 0.95rem;
-            line-height: 1.6;
-            color: #2d3436;
+            line-height: 1.5;
         }
-        .img-container {
-            margin-top: 10px;
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .link-btn {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #0984e3;
+            text-decoration: none;
+            font-weight: 600;
+            background: #e3f2fd;
+            padding: 4px 10px;
+            border-radius: 20px;
         }
-        .img-container img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-        .img-container img:hover {
-            transform: scale(1.05);
+        .link-btn:hover {
+            background: #bbdefb;
         }
         .warning {
             color: #d63031;
             font-size: 0.85rem;
-            margin-top: 8px;
+            margin-top: 5px;
             display: block;
-            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Taiwan Trip 2026 🇹🇼</h1>
-        <p>เลือก Vibe ที่ใช่... ให้คนจัดทริปไปเปย์ถูกที่!</p>
+        <h1>Taiwan Trip 2026</h1>
+        <p>เลือก Vibe ที่ใช่... ไปให้สุด!</p>
     </div>
 
     <div class="tabs">
@@ -173,42 +167,37 @@
     <div id="plan1" class="plan-container active">
         <div class="vibe-box">
             <strong>Vibe Check:</strong>
-            อากาศหนาวจัด, ทะเลหมอก, ยอดเขาสูง 3,000 เมตร, หญ้าสีทอง ฟีลเหมือนไปสวิตเซอร์แลนด์ผสมฉากหนังอินดี้ คอนเทนต์ออกมาดูแพง 100%
+            อากาศหนาว, ทะเลหมอก, ยอดเขาสูง 3,000 เมตร, หญ้าสีทองตัดกับดอกกุหลาบพันปีสีชมพู ฟีลเหมือนไปสวิตเซอร์แลนด์ผสมฉากหนังอินดี้ ถ่ายรูปออกมาดูแพงและอลังการ
         </div>
         <ul class="timeline">
             <li>
-                <span class="date">วันที่ 11-12 | Taipei City Warm-up</span>
+                <span class="date">วันที่ 11-12 | City Warm-up</span>
                 <div class="detail">อยู่ไทเป ชิลๆ เดินเล่นหาของกิน หาคาเฟ่เท่ๆ ปรับตัวก่อนลุยจริง</div>
             </li>
             <li>
                 <span class="date">วันที่ 13 | The Transit & Cingjing</span>
                 <div class="detail">
-                    นั่ง HSR วาร์ปไปไทจง ต่อรถบัสขึ้นเขา เช็คอินเข้า <strong>Top Cloud Villa</strong> นอนดูวิวทะเลหมอกตอนเย็น และภูเขาอลังการจากระเบียงห้อง
-                    <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1555582373-c618eb7e6270?q=80&w=800&auto=format&fit=crop" alt="Cingjing Farm Vibe">
-                    </div>
+                    นั่งรถไฟความเร็วสูงไปไทจง ต่อรถบัสขึ้นเขา เช็คอินเข้า <strong>Top Cloud Villa</strong><br>
+                    นอนดูวิวทะเลหมอกตอนเย็นจากระเบียงห้อง โคตรฟิน!
+                    <a href="https://www.google.com/search?q=Top+Cloud+Villa+Cingjing&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวห้องพัก Top Cloud Villa</a>
                 </div>
             </li>
             <li>
                 <span class="date">วันที่ 14 | Hehuanshan Summit (Half-day)</span>
                 <div class="detail">
-                    ตื่นเช้ามืด นั่งรถตู้ไปดูพระอาทิตย์ขึ้นที่ระดับ 3,275m เดินชิลๆ ที่ <strong>Shimen Mountain Trail</strong> ถ่ายรูปยอดเขา บ่ายลงเขากลับไทเป
-                    <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1588613254955-44280145c363?q=80&w=800&auto=format&fit=crop" alt="Hehuanshan Trail">
-                    </div>
+                    ตื่นเช้ามืด นั่งรถตู้ไปดูพระอาทิตย์ขึ้นที่ความสูง 3,275m เดินเล่น <strong>Shimen Mountain Trail</strong> ถ่ายรูปกับดอกกุหลาบพันปี บ่ายๆ ลงเขากลับไทเป
+                    <a href="https://www.google.com/search?q=Hehuanshan+April+Azalea&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวยอดเขา & ดอกไม้</a>
                 </div>
             </li>
             <li>
                 <span class="date">วันที่ 15, 17, 18 | Taipei Free Roam</span>
-                <div class="detail">ตะลุยไทเปยาวๆ ช็อปปิ้ง กินชาบูหม่าล่า แวะบาร์ลับ เก็บตกของฝาก</div>
+                <div class="detail">กลับมาอยู่ไทเปยาวๆ ช็อปปิ้ง กินชาบูหม่าล่า เก็บตกของฝาก</div>
             </li>
             <li>
                 <span class="date">วันที่ 16 | The Volcanic Drop</span>
                 <div class="detail">
-                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟควันพุ่ง (Xiaoyoukeng) และถ่ายรูปชิลๆ
-                    <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1621609804473-b3c10a400c60?q=80&w=800&auto=format&fit=crop" alt="Yangmingshan Volcano">
-                    </div>
+                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟควันพุ่ง และถ่ายรูปทุ่งดอก Calla Lily สีขาวคลีนๆ ที่ Zhuzihu
+                    <a href="https://www.google.com/search?q=Zhuzihu+Calla+Lily+Festival&tbm=isch" target="_blank" class="link-btn">📷 ดูทุ่งดอก Calla Lily</a>
                 </div>
             </li>
         </ul>
@@ -218,53 +207,51 @@
         <div class="vibe-box">
             <strong>Vibe Check:</strong>
             ทะเลแปซิฟิกกว้างๆ, หน้าผาหินอ่อนสุดอลังการ, ป่าสีเขียวชอุ่ม เดินทางง่าย ไม่เหนื่อยมาก ฟีลปล่อยจอย นั่งจิบกาแฟริมทะเล
-            <span class="warning">*Note: เข้าลึกๆ ในหุบเขา Taroko ไม่ได้นะ เพราะกำลังฟื้นฟูจากแผ่นดินไหว แต่ดูวิวด้านนอกได้</span>
+            <span class="warning">*Note: เข้าลึกๆ ใน Taroko ไม่ได้มากนะ เพราะยังซ่อมทางจากแผ่นดินไหวอยู่</span>
         </div>
         <ul class="timeline">
             <li>
-                <span class="date">วันที่ 11-12 | Taipei City Warm-up</span>
-                <div class="detail">ลุยไทเป เก็บร้านอร่อย เดินเล่นย่านเก๋ๆ เตรียมตัวย้ายเมือง</div>
+                <span class="date">วันที่ 11-12 | City Warm-up</span>
+                <div class="detail">ตะลุยไทเป เก็บร้านอร่อย เดินเล่นชิลๆ เหมือนเดิม</div>
             </li>
             <li>
                 <span class="date">วันที่ 13 | Escape to the Ocean</span>
                 <div class="detail">
                     นั่งรถไฟด่วนไป <strong>Hualien</strong> เช็คอินโรงแรมใกล้ทะเล ไปหาด <strong>Qixingtan</strong> เดินฟังเสียงคลื่นกระทบหิน
-                    <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1543165213-94ab08b2ac84?q=80&w=800&auto=format&fit=crop" alt="Qixingtan Beach">
-                    </div>
+                    <a href="https://www.google.com/search?q=Qixingtan+Beach+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหาดหิน Qixingtan</a>
                 </div>
             </li>
             <li>
-                <span class="date">วันที่ 14 | The Epic Cliff</span>
+                <span class="date">วันที่ 14 | The Epic Gorge & Cliff</span>
                 <div class="detail">
-                    เหมารถเที่ยวรอบนอก <strong>Taroko</strong> และไปดูหน้าผา <strong>Qingshui Cliff</strong> อลังการแบบสเกลระดับโลก สีน้ำทะเลพาสเทลจัดๆ
-                    <div class="img-container">
-                        <img src="https://images.unsplash.com/photo-1505300454743-f111e1ee20fb?q=80&w=800&auto=format&fit=crop" alt="Qingshui Cliff">
-                    </div>
+                    เหมารถเที่ยว <strong>Taroko Gorge</strong> (แวะจุดที่ปลอดภัย) และไปดูหน้าผา <strong>Qingshui Cliff</strong> อลังการแบบตะโกน
+                    <a href="https://www.google.com/search?q=Qingshui+Cliff+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหน้าผา Qingshui</a>
                 </div>
             </li>
             <li>
                 <span class="date">วันที่ 15 | Back to the City</span>
-                <div class="detail">นั่งรถไฟด่วนกลับไทเป เช็คอินโรงแรม พักผ่อน หาร้านอร่อยดินเนอร์</div>
+                <div class="detail">นั่งรถไฟกลับไทเป เช็คอินโรงแรม แล้วออกไปหาร้านชิลตอนเย็น</div>
             </li>
             <li>
                 <span class="date">วันที่ 16 | The Volcanic Drop</span>
                 <div class="detail">
-                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูภูเขาไฟเหมือนแพลน 1 เป๊ะ!
+                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟและดอก Calla Lily เหมือนแพลนแรก!
                 </div>
             </li>
              <li>
                 <span class="date">วันที่ 17-18 | Taipei Farewell</span>
-                <div class="detail">เดินสายกิน ช็อปปิ้ง รองเท้า ชานมไข่มุก เตรียมบินกลับไทย</div>
+                <div class="detail">เดินสายกิน ช็อปปิ้งตามใจชอบ เตรียมบินกลับ</div>
             </li>
         </ul>
     </div>
 
     <script>
         function showPlan(planId) {
+            // Remove active class from all buttons and plans
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.plan-container').forEach(plan => plan.classList.remove('active'));
             
+            // Add active class to clicked button and target plan
             event.target.classList.add('active');
             document.getElementById(planId).classList.add('active');
         }
