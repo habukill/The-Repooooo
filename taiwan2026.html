@@ -95,7 +95,7 @@
         .timeline li {
             position: relative;
             padding-left: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .timeline li::before {
             content: '';
@@ -122,7 +122,7 @@
         .date {
             font-weight: 700;
             color: var(--secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             display: block;
         }
         .detail {
@@ -150,6 +150,31 @@
             margin-top: 5px;
             display: block;
         }
+        /* New Weather UI */
+        .weather-info {
+            background: #fafafa;
+            border: 1px solid #eeeeee;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-top: 12px;
+            border-left: 4px solid #00cec9;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .weather-info strong {
+            color: #2d3436;
+        }
+        .temp-badge {
+            background: #2d3436;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 6px;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +198,10 @@
             <li>
                 <span class="date">วันที่ 11-12 | City Warm-up</span>
                 <div class="detail">อยู่ไทเป ชิลๆ เดินเล่นหาของกิน หาคาเฟ่เท่ๆ ปรับตัวก่อนลุยจริง</div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> กลางวันแอบร้อน กลางคืนลมเย็น 19°C - 21°C เสี่ยงเจอฝนปรอยๆ นิดหน่อย</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อยืดชิลๆ + แจ็คเก็ตบางคลุมตอนดึก พกร่มเล็กๆ ติดกระเป๋าไว้เซฟสุด</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 13 | The Transit & Cingjing</span>
@@ -181,6 +210,10 @@
                     นอนดูวิวทะเลหมอกตอนเย็นจากระเบียงห้อง โคตรฟิน!
                     <a href="https://www.google.com/search?q=Top+Cloud+Villa+Cingjing&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวห้องพัก Top Cloud Villa</a>
                 </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">17°C - 20°C</span><strong>อากาศ:</strong> บนเขากลางวันเย็นสบาย แต่พอมืดปุ๊บอุณหภูมิดิ่งเหลือ 10°C - 13°C หนาวเลยนะ!</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดเดิมจากไทเป แต่ต้องมี "สเวตเตอร์หนาๆ" หรือฮู้ดดี้หยิบมาสวมทับตอนรถไต่ขึ้นเขา</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 14 | Hehuanshan Summit (Half-day)</span>
@@ -188,21 +221,33 @@
                     ตื่นเช้ามืด นั่งรถตู้ไปดูพระอาทิตย์ขึ้นที่ความสูง 3,275m เดินเล่น <strong>Shimen Mountain Trail</strong> ถ่ายรูปกับดอกกุหลาบพันปี บ่ายๆ ลงเขากลับไทเป
                     <a href="https://www.google.com/search?q=Hehuanshan+April+Azalea&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวยอดเขา & ดอกไม้</a>
                 </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">8°C - 12°C</span><strong>อากาศ:</strong> หนาวจัด ลมโคตรแรง! ตอนเช้ามืดตี 4 อุณหภูมิแค่ 2°C - 5°C ฟีลตู้แช่แข็ง</div>
+                    <div>👗 <strong>OOTD:</strong> จัดเต็มสุดในทริป! ฮีทเทค + สเวตเตอร์ + เสื้อโค้ท/กันลมหนาๆ + หมวกไหมพรม + ถุงมือ</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 15, 17 | Taipei Free Roam</span>
                 <div class="detail">กลับมาอยู่ไทเปยาวๆ ช็อปปิ้ง กินชาบูหม่าล่า เก็บตกของฝาก</div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> อุ่นขึ้น กลับมาเดินสบายๆ ลมเย็นตอนกลางคืน</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดแฟชั่นจัดเต็ม เดรสพริ้วๆ แขนยาวเนื้อบางได้เลย</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 16 | The Volcanic Drop</span>
                 <div class="detail">
                     ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟควันพุ่ง และถ่ายรูปทุ่งดอก Calla Lily สีขาวคลีนๆ ที่ Zhuzihu
-                    <a href="https://www.google.com/search?q=yangmingshan&sca_esv=b5455d2c67d11081&udm=2&sxsrf=ANbL-n7KwMH5cDCYYfsxCdDg_aO2MsE6nA%3A1773133063782&ei=B92vaf6zL9_g1e8PierM-QM&biw=1920&bih=1031&ved=0ahUKEwi-05-z-5STAxVfcPUHHQk1Mz8Q4dUDCBI&uact=5&oq=yangmingshan&gs_lp=Egtnd3Mtd2l6LWltZyIMeWFuZ21pbmdzaGFuMgoQABiABBiKBRhDMgoQABiABBiKBRhDMgoQABiABBiKBRhDMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyChAAGIAEGIoFGEMyChAAGIAEGIoFGENI5R5QAFirHXABeACQAQCYAVugAesJqgECMTa4AQPIAQD4AQGYAg2gAsIIwgIEEAAYHsICBhAAGB4YCsICCxAAGIAEGLEDGIMBwgIIEAAYgAQYsQPCAg4QABiABBiKBRixAxiDAZgDAJIHAjEzoAexPrIHAjEzuAfCCMIHBjAuMS4xMsgHNIAIAQ&sclient=gws-wiz-img" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
+                    <a href="https://www.google.com/search?q=yangmingshan" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">20°C - 23°C</span><strong>อากาศ:</strong> เย็นกว่าในตัวเมือง ลมแรงพัดหัวฟู และเสี่ยงหมอก/ฝนจัดมาก 15°C - 18°C</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม (Windbreaker) หรือกันฝน งดหมวกปีกกว้างเดี๋ยวปลิว และใส่ผ้าใบที่เปื้อนดินได้นิดหน่อย</div>
                 </div>
             </li>
             <li>
                 <span class="date">วันที่ 18 | ปิ๊กบ้านนนน ฮือออ แต่พรุ่งนี้ยังไม่ต้องทำงาน เย่ะ!!</span>
-                <div class="detail">กลับมาอยู่ไทเปยาวๆ ช็อปปิ้ง กินชาบูหม่าล่า เก็บตกของฝาก</div>
+                <div class="detail">ช็อปปิ้งเก็บตก ซื้อพายสับปะรด เตรียมบินกลับ</div>
             </li>
         </ul>
     </div>
@@ -217,6 +262,10 @@
             <li>
                 <span class="date">วันที่ 11-12 | City Warm-up</span>
                 <div class="detail">ตะลุยไทเป เก็บร้านอร่อย เดินเล่นชิลๆ เหมือนเดิม</div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> แดดอุ่นๆ กลางวัน กลางคืน 19°C - 21°C อากาศเมืองทั่วไป</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อยืด คาร์ดิแกนบางๆ พกหมวก/ร่ม</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 13 | Escape to the Ocean</span>
@@ -224,12 +273,20 @@
                     นั่งรถไฟด่วนไป <strong>Hualien</strong> เช็คอินโรงแรมใกล้ทะเล ไปหาด <strong>Qixingtan</strong> เดินฟังเสียงคลื่นกระทบหิน
                     <a href="https://www.google.com/search?q=Qixingtan+Beach+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหาดหิน Qixingtan</a>
                 </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">25°C - 27°C</span><strong>อากาศ:</strong> ลมทะเลตีหน้า แดดแรง แต่ติดมหาสมุทรเลยมีโอกาสเจอฝนตกบ่อยกว่าไทเป</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดซัมเมอร์ ฮาวาย ขาสั้น เดรสพริ้วๆ แล้วพกเสื้อคลุมบางๆ กันลมทะเล</div>
+                </div>
             </li>
             <li>
                 <span class="date">วันที่ 14 | The Epic Gorge & Cliff</span>
                 <div class="detail">
                     เหมารถเที่ยว <strong>Taroko Gorge</strong> (แวะจุดที่ปลอดภัย) และไปดูหน้าผา <strong>Qingshui Cliff</strong> อลังการแบบตะโกน
                     <a href="https://www.google.com/search?q=Qingshui+Cliff+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหน้าผา Qingshui</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">25°C - 27°C</span><strong>อากาศ:</strong> ตรงหน้าผาแดดจัด แต่ถ้าเข้าไปโซนหุบเขาจะร่มและชื้นกว่านิดหน่อย</div>
+                    <div>👗 <strong>OOTD:</strong> เน้นทะมัดทะแมง ผ้าใบเดินสบาย เสื้อผ้าสีสดๆ (แดง/ส้ม) ตัดกับฉากหลังสีเขียว/เทาหินอ่อน โคตรป๊อป!</div>
                 </div>
             </li>
             <li>
@@ -240,7 +297,11 @@
                 <span class="date">วันที่ 16 | The Volcanic Drop</span>
                 <div class="detail">
                     ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟและดอก Calla Lily เหมือนแพลนแรก!
-                    <a href="https://www.google.com/search?q=yangmingshan&sca_esv=b5455d2c67d11081&udm=2&sxsrf=ANbL-n7KwMH5cDCYYfsxCdDg_aO2MsE6nA%3A1773133063782&ei=B92vaf6zL9_g1e8PierM-QM&biw=1920&bih=1031&ved=0ahUKEwi-05-z-5STAxVfcPUHHQk1Mz8Q4dUDCBI&uact=5&oq=yangmingshan&gs_lp=Egtnd3Mtd2l6LWltZyIMeWFuZ21pbmdzaGFuMgoQABiABBiKBRhDMgoQABiABBiKBRhDMgoQABiABBiKBRhDMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyChAAGIAEGIoFGEMyChAAGIAEGIoFGENI5R5QAFirHXABeACQAQCYAVugAesJqgECMTa4AQPIAQD4AQGYAg2gAsIIwgIEEAAYHsICBhAAGB4YCsICCxAAGIAEGLEDGIMBwgIIEAAYgAQYsQPCAg4QABiABBiKBRixAxiDAZgDAJIHAjEzoAexPrIHAjEzuAfCCMIHBjAuMS4xMsgHNIAIAQ&sclient=gws-wiz-img" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
+                    <a href="https://www.google.com/search?q=yangmingshan" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">20°C - 23°C</span><strong>อากาศ:</strong> ลมแรง อุณหภูมิลดฮวบกว่าในเมือง ฝนตกบ่อย</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม หมวกบีนนี่ (หมวกปีกกว้างงด) เลี่ยงรองเท้าสีขาวล้วน</div>
                 </div>
             </li>
              <li>
@@ -252,11 +313,9 @@
 
     <script>
         function showPlan(planId) {
-            // Remove active class from all buttons and plans
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.plan-container').forEach(plan => plan.classList.remove('active'));
             
-            // Add active class to clicked button and target plan
             event.target.classList.add('active');
             document.getElementById(planId).classList.add('active');
         }
