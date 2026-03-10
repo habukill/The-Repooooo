@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taiwan 2026: Choose Our Vibe</title>
+    <title>Taiwan 2026: Master Plan</title>
     <style>
         :root {
             --primary: #2d3436;
@@ -37,22 +37,28 @@
         }
         .tabs {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
             background: #dfe6e9;
             padding: 5px;
             border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
         }
         .tab-btn {
-            padding: 12px 24px;
+            padding: 12px 20px;
             border: none;
             background: transparent;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #636e72;
             cursor: pointer;
             border-radius: 8px;
             transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
         }
         .tab-btn.active {
             background: var(--card-bg);
@@ -68,6 +74,7 @@
             padding: 24px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
             animation: fadeIn 0.4s ease;
+            box-sizing: border-box;
         }
         .plan-container.active {
             display: block;
@@ -76,239 +83,164 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .vibe-box {
-            background: #f1f2f6;
-            padding: 15px;
-            border-radius: 8px;
+        /* Zone Box Styles */
+        .zone-box {
+            border: 1px solid #eeeeee;
+            border-radius: 12px;
+            padding: 16px;
             margin-bottom: 20px;
-            border-left: 4px solid var(--secondary);
+            background: #fafafa;
+            border-left: 5px solid var(--secondary);
         }
-        .vibe-box strong {
-            display: block;
-            margin-bottom: 5px;
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
         }
-        .timeline {
-            list-style: none;
-            padding: 0;
+        .zone-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
             margin: 0;
         }
-        .timeline li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 24px;
-        }
-        .timeline li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 6px;
-            width: 8px;
-            height: 8px;
-            background: var(--secondary);
-            border-radius: 50%;
-        }
-        .timeline li::after {
-            content: '';
-            position: absolute;
-            left: 3px;
-            top: 18px;
-            width: 2px;
-            height: calc(100% + 5px);
-            background: #dfe6e9;
-        }
-        .timeline li:last-child::after {
-            display: none;
-        }
-        .date {
-            font-weight: 700;
-            color: var(--secondary);
-            font-size: 0.95rem;
-            display: block;
-        }
-        .detail {
-            margin-top: 5px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        .link-btn {
-            display: inline-block;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: #0984e3;
-            text-decoration: none;
-            font-weight: 600;
-            background: #e3f2fd;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-        .link-btn:hover {
-            background: #bbdefb;
-        }
-        .warning {
-            color: #d63031;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: block;
-        }
-        /* New Weather UI */
-        .weather-info {
-            background: #fafafa;
-            border: 1px solid #eeeeee;
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #636e72;
-            margin-top: 12px;
-            border-left: 4px solid #00cec9;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .weather-info strong {
-            color: #2d3436;
-        }
-        .temp-badge {
+        .transport-badge {
             background: #2d3436;
             color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-right: 6px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
+        .place-item {
+            margin-bottom: 12px;
+        }
+        .place-item:last-child {
+            margin-bottom: 0;
+        }
+        .place-name {
+            font-weight: 600;
+            color: #0984e3;
+            font-size: 0.95rem;
+        }
+        .place-desc {
+            font-size: 0.9rem;
+            color: #636e72;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+        /* Rest of existing styles */
+        .vibe-box { background: #f1f2f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--secondary); }
+        .timeline { list-style: none; padding: 0; margin: 0; }
+        .timeline li { position: relative; padding-left: 20px; margin-bottom: 24px; }
+        .timeline li::before { content: ''; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; }
+        .timeline li::after { content: ''; position: absolute; left: 3px; top: 18px; width: 2px; height: calc(100% + 5px); background: #dfe6e9; }
+        .timeline li:last-child::after { display: none; }
+        .date { font-weight: 700; color: var(--secondary); font-size: 0.95rem; display: block; }
+        .detail { margin-top: 5px; font-size: 0.95rem; line-height: 1.5; }
+        .weather-info { background: #fafafa; border: 1px solid #eeeeee; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; color: #636e72; margin-top: 12px; border-left: 4px solid #00cec9; display: flex; flex-direction: column; gap: 4px; }
+        .temp-badge { background: #2d3436; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin-right: 6px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Taiwan Trip 2026</h1>
-        <p>เลือก Vibe ที่ใช่... ไปให้สุด!</p>
+        <p>Master Plan & City Guide 🇹🇼</p>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showPlan('plan1')">Option 1: สาย Cinematic 🏔️</button>
-        <button class="tab-btn" onclick="showPlan('plan2')">Option 2: สาย Chill & Ocean 🌊</button>
+        <button class="tab-btn active" onclick="showPlan('plan1')">Option 1: Cinematic 🏔️</button>
+        <button class="tab-btn" onclick="showPlan('plan2')">Option 2: Ocean Vibe 🌊</button>
+        <button class="tab-btn" onclick="showPlan('taipei')">Taipei City Guide 🏙️</button>
     </div>
 
     <div id="plan1" class="plan-container active">
-        <div class="vibe-box">
-            <strong>Vibe Check:</strong>
-            อากาศหนาว, ทะเลหมอก, ยอดเขาสูง 3,000 เมตร, หญ้าสีทองตัดกับดอกกุหลาบพันปีสีชมพู ฟีลเหมือนไปสวิตเซอร์แลนด์ผสมฉากหนังอินดี้ ถ่ายรูปออกมาดูแพงและอลังการ
-        </div>
+        <div class="vibe-box"><strong>Vibe Check:</strong> Hehuanshan หนาวจัด ทะเลหมอก ฟีลสวิตเซอร์แลนด์</div>
         <ul class="timeline">
-            <li>
-                <span class="date">วันที่ 11-12 | City Warm-up</span>
-                <div class="detail">อยู่ไทเป ชิลๆ เดินเล่นหาของกิน หาคาเฟ่เท่ๆ ปรับตัวก่อนลุยจริง</div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> กลางวันแอบร้อน กลางคืนลมเย็น 19°C - 21°C เสี่ยงเจอฝนปรอยๆ นิดหน่อย</div>
-                    <div>👗 <strong>OOTD:</strong> เสื้อยืดชิลๆ + แจ็คเก็ตบางคลุมตอนดึก พกร่มเล็กๆ ติดกระเป๋าไว้เซฟสุด</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 13 | The Transit & Cingjing</span>
-                <div class="detail">
-                    นั่งรถไฟความเร็วสูงไปไทจง ต่อรถบัสขึ้นเขา เช็คอินเข้า <strong>Top Cloud Villa</strong><br>
-                    นอนดูวิวทะเลหมอกตอนเย็นจากระเบียงห้อง โคตรฟิน!
-                    <a href="https://www.google.com/search?q=Top+Cloud+Villa+Cingjing&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวห้องพัก Top Cloud Villa</a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">17°C - 20°C</span><strong>อากาศ:</strong> บนเขากลางวันเย็นสบาย แต่พอมืดปุ๊บอุณหภูมิดิ่งเหลือ 10°C - 13°C หนาวเลยนะ!</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดเดิมจากไทเป แต่ต้องมี "สเวตเตอร์หนาๆ" หรือฮู้ดดี้หยิบมาสวมทับตอนรถไต่ขึ้นเขา</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 14 | Hehuanshan Summit (Half-day)</span>
-                <div class="detail">
-                    ตื่นเช้ามืด นั่งรถตู้ไปดูพระอาทิตย์ขึ้นที่ความสูง 3,275m เดินเล่น <strong>Shimen Mountain Trail</strong> ถ่ายรูปกับดอกกุหลาบพันปี บ่ายๆ ลงเขากลับไทเป
-                    <a href="https://www.google.com/search?q=Hehuanshan+April+Azalea&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวยอดเขา & ดอกไม้</a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">8°C - 12°C</span><strong>อากาศ:</strong> หนาวจัด ลมโคตรแรง! ตอนเช้ามืดตี 4 อุณหภูมิแค่ 2°C - 5°C ฟีลตู้แช่แข็ง</div>
-                    <div>👗 <strong>OOTD:</strong> จัดเต็มสุดในทริป! ฮีทเทค + สเวตเตอร์ + เสื้อโค้ท/กันลมหนาๆ + หมวกไหมพรม + ถุงมือ</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 15, 17 | Taipei Free Roam</span>
-                <div class="detail">กลับมาอยู่ไทเปยาวๆ ช็อปปิ้ง กินชาบูหม่าล่า เก็บตกของฝาก</div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> อุ่นขึ้น กลับมาเดินสบายๆ ลมเย็นตอนกลางคืน</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดแฟชั่นจัดเต็ม เดรสพริ้วๆ แขนยาวเนื้อบางได้เลย</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 16 | The Volcanic Drop</span>
-                <div class="detail">
-                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟควันพุ่ง และถ่ายรูปทุ่งดอก Calla Lily สีขาวคลีนๆ ที่ Zhuzihu
-                    <a href="https://www.google.com/search?q=yangmingshan" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">20°C - 23°C</span><strong>อากาศ:</strong> เย็นกว่าในตัวเมือง ลมแรงพัดหัวฟู และเสี่ยงหมอก/ฝนจัดมาก 15°C - 18°C</div>
-                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม (Windbreaker) หรือกันฝน งดหมวกปีกกว้างเดี๋ยวปลิว และใส่ผ้าใบที่เปื้อนดินได้นิดหน่อย</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 18 | ปิ๊กบ้านนนน ฮือออ แต่พรุ่งนี้ยังไม่ต้องทำงาน เย่ะ!!</span>
-                <div class="detail">ช็อปปิ้งเก็บตก ซื้อพายสับปะรด เตรียมบินกลับ</div>
-            </li>
+            <li><span class="date">วันที่ 11-12 | City Warm-up</span><div class="detail">เที่ยวในตัวเมือง (ดูแท็บ Taipei City Guide)</div></li>
+            <li><span class="date">วันที่ 13-14 | Hehuanshan & Cingjing</span><div class="detail">ล่าพระอาทิตย์ขึ้น เดินเทรล Shimen Mountain</div></li>
+            <li><span class="date">วันที่ 15-18 | Taipei Free Roam & Yangmingshan</span><div class="detail">เก็บตกไทเป และขึ้นภูเขาไฟ Xiaoyoukeng</div></li>
         </ul>
     </div>
 
     <div id="plan2" class="plan-container">
-        <div class="vibe-box">
-            <strong>Vibe Check:</strong>
-            ทะเลแปซิฟิกกว้างๆ, หน้าผาหินอ่อนสุดอลังการ, ป่าสีเขียวชอุ่ม เดินทางง่าย ไม่เหนื่อยมาก ฟีลปล่อยจอย นั่งจิบกาแฟริมทะเล
-            <span class="warning">*Note: เข้าลึกๆ ใน Taroko ไม่ได้มากนะ เพราะยังซ่อมทางจากแผ่นดินไหวอยู่</span>
-        </div>
+        <div class="vibe-box"><strong>Vibe Check:</strong> Hualien ทะเลแปซิฟิก หน้าผาหินอ่อน Taroko</div>
         <ul class="timeline">
-            <li>
-                <span class="date">วันที่ 11-12 | City Warm-up</span>
-                <div class="detail">ตะลุยไทเป เก็บร้านอร่อย เดินเล่นชิลๆ เหมือนเดิม</div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">25°C - 28°C</span><strong>อากาศ:</strong> แดดอุ่นๆ กลางวัน กลางคืน 19°C - 21°C อากาศเมืองทั่วไป</div>
-                    <div>👗 <strong>OOTD:</strong> เสื้อยืด คาร์ดิแกนบางๆ พกหมวก/ร่ม</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 13 | Escape to the Ocean</span>
-                <div class="detail">
-                    นั่งรถไฟด่วนไป <strong>Hualien</strong> เช็คอินโรงแรมใกล้ทะเล ไปหาด <strong>Qixingtan</strong> เดินฟังเสียงคลื่นกระทบหิน
-                    <a href="https://www.google.com/search?q=Qixingtan+Beach+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหาดหิน Qixingtan</a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">25°C - 27°C</span><strong>อากาศ:</strong> ลมทะเลตีหน้า แดดแรง แต่ติดมหาสมุทรเลยมีโอกาสเจอฝนตกบ่อยกว่าไทเป</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดซัมเมอร์ ฮาวาย ขาสั้น เดรสพริ้วๆ แล้วพกเสื้อคลุมบางๆ กันลมทะเล</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 14 | The Epic Gorge & Cliff</span>
-                <div class="detail">
-                    เหมารถเที่ยว <strong>Taroko Gorge</strong> (แวะจุดที่ปลอดภัย) และไปดูหน้าผา <strong>Qingshui Cliff</strong> อลังการแบบตะโกน
-                    <a href="https://www.google.com/search?q=Qingshui+Cliff+Hualien&tbm=isch" target="_blank" class="link-btn">📷 ดูวิวหน้าผา Qingshui</a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">25°C - 27°C</span><strong>อากาศ:</strong> ตรงหน้าผาแดดจัด แต่ถ้าเข้าไปโซนหุบเขาจะร่มและชื้นกว่านิดหน่อย</div>
-                    <div>👗 <strong>OOTD:</strong> เน้นทะมัดทะแมง ผ้าใบเดินสบาย เสื้อผ้าสีสดๆ (แดง/ส้ม) ตัดกับฉากหลังสีเขียว/เทาหินอ่อน โคตรป๊อป!</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">วันที่ 15 | Back to the City</span>
-                <div class="detail">นั่งรถไฟกลับไทเป เช็คอินโรงแรม แล้วออกไปหาร้านชิลตอนเย็น</div>
-            </li>
-            <li>
-                <span class="date">วันที่ 16 | The Volcanic Drop</span>
-                <div class="detail">
-                    ขึ้นเขา <strong>Yangmingshan</strong> ไปดูปากปล่องภูเขาไฟและดอก Calla Lily เหมือนแพลนแรก!
-                    <a href="https://www.google.com/search?q=yangmingshan" target="_blank" class="link-btn">📷 ดูวิวชิวชิววว สบายสยายยย </a>
-                </div>
-                <div class="weather-info">
-                    <div><span class="temp-badge">20°C - 23°C</span><strong>อากาศ:</strong> ลมแรง อุณหภูมิลดฮวบกว่าในเมือง ฝนตกบ่อย</div>
-                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม หมวกบีนนี่ (หมวกปีกกว้างงด) เลี่ยงรองเท้าสีขาวล้วน</div>
-                </div>
-            </li>
-             <li>
-                <span class="date">วันที่ 17-18 | Taipei Farewell</span>
-                <div class="detail">เดินสายกิน ช็อปปิ้งตามใจชอบ เตรียมบินกลับ</div>
-            </li>
+            <li><span class="date">วันที่ 11-12 | City Warm-up</span><div class="detail">เที่ยวในตัวเมือง (ดูแท็บ Taipei City Guide)</div></li>
+            <li><span class="date">วันที่ 13-14 | Escape to the Ocean</span><div class="detail">ลุย Hualien หาด Qixingtan ดูหน้าผา Qingshui Cliff</div></li>
+            <li><span class="date">วันที่ 15-18 | Taipei Free Roam & Yangmingshan</span><div class="detail">เก็บตกไทเป และขึ้นภูเขาไฟ Xiaoyoukeng</div></li>
         </ul>
+    </div>
+
+    <div id="taipei" class="plan-container">
+        <div class="vibe-box">
+            <strong>The Taipei Playbook 📍</strong>
+            ลิสต์ที่เที่ยวแบ่งตามโซน เบสแคมป์เราอยู่ Ximen เดินทางง่ายมาก เล็ง Vibe ที่ชอบแล้วจับยัดใส่วันว่างได้เลย
+        </div>
+
+        <div class="zone-box">
+            <div class="zone-header">
+                <h3 class="zone-title">💻 Zone 1: The Tech & Art Hub</h3>
+                <span class="transport-badge">🚇 MRT สายสีน้ำเงิน (2 สถานี)</span>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Syntrend Creative Park & Guang Hua Digital Plaza</div>
+                <div class="place-desc">ตึกรวม Gadget แห่งอนาคต เดินดูอุปกรณ์ Smart Home ล้ำๆ เซ็ต Network หรือ PC Hardware แปลกๆ ใครชอบอัปเกรดระบบบ้านคือฟินมาก เดินแอร์ฉ่ำๆ</div>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Huashan 1914 Creative Park</div>
+                <div class="place-desc">อยู่ติดกันเลย โรงงานเหล้าเก่าที่รีโนเวทใหม่ ได้ไอเดียดูงานโครงสร้าง ดิบๆ ปูนเปลือย แถมมีนิทรรศการ Art Toy และคาเฟ่เพียบ</div>
+            </div>
+        </div>
+
+        <div class="zone-box">
+            <div class="zone-header">
+                <h3 class="zone-title">☕ Zone 2: Aesthetic & Coffee Scene</h3>
+                <span class="transport-badge">🚇 MRT สายสีเขียว (1 สถานี)</span>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Zhongshan (Chifeng Street)</div>
+                <div class="place-desc">ย่าน Gen Z ไต้หวัน ดัดแปลงตึกแถวเก่าเป็นร้าน Multi-brand เทสดีๆ เดินส่องแฟชั่นชิลๆ</div>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Simple Kaffa (The Coffee One) หรือ VWI by CHADWANG</div>
+                <div class="place-desc">เมืองหลวงคนบ้า Specialty Coffee สั่งดริปร้านแชมป์โลก หรือกิน Espresso ช็อตเนียนๆ ให้คุ้มค่าลิ้นที่คุ้นเคยกับการสกัดช็อตเอง</div>
+            </div>
+        </div>
+
+        <div class="zone-box">
+            <div class="zone-header">
+                <h3 class="zone-title">🎬 Zone 3: Architecture & Cinematic</h3>
+                <span class="transport-badge">🚇 MRT สายสีแดง หรือ 🚌 รถบัส</span>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Taipei Performing Arts Center (Shilin)</div>
+                <div class="place-desc">ตึกทรงลูกโลกยักษ์สีเงิน ดีไซน์หลุดโลก ฟีลอลังการเหมือนหลุดเข้าไปในหนังของ Christopher Nolan ถ่ายรูปเสร็จข้ามถนนไปหาของกินที่ Shilin Night Market ต่อได้เลย</div>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Taipei Music Center</div>
+                <div class="place-desc">สถาปัตยกรรมล้ำๆ ทรงตึกเหมือนยานอวกาศ ถ่ายคอนเทนต์มุมกว้างได้เท่มาก</div>
+            </div>
+        </div>
+
+        <div class="zone-box">
+            <div class="zone-header">
+                <h3 class="zone-title">🐈 Zone 4: The Outskirts Escape</h3>
+                <span class="transport-badge">🚂 รถไฟ TRA หรือ 🚌 รถบัส</span>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Houtong Cat Village (หมู่บ้านแมวหู่ทง)</div>
+                <div class="place-desc">นั่งรถไฟออกเมืองไปนิดนึง แวะหาแก๊งแมวอ้วนเจ้าถิ่นที่เดินป้วนเปี้ยนทั่วหมู่บ้าน มีคาเฟ่แมวริมทางรถไฟ (บรรเทาความคิดถึงแมว 2 ตัวที่บ้านได้ดีเลย)</div>
+            </div>
+            <div class="place-item">
+                <div class="place-name">Dihua Street (ย่านเมืองเก่า)</div>
+                <div class="place-desc">เดินดูตึกอิฐแดงทรงโบราณช่วงบ่าย พอตกดึก โซนนี้จะมี Speakeasy (บาร์ลับ) ซ่อนอยู่หลังร้านยาจีนเต็มไปหมด ฟีลจิบเครื่องดื่มเท่ๆ</div>
+            </div>
+        </div>
+
     </div>
 
     <script>
