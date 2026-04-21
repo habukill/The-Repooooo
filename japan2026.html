@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bro's Alpine Sun-Seeker 2026</title>
+    <title>Bro's Trip CMS Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -12,32 +12,26 @@
         .tab-btn.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
         .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
         .weather-widget { background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2)); }
-        .art-tag { background-color: #ec4899; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: inline-block; }
+        input, textarea { background-color: rgba(15, 23, 42, 0.8); border: 1px solid #475569; color: white; padding: 4px 8px; border-radius: 4px; width: 100%; font-size: 0.875rem; }
+        input:focus, textarea:focus { outline: none; border-color: #38bdf8; ring: 1px; ring-color: #38bdf8; }
+        .fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 50; }
+        .fab-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .fab-btn:hover { transform: scale(1.1); }
     </style>
 </head>
-<body class="antialiased p-4 md:p-8">
+<body class="antialiased p-4 md:p-8 pb-24">
 
-    <header class="max-w-4xl mx-auto mb-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase tracking-wide"><span class="gradient-text">Alpine Sun-Seeker</span> 2026</h1>
-        <p class="text-gray-400 text-lg">30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo</p>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div class="glass-panel p-4 rounded-xl text-center">
-                <span class="block text-2xl font-bold text-blue-400">9</span>
-                <span class="text-xs text-gray-400 uppercase">Days</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl text-center">
-                <span class="block text-2xl font-bold text-green-400">Sunny</span>
-                <span class="text-xs text-gray-400 uppercase">Focus</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl text-center">
-                <span class="block text-2xl font-bold text-pink-400">Art</span>
-                <span class="text-xs text-gray-400 uppercase">Masterpiece</span>
-            </div>
-            <div class="glass-panel p-4 rounded-xl text-center">
-                <span class="block text-2xl font-bold text-red-400">Nirasaki</span>
-                <span class="text-xs text-gray-400 uppercase">Basecamp</span>
-            </div>
+    <header class="max-w-4xl mx-auto mb-8 text-center" id="header-display">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase tracking-wide"><span class="gradient-text" id="disp-main-title">Alpine Sun-Seeker</span> 2026</h1>
+        <p class="text-gray-400 text-lg" id="disp-main-desc">30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo</p>
+    </header>
+
+    <header class="max-w-4xl mx-auto mb-8 text-center hidden" id="header-edit">
+        <div class="glass-panel p-4 rounded-xl border-dashed border-2 border-sky-500">
+            <label class="text-xs text-sky-400 block text-left mb-1">Main Title</label>
+            <input type="text" id="edit-main-title" class="mb-2 font-bold text-xl">
+            <label class="text-xs text-sky-400 block text-left mb-1">Sub Description</label>
+            <input type="text" id="edit-main-desc">
         </div>
     </header>
 
@@ -46,208 +40,251 @@
         <div id="content-area" class="glass-panel rounded-2xl p-6 shadow-2xl transition-all duration-300"></div>
     </main>
 
+    <div class="fab-container">
+        <button id="btn-export" class="fab-btn bg-emerald-600 text-white" title="Export JSON Code">💾</button>
+        <button id="btn-edit" class="fab-btn bg-blue-600 text-white" title="Toggle Edit Mode">⚙️</button>
+    </div>
+
     <script>
-        const tripData = [
+        // 1. Default Data (ถ้ายังไม่มีใน LocalStorage จะดึงอันนี้มาใช้)
+        const defaultTripMeta = { title: "Alpine Sun-Seeker", desc: "30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo" };
+        const defaultTripData = [
             {
-                day: "Day 1", date: "30 May", title: "NRT ➔ The Sunset V.I.P.",
-                route: "Narita Airport ➔ Nirasaki", sleep: "日の沈み、また昇る (Nirasaki)",
-                weather: { temp: "18-25°C", icon: "☀️", desc: "ฟ้าโปร่ง ลุ้นวิวฟูจิยามเย็น" },
-                ootd: "เสื้อยืด + กางเกงชิโน่ (เตรียมเสื้อคลุมจิบเบียร์ดู Full Moon คืนนี้)",
+                day: "Day 1", date: "30 May", title: "NRT ➔ The Sunset V.I.P.", route: "Narita Airport ➔ Nirasaki", sleep: "日の沈み、また昇る (Nirasaki)",
+                weather: { temp: "18-25°C", icon: "☀️", desc: "ฟ้าโปร่ง ลุ้นวิวฟูจิยามเย็น" }, ootd: "เสื้อยืด + กางเกงชิโน่ (เตรียมเสื้อคลุมจิบเบียร์)",
                 visualLink: "https://www.google.com/search?tbm=isch&q=Kofu+Basin+night+view+Fuji",
-                activities: [
-                    "รับรถ Toyota Rent NRT ➔ ยิงยาวทางด่วน Chuo Expwy",
-                    "Koshu Yumekouji: แวะกินข้าวเที่ยงตรอกเมืองเก่าหน้าสถานี Kofu",
-                    "Check-in: เข้าที่พัก Nirasaki ให้ทันดูพระอาทิตย์ตกดินหลัง Minami Alps",
-                    "Moonbathing: คืนนี้ข้างขึ้น 14 ค่ำ นอนดูเงาภูเขาอาบแสงจันทร์"
-                ],
-                navi: [{ name: "Toyota NRT T1", code: "0476-32-1020" }, { name: "Nirasaki Airbnb", code: "0551-22-1111 (Nirasaki City)" }],
-                food: "🥢 Koshu Houtou (เส้นแบนต้มฟักทอง) & ไวน์ยามานาชิ",
-                isArtDay: false
+                activities: ["รับรถ Toyota Rent NRT ➔ ยิงยาวทางด่วน Chuo Expwy", "Koshu Yumekouji: แวะกินข้าวเที่ยง", "Check-in: เข้าที่พัก Nirasaki", "Moonbathing: นอนดูเงาภูเขาอาบแสงจันทร์"],
+                navi: [{ name: "Toyota NRT T1", code: "0476-32-1020" }, { name: "Nirasaki Airbnb", code: "0551-22-1111" }],
+                food: "🥢 Koshu Houtou & ไวน์ยามานาชิ", isArtDay: false
             },
             {
-                day: "Day 2", date: "31 May", title: "Agile Art Exploration",
-                route: "Nirasaki ➔ Hokuto ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "15-23°C", icon: "🎨", desc: "Check weather first!" },
-                ootd: "เสื้อเชิ้ตโอเวอร์ไซส์ ถ่ายรูปแนว Architecture",
+                day: "Day 2", date: "31 May", title: "Agile Art Exploration", route: "Nirasaki ➔ Hokuto ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
+                weather: { temp: "15-23°C", icon: "🎨", desc: "Check weather first!" }, ootd: "เสื้อเชิ้ตโอเวอร์ไซส์ ถ่ายรูปแนว Architecture",
                 visualLink: "https://www.google.com/search?tbm=isch&q=Kiyoharu+Art+Colony+Tadao+Ando",
-                activities: [
-                    "Agile Choice: แดดดีไป Kiyosato Terrace / เมฆเยอะไป Shosenkyo",
-                    "Kiyoharu Art Colony: เสพงานสถาปัตยกรรม Tadao Ando กลางป่าสน",
-                    "Mishakaike Pond: บึงน้ำมรกตกระจกสะท้อนป่า (ก่อนเข้า Matsumoto)",
-                    "Night: เดินเล่นรอบปราสาทมัตสึโมโต้"
-                ],
-                navi: [{ name: "Kiyoharu Art Colony", code: "Mapcode: 161 582 866*60" }, { name: "Mishakaike Pond", code: "218 695 643*22" }],
-                food: "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขา) แกล้มเบียร์ท้องถิ่น",
-                isArtDay: true
+                activities: ["Agile Choice: แดดดีไป Kiyosato Terrace / เมฆเยอะไป Shosenkyo", "Kiyoharu Art Colony: เสพงานสถาปัตยกรรม Tadao Ando", "Mishakaike Pond: บึงน้ำมรกตกระจกสะท้อนป่า"],
+                navi: [{ name: "Kiyoharu Art Colony", code: "161 582 866*60" }, { name: "Mishakaike Pond", code: "218 695 643*22" }],
+                food: "🍗 Sanzoku-yaki แกล้มเบียร์ท้องถิ่น", isArtDay: true
             },
             {
-                day: "Day 3", date: "1 Jun", title: "Deep Forest Escape",
-                route: "Matsumoto ➔ Kamikochi", sleep: "Hotel @ Kamikochi",
-                weather: { temp: "8-16°C", icon: "🌲", desc: "หนาวเย็น สดชื่นเลเวล 10" },
-                ootd: "Layering: เสื้อแขนยาว + เสื้อกั๊ก + แจ็คเก็ตกันลม",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Kamikochi+Kappa+Bridge+summer",
-                activities: ["จอดรถ Sawando ➔ เข้า Kamikochi", "เดินป่าเลียบแม่น้ำ Azusa สูดอากาศบริสุทธิ์", "นอนนิ่งๆ ฟังเสียงน้ำไหลข้างสะพานกัปปะ"],
-                navi: [{ name: "Sawando Parking", code: "406 312 878*85" }],
-                food: "🥧 Apple Pie Trois Cinq & อาหารโรงแรม",
-                isArtDay: false
-            },
-            {
-                day: "Day 4", date: "2 Jun", title: "The Dot Lady & City Walk",
-                route: "Kamikochi ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "12-22°C", icon: "🌤️", desc: "อากาศเคลียร์ เดินสบาย" },
-                ootd: "ชุดพร้อมเดิน Gallery (เสื้อลายจุด Yayoi ต้องมา)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Matsumoto+City+Museum+of+Art+Yayoi+Kusama",
-                activities: [
-                    "กลับมาเอารถที่ Sawando ➔ เข้าเมือง Matsumoto",
-                    "Matsumoto City Museum of Art (เสพงาน Yayoi Kusama)",
-                    "เดินเล่นถนน Nawate/Nakamachi หาซื้อของคราฟต์"
-                ],
-                navi: [{ name: "Matsumoto Art Museum", code: "75 861 635*34" }],
-                food: "🍜 Shinshu Soba (โซบะเส้นสดทำมือ)",
-                isArtDay: true
-            },
-            {
-                day: "Day 5", date: "3 Jun", title: "Snow Wall Masterpiece",
-                route: "Matsumoto ➔ Ogizawa ➔ Murodo ➔ Hakuba", sleep: "Hakuba",
-                weather: { temp: "2-10°C", icon: "❄️", desc: "หนาวจัด แดดสะท้อนหิมะแรง" },
-                ootd: "เสื้อกันลมหนา + แว่นกันแดด (Must Item!)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Yuki-no-Otani+Snow+Wall+June",
-                activities: ["Ogizawa ➔ Murodo: เดินชมกำแพงหิมะยักษ์", "ถ่ายรูปจุดสูงสุดของทริป ➔ ขับต่อไป Hakuba", "Check-in บ้านพักสไตล์ Cabin @ Hakuba"],
-                navi: [{ name: "Ogizawa Station", code: "695 125 101*55" }],
-                food: "🍛 แกงกะหรี่เขื่อน Kurobe & 🥩 เนื้อย่าง Shinshu A5",
-                isArtDay: false
-            },
-            {
-                day: "Day 6", date: "4 Jun", title: "Mountain Harbor ➔ Tokyo",
-                route: "Hakuba ➔ Tokyo (Tabata)", sleep: "Hotel @ Tabata",
-                weather: { temp: "15-26°C", icon: "🏙️", desc: "กลับเข้าเมือง อากาศอุ่น" },
-                ootd: "ชุดขับรถสบายๆ สไตล์ City Boy",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Hakuba+Mountain+Harbor+Summer",
-                activities: [
-                    "Hakuba Mountain Harbor: จิบกาแฟดูวิว Alps 3 ยอด",
-                    "ยิงยาวเข้าโตเกียว ➔ คืนรถ @ Nishi-Nippori",
-                    "Check-in Tabata Basecamp: แหล่งรวมของกินราคาถูก"
-                ],
-                navi: [{ name: "Hakuba Harbor", code: "0261-72-3150" }, { name: "Toyota N-Nippori", code: "03-3823-0100" }],
-                food: "☕ City Bakery & 🍢 ยากิโทริโลคอลแถว Tabata",
-                isArtDay: false
-            },
-            {
-                day: "Day 7", date: "5 Jun", title: "Cute Overload (Chiikawa Land)",
-                route: "Tabata ➔ Tokyo Station ➔ Harajuku", sleep: "Hotel @ Tabata",
-                weather: { temp: "18-26°C", icon: "💖", desc: "ระวังฝนปรอยโตเกียว" },
-                ootd: "ชุดเดินเมืองเน้นคล่องตัว พร้อมแบกถุงช้อปปิ้ง",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo+Station+Character+Street",
-                activities: [
-                    "Chiikawa Land: เช้าไปลุย Tokyo Character Street (ต้องจองคิว!)",
-                    "Harajuku: เดินชิล Takeshita Street & Meiji Jingu",
-                    "City Chill: หาคาเฟ่เก๋ๆ นั่งเช็ค Backlog งานแบบหล่อๆ"
-                ],
+                day: "Day 7", date: "5 Jun", title: "Cute Overload (Chiikawa Land)", route: "Tabata ➔ Tokyo Station ➔ Harajuku", sleep: "Hotel @ Tabata",
+                weather: { temp: "18-26°C", icon: "💖", desc: "ระวังฝนปรอยโตเกียว" }, ootd: "ชุดเดินเมืองเน้นคล่องตัว พร้อมแบกถุงช้อปปิ้ง",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo+Station",
+                activities: ["Chiikawa Land: ลุย Tokyo Character Street", "Harajuku: เดินชิล Takeshita Street", "City Chill: หาคาเฟ่เก๋ๆ นั่งเช็ค Backlog งาน"],
                 navi: [{ name: "Tokyo Station", code: "Character Street B1" }],
-                food: "🥞 แพนเค้กนุ่มฟู & 🍛 ข้าวแกงกะหรี่หอมๆ",
-                isArtDay: false
-            },
-            {
-                day: "Day 8", date: "6 Jun", title: "Tokyo Aesthetic Chill",
-                route: "Tabata ➔ Yanaka ➔ Shibuya", sleep: "Hotel @ Tabata",
-                weather: { temp: "19-27°C", icon: "🎨", desc: "เดินชิลวันสุดท้าย" },
-                ootd: "Vintage Look หรือเสื้อผ้าแนว Street",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Yanaka+Ginza+Tokyo+Sunset",
-                activities: [
-                    "Yanaka Ginza: เดินเล่นย่านแมวเหมียวสุดคลาสสิกใกล้ Tabata",
-                    "SCAI The Bathhouse: ชมงานศิลปะในโรงอาบน้ำเก่า",
-                    "Shibuya Sky: ดูวิวเมืองโตเกียวทิ้งท้ายทริป",
-                    "Final Packing: ยัดของลงกระเป๋าเตรียมกลับบ้าน"
-                ],
-                navi: [{ name: "Yanaka Ginza", code: "เดินจากสถานี Nippori" }],
-                food: "🍱 ซูชิสายพาน & ปาร์ตี้อาหารซูเปอร์ป้ายเหลือง",
-                isArtDay: true
-            },
-            {
-                day: "Day 9", date: "7 Jun", title: "Final Boarding",
-                route: "Tabata ➔ Narita Airport", sleep: "BKK",
-                weather: { temp: "20-27°C", icon: "✈️", desc: "Safe Flight" },
-                ootd: "เสื้อผ้าหลวมสบายที่สุดสำหรับนั่งเครื่อง 6 ชม.",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Narita+Airport+Terminal+1+Zipair",
-                activities: ["ตื่นสายๆ เช็คเอาท์ ➔ Skyliner จาก Nippori", "NRT Terminal 1: Shopping Duty Free ขนมสุดท้าย", "15:00 ZIPAIR: บินกลับกรุงเทพฯ"],
-                navi: [{ name: "Skyliner", code: "Nippori Station" }],
-                food: "🍱 Ekiben (ข้าวกล่องรถไฟ) มื้อสุดท้าย",
-                isArtDay: false
+                food: "🥞 แพนเค้กนุ่มฟู & 🍛 ข้าวแกงกะหรี่หอมๆ", isArtDay: false
             }
-        ];
+        ]; // (ตัดทอนให้เห็นภาพว่าเพิ่มลดข้อมูลเองได้เลย)
+
+        // 2. State Management
+        let tripMeta = JSON.parse(localStorage.getItem('broTripMeta')) || defaultTripMeta;
+        let tripData = JSON.parse(localStorage.getItem('broTripData')) || defaultTripData;
+        let isEditMode = false;
+        let currentDayIndex = 0;
 
         const tabsContainer = document.getElementById('tabs');
         const contentArea = document.getElementById('content-area');
 
-        function renderContent(dayIndex) {
-            const data = tripData[dayIndex];
-            const naviHTML = data.navi.map(n => `
-                <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex justify-between items-center">
-                    <span class="text-sm text-slate-300">${n.name}</span>
-                    <span class="text-sm font-mono text-emerald-400 bg-slate-900 px-2 py-1 rounded shadow-inner">${n.code}</span>
-                </div>
-            `).join('');
+        // 3. Render Header
+        function renderHeader() {
+            if (isEditMode) {
+                document.getElementById('header-display').classList.add('hidden');
+                document.getElementById('header-edit').classList.remove('hidden');
+                document.getElementById('edit-main-title').value = tripMeta.title;
+                document.getElementById('edit-main-desc').value = tripMeta.desc;
+            } else {
+                document.getElementById('header-display').classList.remove('hidden');
+                document.getElementById('header-edit').classList.add('hidden');
+                document.getElementById('disp-main-title').innerText = tripMeta.title;
+                document.getElementById('disp-main-desc').innerText = tripMeta.desc;
+            }
+        }
 
-            const activitiesHTML = data.activities.map(a => `
-                <li class="flex items-start mb-3"><span class="text-sky-400 mr-2 mt-0.5">⚡</span><span class="text-slate-200">${a}</span></li>
-            `).join('');
+        // 4. Update Data Before Switch/Save
+        function saveCurrentView() {
+            if (!isEditMode) return;
+            
+            // Save Header
+            tripMeta.title = document.getElementById('edit-main-title').value;
+            tripMeta.desc = document.getElementById('edit-main-desc').value;
 
-            contentArea.innerHTML = `
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b border-slate-700 pb-5 gap-4">
-                    <div>
-                        ${data.isArtDay ? '<span class="art-tag">Art & Architecture 🎨</span>' : ''}
-                        <h2 class="text-2xl md:text-3xl font-bold mt-2 text-white">${data.title}</h2>
-                    </div>
-                    <div class="flex flex-col items-end gap-2 w-full md:w-auto">
-                        <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-full border border-slate-600 font-medium">🛌 ${data.sleep}</span>
-                        <a href="${data.visualLink}" target="_blank" class="w-full md:w-auto text-center bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-lg flex items-center justify-center gap-2">📸 ส่องรูปสถานที่</a>
-                    </div>
-                </div>
+            // Save Current Day Content
+            const data = tripData[currentDayIndex];
+            data.title = document.getElementById('e-title').value;
+            data.date = document.getElementById('e-date').value;
+            data.sleep = document.getElementById('e-sleep').value;
+            data.weather.icon = document.getElementById('e-w-icon').value;
+            data.weather.temp = document.getElementById('e-w-temp').value;
+            data.weather.desc = document.getElementById('e-w-desc').value;
+            data.ootd = document.getElementById('e-ootd').value;
+            data.food = document.getElementById('e-food').value;
 
-                <div class="weather-widget rounded-xl p-4 mb-6 border border-sky-500/30 flex flex-col md:flex-row items-center gap-4">
-                    <div class="flex items-center gap-3 w-full md:w-auto md:border-r md:border-sky-500/30 md:pr-4">
-                        <span class="text-4xl">${data.weather.icon}</span>
-                        <div><p class="text-xl font-bold text-white">${data.weather.temp}</p><p class="text-xs text-sky-200">${data.weather.desc}</p></div>
-                    </div>
-                    <div class="w-full md:w-auto"><p class="text-sm text-sky-100"><span class="font-bold text-sky-300">👗 OOTD:</span> ${data.ootd}</p></div>
-                </div>
+            // Save Missions
+            const missionInputs = document.querySelectorAll('.e-mission');
+            data.activities = Array.from(missionInputs).map(inp => inp.value).filter(val => val.trim() !== "");
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-300 flex items-center">⚡ Mission</h3>
-                        <ul class="text-sm">${activitiesHTML}</ul>
-                    </div>
-                    <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h3 class="text-lg font-semibold mb-4 text-sky-300 flex items-center">📍 GPS / Code</h3>
-                        <div class="space-y-3">${naviHTML}</div>
-                    </div>
-                </div>
-
-                <div class="mt-6 bg-gradient-to-r from-amber-900/20 to-orange-900/20 p-5 rounded-xl border border-amber-700/30">
-                    <h3 class="text-lg font-semibold mb-2 text-amber-400">😋 Target Food</h3>
-                    <p class="text-slate-200 font-medium">${data.food}</p>
-                </div>
-            `;
-
-            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-                if (idx === dayIndex) {
-                    btn.classList.add('bg-sky-600', 'text-white', 'border-sky-500', 'shadow-lg', 'shadow-sky-500/20');
-                    btn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700');
-                } else {
-                    btn.classList.remove('bg-sky-600', 'text-white', 'border-sky-500', 'shadow-lg', 'shadow-sky-500/20');
-                    btn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700');
+            // Save Mapcodes
+            const naviNames = document.querySelectorAll('.e-n-name');
+            const naviCodes = document.querySelectorAll('.e-n-code');
+            data.navi = [];
+            for (let i = 0; i < naviNames.length; i++) {
+                if (naviNames[i].value.trim() !== "") {
+                    data.navi.push({ name: naviNames[i].value, code: naviCodes[i].value });
                 }
+            }
+
+            localStorage.setItem('broTripMeta', JSON.stringify(tripMeta));
+            localStorage.setItem('broTripData', JSON.stringify(tripData));
+        }
+
+        // 5. Render Core Content
+        function renderContent(dayIndex) {
+            currentDayIndex = dayIndex;
+            const data = tripData[dayIndex];
+
+            // --- READ MODE ---
+            if (!isEditMode) {
+                const naviHTML = data.navi.map(n => `
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex justify-between items-center">
+                        <span class="text-sm text-slate-300">${n.name}</span>
+                        <span class="text-sm font-mono text-emerald-400 bg-slate-900 px-2 py-1 rounded shadow-inner">${n.code}</span>
+                    </div>
+                `).join('');
+
+                const activitiesHTML = data.activities.map(a => `
+                    <li class="flex items-start mb-3"><span class="text-sky-400 mr-2 mt-0.5">⚡</span><span class="text-slate-200">${a}</span></li>
+                `).join('');
+
+                contentArea.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b border-slate-700 pb-5 gap-4">
+                        <div>
+                            <span class="text-sky-400 font-bold tracking-wider uppercase text-sm bg-sky-900/30 px-2 py-1 rounded">${data.date}</span>
+                            <h2 class="text-2xl md:text-3xl font-bold mt-2 text-white">${data.title}</h2>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 w-full md:w-auto">
+                            <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-full border border-slate-600 font-medium">🛌 ${data.sleep}</span>
+                        </div>
+                    </div>
+                    <div class="weather-widget rounded-xl p-4 mb-6 border border-sky-500/30 flex flex-col md:flex-row items-center gap-4">
+                        <div class="flex items-center gap-3 md:border-r md:border-sky-500/30 md:pr-4">
+                            <span class="text-4xl">${data.weather.icon}</span>
+                            <div><p class="text-xl font-bold text-white">${data.weather.temp}</p><p class="text-xs text-sky-200">${data.weather.desc}</p></div>
+                        </div>
+                        <div class="w-full md:w-auto"><p class="text-sm text-sky-100"><span class="font-bold text-sky-300">👗 OOTD:</span> ${data.ootd}</p></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
+                            <h3 class="text-lg font-semibold mb-4 text-indigo-300 flex items-center">⚡ Mission / Plan</h3>
+                            <ul class="text-sm">${activitiesHTML}</ul>
+                        </div>
+                        <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
+                            <h3 class="text-lg font-semibold mb-4 text-sky-300 flex items-center">📍 GPS / Code</h3>
+                            <div class="space-y-3">${naviHTML}</div>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-gradient-to-r from-amber-900/20 to-orange-900/20 p-5 rounded-xl border border-amber-700/30">
+                        <h3 class="text-lg font-semibold mb-2 text-amber-400">😋 Target Food</h3>
+                        <p class="text-slate-200 font-medium">${data.food}</p>
+                    </div>
+                `;
+            } 
+            // --- EDIT MODE ---
+            else {
+                const activitiesEdit = data.activities.map((a, i) => `
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" class="e-mission" value="${a}">
+                        <button onclick="removeMission(${i})" class="bg-red-500 hover:bg-red-600 px-3 rounded text-white text-xs">🗑️</button>
+                    </div>
+                `).join('');
+
+                const naviEdit = data.navi.map((n, i) => `
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" class="e-n-name w-1/2" value="${n.name}" placeholder="Place Name">
+                        <input type="text" class="e-n-code w-1/2" value="${n.code}" placeholder="Mapcode/Tel">
+                        <button onclick="removeNavi(${i})" class="bg-red-500 hover:bg-red-600 px-3 rounded text-white text-xs">🗑️</button>
+                    </div>
+                `).join('');
+
+                contentArea.innerHTML = `
+                    <div class="border-2 border-dashed border-sky-500 p-4 rounded-xl bg-slate-800/50">
+                        <h3 class="text-sky-400 font-bold mb-4">🛠️ EDIT MODE ACTIVE (Day ${currentDayIndex + 1})</h3>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div><label class="text-xs text-gray-400">Title</label><input type="text" id="e-title" value="${data.title}"></div>
+                            <div><label class="text-xs text-gray-400">Date</label><input type="text" id="e-date" value="${data.date}"></div>
+                            <div class="col-span-2"><label class="text-xs text-gray-400">Sleep (ที่พัก)</label><input type="text" id="e-sleep" value="${data.sleep}"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 mb-4 bg-slate-900 p-3 rounded">
+                            <div><label class="text-xs text-gray-400">Icon</label><input type="text" id="e-w-icon" value="${data.weather.icon}"></div>
+                            <div><label class="text-xs text-gray-400">Temp</label><input type="text" id="e-w-temp" value="${data.weather.temp}"></div>
+                            <div><label class="text-xs text-gray-400">Desc</label><input type="text" id="e-w-desc" value="${data.weather.desc}"></div>
+                        </div>
+
+                        <div class="mb-4"><label class="text-xs text-gray-400">OOTD</label><input type="text" id="e-ootd" value="${data.ootd}"></div>
+                        <div class="mb-6"><label class="text-xs text-gray-400">Target Food</label><input type="text" id="e-food" value="${data.food}"></div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-900 p-3 rounded border border-slate-700">
+                                <label class="text-sm font-bold text-indigo-300 mb-2 block">Missions</label>
+                                <div id="edit-missions-list">${activitiesEdit}</div>
+                                <button onclick="addMission()" class="mt-2 text-xs bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded w-full">+ Add Mission</button>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded border border-slate-700">
+                                <label class="text-sm font-bold text-sky-300 mb-2 block">GPS / Mapcode</label>
+                                <div id="edit-navi-list">${naviEdit}</div>
+                                <button onclick="addNavi()" class="mt-2 text-xs bg-sky-600 hover:bg-sky-500 px-3 py-1 rounded w-full">+ Add GPS</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Update Tabs UI
+            tabsContainer.innerHTML = '';
+            tripData.forEach((d, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn snap-center whitespace-nowrap px-5 py-2.5 rounded-xl border text-sm font-semibold transition-all ${idx === dayIndex ? 'bg-sky-600 text-white border-sky-500' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}`;
+                btn.innerText = d.day;
+                btn.onclick = () => {
+                    if (isEditMode) saveCurrentView(); // Auto-save before switching tabs
+                    renderContent(idx);
+                };
+                tabsContainer.appendChild(btn);
             });
         }
 
-        tripData.forEach((data, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'tab-btn snap-center whitespace-nowrap px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-sm font-semibold transition-all duration-200 hover:bg-slate-700';
-            btn.innerText = data.day;
-            btn.onclick = () => renderContent(index);
-            tabsContainer.appendChild(btn);
+        // 6. Action Functions for Lists (เพิ่ม/ลบ Bullet)
+        window.addMission = () => { saveCurrentView(); tripData[currentDayIndex].activities.push("New Item"); renderContent(currentDayIndex); }
+        window.removeMission = (idx) => { saveCurrentView(); tripData[currentDayIndex].activities.splice(idx, 1); renderContent(currentDayIndex); }
+        window.addNavi = () => { saveCurrentView(); tripData[currentDayIndex].navi.push({name:"", code:""}); renderContent(currentDayIndex); }
+        window.removeNavi = (idx) => { saveCurrentView(); tripData[currentDayIndex].navi.splice(idx, 1); renderContent(currentDayIndex); }
+
+        // 7. Toggle Edit Mode Button
+        document.getElementById('btn-edit').addEventListener('click', () => {
+            if (isEditMode) {
+                saveCurrentView(); // Save on exit edit mode
+                document.getElementById('btn-edit').innerText = "⚙️";
+                document.getElementById('btn-edit').classList.replace('bg-pink-600', 'bg-blue-600');
+            } else {
+                document.getElementById('btn-edit').innerText = "💾";
+                document.getElementById('btn-edit').classList.replace('bg-blue-600', 'bg-pink-600');
+            }
+            isEditMode = !isEditMode;
+            renderHeader();
+            renderContent(currentDayIndex);
         });
 
+        // 8. Export JSON to Update Hardcode
+        document.getElementById('btn-export').addEventListener('click', () => {
+            saveCurrentView();
+            const exportText = `const defaultTripMeta = ${JSON.stringify(tripMeta, null, 2)};\nconst defaultTripData = ${JSON.stringify(tripData, null, 2)};`;
+            navigator.clipboard.writeText(exportText).then(() => {
+                alert("✅ ก๊อปปี้ข้อมูล Trip Data ชุดใหม่ลง Clipboard แล้ว!\nเอาไปวางทับโค้ดก้อนเดิมในไฟล์ HTML เพื่ออัปเดตแบบถาวรได้เลย");
+            });
+        });
+
+        // Initial Load
+        renderHeader();
         renderContent(0);
     </script>
 </body>
