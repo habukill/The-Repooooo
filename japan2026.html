@@ -538,6 +538,13 @@ const defaultTripData = [
                         </h3>
                         <p class="text-slate-200 font-medium text-lg">${data.food}</p>
                     </div>
+
+                    <div class="fab-container">
+        <button id="btn-force-sync" class="fab-btn bg-red-600 hover:bg-red-500 text-white text-sm font-bold" title="Force Sync from Git">🔄</button>
+        
+        <button id="btn-export" class="fab-btn bg-emerald-500 hover:bg-emerald-400 text-white" title="Export JSON Code">💾</button>
+        <button id="btn-edit" class="fab-btn bg-blue-600 hover:bg-blue-500 text-white" title="Toggle Edit Mode">⚙️</button>
+    </div>
                 `;
             } 
             // --- EDIT MODE ---
@@ -656,6 +663,18 @@ const defaultTripData = [
         // Initialize
         renderHeader();
         renderContent(0);
+
+
+// 9. The Nuclear Button (Force Sync)
+        document.getElementById('btn-force-sync').addEventListener('click', () => {
+            const confirmSync = confirm("🚨 คำเตือน: ระบบจะล้างข้อมูลที่คุณแก้ค้างไว้ในเครื่อง แล้วดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์ (GitHub) มาแทน ยืนยันไหม Bro?");
+            if (confirmSync) {
+                localStorage.removeItem('broTripMeta');
+                localStorage.removeItem('broTripData');
+                // บังคับ Reload เว็บและเคลียร์แคช
+                window.location.href = window.location.pathname + '?timestamp=' + new Date().getTime();
+            }
+        });
     </script>
 
 
