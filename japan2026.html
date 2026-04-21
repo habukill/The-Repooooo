@@ -48,82 +48,273 @@
     </div>
 
     <script>
+        
         // 1. The FULL 9-Days Default Data
-        const defaultTripMeta = { title: "Alpine Sun-Seeker", desc: "30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo" };
-        const defaultTripData = [
+        const defaultTripMeta = {
+    "title": "Alpine Sun-Seeker",
+    "desc": "30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo"
+};
+const defaultTripData = [
+    {
+        "day": "Day 1",
+        "date": "30 May",
+        "title": "NRT ➔ The Sunset V.I.P.",
+        "route": "Narita Airport ➔ Nirasaki",
+        "sleep": "日の沈み、また昇る (Nirasaki)",
+        "weather": {
+            "temp": "18-25°C",
+            "icon": "☀️",
+            "desc": "ฟ้าโปร่ง ลุ้นวิวฟูจิยามเย็น"
+        },
+        "ootd": "เสื้อยืด + กางเกงชิโน่ (เตรียมเสื้อคลุมจิบเบียร์ดู Full Moon)",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Kofu+Basin+night+view+Fuji",
+        "activities": [
+            "รับรถ Toyota Rent NRT ➔ ยิงยาวทางด่วน Chuo Expwy",
+            "Koshu Yumekouji: แวะกินข้าวเที่ยงตรอกเมืองเก่าหน้าสถานี Kofu",
+            "Check-in: เข้าที่พัก Nirasaki ให้ทันดูพระอาทิตย์ตกดินหลัง Minami Alps",
+            "Moonbathing: นอนดูเงาภูเขาอาบแสงจันทร์ (ข้างขึ้น 14 ค่ำ)"
+        ],
+        "navi": [
             {
-                day: "Day 1", date: "30 May", title: "NRT ➔ The Sunset V.I.P.", route: "Narita Airport ➔ Nirasaki", sleep: "日の沈み、また昇る (Nirasaki)",
-                weather: { temp: "18-25°C", icon: "☀️", desc: "ฟ้าโปร่ง ลุ้นวิวฟูจิยามเย็น" }, ootd: "เสื้อยืด + กางเกงชิโน่ (เตรียมเสื้อคลุมจิบเบียร์ดู Full Moon)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Kofu+Basin+night+view+Fuji",
-                activities: ["รับรถ Toyota Rent NRT ➔ ยิงยาวทางด่วน Chuo Expwy", "Koshu Yumekouji: แวะกินข้าวเที่ยงตรอกเมืองเก่าหน้าสถานี Kofu", "Check-in: เข้าที่พัก Nirasaki ให้ทันดูพระอาทิตย์ตกดินหลัง Minami Alps", "Moonbathing: นอนดูเงาภูเขาอาบแสงจันทร์ (ข้างขึ้น 14 ค่ำ)"],
-                navi: [{ name: "Toyota NRT T1", code: "0476-32-1020" }, { name: "Nirasaki Airbnb", code: "0551-22-1111 (Nirasaki City)" }],
-                food: "🥢 Koshu Houtou (เส้นแบนต้มฟักทอง) & ไวน์ยามานาชิ", isArtDay: false
+                "name": "Toyota NRT T1",
+                "code": "0476-32-1020"
             },
             {
-                day: "Day 2", date: "31 May", title: "Agile Art Exploration", route: "Nirasaki ➔ Hokuto ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "15-23°C", icon: "🎨", desc: "Check weather first!" }, ootd: "เสื้อเชิ้ตโอเวอร์ไซส์ ถ่ายรูปแนว Architecture",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Kiyoharu+Art+Colony+Tadao+Ando",
-                activities: ["Agile Choice: แดดดีไป Kiyosato Terrace / เมฆเยอะไป Shosenkyo", "Kiyoharu Art Colony: เสพงานสถาปัตยกรรม Tadao Ando กลางป่าสน", "Mishakaike Pond: บึงน้ำมรกตกระจกสะท้อนป่า (ก่อนเข้า Matsumoto)", "Night: เดินเล่นรอบปราสาทมัตสึโมโต้"],
-                navi: [{ name: "Kiyoharu Art Colony", code: "161 582 866*60" }, { name: "Mishakaike Pond", code: "218 695 643*22" }],
-                food: "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขา) แกล้มเบียร์ท้องถิ่น", isArtDay: true
-            },
-            {
-                day: "Day 3", date: "1 Jun", title: "Deep Forest Escape", route: "Matsumoto ➔ Kamikochi", sleep: "Hotel @ Kamikochi",
-                weather: { temp: "8-16°C", icon: "🌲", desc: "หนาวเย็น สดชื่นเลเวล 10" }, ootd: "Layering: เสื้อแขนยาว + เสื้อกั๊ก + แจ็คเก็ตกันลม",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Kamikochi+Kappa+Bridge+summer",
-                activities: ["จอดรถ Sawando ➔ เข้า Kamikochi", "เดินป่าเลียบแม่น้ำ Azusa สูดอากาศบริสุทธิ์", "นอนนิ่งๆ ฟังเสียงน้ำไหลข้างสะพานกัปปะ"],
-                navi: [{ name: "Sawando Parking", code: "406 312 878*85" }],
-                food: "🥧 Apple Pie Trois Cinq & อาหารโรงแรม", isArtDay: false
-            },
-            {
-                day: "Day 4", date: "2 Jun", title: "The Dot Lady & City Walk", route: "Kamikochi ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "12-22°C", icon: "🌤️", desc: "อากาศเคลียร์ เดินสบาย" }, ootd: "ชุดพร้อมเดิน Gallery (เสื้อลายจุด Yayoi ต้องมา)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Matsumoto+City+Museum+of+Art+Yayoi+Kusama",
-                activities: ["กลับมาเอารถที่ Sawando ➔ เข้าเมือง Matsumoto", "Matsumoto City Museum of Art (เสพงาน Yayoi Kusama)", "เดินเล่นถนน Nawate/Nakamachi หาซื้อของคราฟต์"],
-                navi: [{ name: "Matsumoto Art Museum", code: "75 861 635*34" }],
-                food: "🍜 Shinshu Soba (โซบะเส้นสดทำมือ)", isArtDay: true
-            },
-            {
-                day: "Day 5", date: "3 Jun", title: "Snow Wall Masterpiece", route: "Matsumoto ➔ Ogizawa ➔ Murodo ➔ Hakuba", sleep: "Hakuba",
-                weather: { temp: "2-10°C", icon: "❄️", desc: "หนาวจัด แดดสะท้อนหิมะแรง" }, ootd: "เสื้อกันลมหนา + แว่นกันแดด (Must Item!)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Yuki-no-Otani+Snow+Wall+June",
-                activities: ["Ogizawa ➔ Murodo: เดินชมกำแพงหิมะยักษ์", "ถ่ายรูปจุดสูงสุดของทริป ➔ ขับต่อไป Hakuba", "Check-in บ้านพักสไตล์ Cabin @ Hakuba"],
-                navi: [{ name: "Ogizawa Station", code: "695 125 101*55" }],
-                food: "🍛 แกงกะหรี่เขื่อน Kurobe & 🥩 เนื้อย่าง Shinshu A5", isArtDay: false
-            },
-            {
-                day: "Day 6", date: "4 Jun", title: "Mountain Harbor ➔ Tokyo", route: "Hakuba ➔ Tokyo (Tabata)", sleep: "Hotel @ Tabata",
-                weather: { temp: "15-26°C", icon: "🏙️", desc: "กลับเข้าเมือง อากาศอุ่น" }, ootd: "ชุดขับรถสบายๆ สไตล์ City Boy",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Hakuba+Mountain+Harbor+Summer",
-                activities: ["Hakuba Mountain Harbor: จิบกาแฟดูวิว Alps 3 ยอด", "ยิงยาวเข้าโตเกียว ➔ คืนรถ @ Nishi-Nippori", "Check-in Tabata Basecamp: แหล่งรวมของกินราคาถูก"],
-                navi: [{ name: "Hakuba Harbor", code: "0261-72-3150" }, { name: "Toyota N-Nippori", code: "03-3823-0100" }],
-                food: "☕ City Bakery & 🍢 ยากิโทริโลคอลแถว Tabata", isArtDay: false
-            },
-            {
-                day: "Day 7", date: "5 Jun", title: "Cute Overload (Chiikawa Land)", route: "Tabata ➔ Tokyo Station ➔ Harajuku", sleep: "Hotel @ Tabata",
-                weather: { temp: "18-26°C", icon: "💖", desc: "ระวังฝนปรอยโตเกียว" }, ootd: "ชุดเดินเมืองเน้นคล่องตัว พร้อมแบกถุงช้อปปิ้ง",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo+Station+Character+Street",
-                activities: ["Chiikawa Land: เช้าไปลุย Tokyo Character Street (ต้องจองคิว!)", "Harajuku: เดินชิล Takeshita Street & Meiji Jingu", "City Chill: หาคาเฟ่เก๋ๆ นั่งเช็ค Backlog งานแบบหล่อๆ"],
-                navi: [{ name: "Tokyo Station", code: "Character Street B1" }],
-                food: "🥞 แพนเค้กนุ่มฟู & 🍛 ข้าวแกงกะหรี่หอมๆ", isArtDay: false
-            },
-            {
-                day: "Day 8", date: "6 Jun", title: "Tokyo Aesthetic Chill", route: "Tabata ➔ Yanaka ➔ Shibuya", sleep: "Hotel @ Tabata",
-                weather: { temp: "19-27°C", icon: "🎨", desc: "เดินชิลวันสุดท้าย" }, ootd: "Vintage Look หรือเสื้อผ้าแนว Street",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Yanaka+Ginza+Tokyo+Sunset",
-                activities: ["Yanaka Ginza: เดินเล่นย่านแมวเหมียวสุดคลาสสิกใกล้ Tabata", "SCAI The Bathhouse: ชมงานศิลปะในโรงอาบน้ำเก่า", "Shibuya Sky: ดูวิวเมืองโตเกียวทิ้งท้ายทริป", "Final Packing: ยัดของลงกระเป๋าเตรียมกลับบ้าน"],
-                navi: [{ name: "Yanaka Ginza", code: "เดินจากสถานี Nippori" }],
-                food: "🍱 ซูชิสายพาน & ปาร์ตี้อาหารซูเปอร์ป้ายเหลือง", isArtDay: true
-            },
-            {
-                day: "Day 9", date: "7 Jun", title: "Final Boarding", route: "Tabata ➔ Narita Airport", sleep: "BKK",
-                weather: { temp: "20-27°C", icon: "✈️", desc: "Safe Flight" }, ootd: "เสื้อผ้าหลวมสบายที่สุดสำหรับนั่งเครื่อง 6 ชม.",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Narita+Airport+Terminal+1+Zipair",
-                activities: ["ตื่นสายๆ เช็คเอาท์ ➔ Skyliner จาก Nippori", "NRT Terminal 1: Shopping Duty Free ขนมสุดท้าย", "15:00 ZIPAIR: บินกลับกรุงเทพฯ"],
-                navi: [{ name: "Skyliner", code: "Nippori Station" }],
-                food: "🍱 Ekiben (ข้าวกล่องรถไฟ) มื้อสุดท้าย", isArtDay: false
+                "name": "Nirasaki Airbnb",
+                "code": "0551-22-1111 (Nirasaki City)"
             }
-        ];
+        ],
+        "food": "🥢 Koshu Houtou (เส้นแบนต้มฟักทอง) & ไวน์ยามานาชิ",
+        "isArtDay": false
+    },
+    {
+        "day": "Day 2",
+        "date": "31 May",
+        "title": "Agile Art Exploration",
+        "route": "Nirasaki ➔ Hokuto ➔ Matsumoto",
+        "sleep": "Airbnb @ Matsumoto",
+        "weather": {
+            "temp": "15-23°C",
+            "icon": "🎨",
+            "desc": "Check weather first!"
+        },
+        "ootd": "เสื้อเชิ้ตโอเวอร์ไซส์ ถ่ายรูปแนว Architecture",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Kiyoharu+Art+Colony+Tadao+Ando",
+        "activities": [
+            "Agile Choice: แดดดีไป Kiyosato Terrace / เมฆเยอะไป Shosenkyo",
+            "Kiyoharu Art Colony: เสพงานสถาปัตยกรรม Tadao Ando กลางป่าสน",
+            "Mishakaike Pond: บึงน้ำมรกตกระจกสะท้อนป่า (ก่อนเข้า Matsumoto)",
+            "Night: เดินเล่นรอบปราสาทมัตสึโมโต้"
+        ],
+        "navi": [
+            {
+                "name": "Kiyoharu Art Colony",
+                "code": "161 582 866*60"
+            },
+            {
+                "name": "Mishakaike Pond",
+                "code": "218 695 643*22"
+            }
+        ],
+        "food": "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขา) แกล้มเบียร์ท้องถิ่น",
+        "isArtDay": true
+    },
+    {
+        "day": "Day 3",
+        "date": "1 Jun",
+        "title": "Deep Forest Escape",
+        "route": "Matsumoto ➔ Kamikochi",
+        "sleep": "Hotel @ Kamikochi",
+        "weather": {
+            "temp": "8-16°C",
+            "icon": "🌲",
+            "desc": "หนาวเย็น สดชื่นเลเวล 10"
+        },
+        "ootd": "Layering: เสื้อแขนยาว + เสื้อกั๊ก + แจ็คเก็ตกันลม + หมวกกันแดดหน่อย",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Kamikochi+Kappa+Bridge+summer",
+        "activities": [
+            "จอดรถ Sawando ➔ เข้า Kamikochi",
+            "เดินป่าเลียบแม่น้ำ Azusa สูดอากาศบริสุทธิ์",
+            "นอนนิ่งๆ ฟังเสียงน้ำไหลข้างสะพานกัปปะ",
+            "กินข้าวเย็นที่พักเลย"
+        ],
+        "navi": [
+            {
+                "name": "Sawando Parking",
+                "code": "406 312 878*85"
+            }
+        ],
+        "food": "🥧 Apple Pie Trois Cinq & อาหารโรงแรม",
+        "isArtDay": false
+    },
+    {
+        "day": "Day 4",
+        "date": "2 Jun",
+        "title": "The Dot Lady & City Walk",
+        "route": "Kamikochi ➔ Matsumoto",
+        "sleep": "Airbnb @ Matsumoto",
+        "weather": {
+            "temp": "12-22°C",
+            "icon": "🌤️",
+            "desc": "อากาศเคลียร์ เดินสบาย"
+        },
+        "ootd": "ชุดพร้อมเดิน Gallery (เสื้อลายจุด Yayoi ต้องมา)",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Matsumoto+City+Museum+of+Art+Yayoi+Kusama",
+        "activities": [
+            "กลับมาเอารถที่ Sawando ➔ เข้าเมือง Matsumoto",
+            "Matsumoto City Museum of Art (เสพงาน Yayoi Kusama)",
+            "เดินเล่นถนน Nawate/Nakamachi หาซื้อของคราฟต์"
+        ],
+        "navi": [
+            {
+                "name": "Matsumoto Art Museum",
+                "code": "75 861 635*34"
+            }
+        ],
+        "food": "🍜 Shinshu Soba (โซบะเส้นสดทำมือ)",
+        "isArtDay": true
+    },
+    {
+        "day": "Day 5",
+        "date": "3 Jun",
+        "title": "Snow Wall Masterpiece",
+        "route": "Matsumoto ➔ Ogizawa ➔ Murodo ➔ Hakuba",
+        "sleep": "Hakuba",
+        "weather": {
+            "temp": "2-10°C",
+            "icon": "❄️",
+            "desc": "หนาวจัด แดดสะท้อนหิมะแรง"
+        },
+        "ootd": "เสื้อกันลมหนา + แว่นกันแดด (Must Item!)",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Yuki-no-Otani+Snow+Wall+June",
+        "activities": [
+            "Ogizawa ➔ Murodo: เดินชมกำแพงหิมะยักษ์",
+            "ถ่ายรูปจุดสูงสุดของทริป ➔ ขับต่อไป Hakuba",
+            "Check-in บ้านพักสไตล์ Cabin @ Hakuba"
+        ],
+        "navi": [
+            {
+                "name": "Ogizawa Station",
+                "code": "695 125 101*55"
+            }
+        ],
+        "food": "🍛 แกงกะหรี่เขื่อน Kurobe & 🥩 เนื้อย่าง Shinshu A5",
+        "isArtDay": false
+    },
+    {
+        "day": "Day 6",
+        "date": "4 Jun",
+        "title": "Mountain Harbor ➔ Tokyo",
+        "route": "Hakuba ➔ Tokyo (Tabata)",
+        "sleep": "Hotel @ Tabata",
+        "weather": {
+            "temp": "15-26°C",
+            "icon": "🏙️",
+            "desc": "กลับเข้าเมือง อากาศอุ่น"
+        },
+        "ootd": "ชุดขับรถสบายๆ สไตล์ City Boy",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Hakuba+Mountain+Harbor+Summer",
+        "activities": [
+            "Hakuba Mountain Harbor: จิบกาแฟดูวิว Alps 3 ยอด",
+            "ยิงยาวเข้าโตเกียว ➔ คืนรถ @ Nishi-Nippori",
+            "Check-in Tabata Basecamp: แหล่งรวมของกินราคาถูก"
+        ],
+        "navi": [
+            {
+                "name": "Hakuba Harbor",
+                "code": "0261-72-3150"
+            },
+            {
+                "name": "Toyota N-Nippori",
+                "code": "03-3823-0100"
+            }
+        ],
+        "food": "☕ City Bakery & 🍢 ยากิโทริโลคอลแถว Tabata",
+        "isArtDay": false
+    },
+    {
+        "day": "Day 7",
+        "date": "5 Jun",
+        "title": "Cute Overload (Chiikawa Land)",
+        "route": "Tabata ➔ Tokyo Station ➔ Harajuku",
+        "sleep": "Hotel @ Tabata",
+        "weather": {
+            "temp": "18-26°C",
+            "icon": "💖",
+            "desc": "ระวังฝนปรอยโตเกียว"
+        },
+        "ootd": "ชุดเดินเมืองเน้นคล่องตัว พร้อมแบกถุงช้อปปิ้ง",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo+Station+Character+Street",
+        "activities": [
+            "Chiikawa Land: เช้าไปลุย Tokyo Character Street (ต้องจองคิว!)",
+            "Harajuku: เดินชิล Takeshita Street & Meiji Jingu",
+            "City Chill: หาคาเฟ่เก๋ๆ นั่งเช็ค Backlog งานแบบหล่อๆ"
+        ],
+        "navi": [
+            {
+                "name": "Tokyo Station",
+                "code": "Character Street B1"
+            }
+        ],
+        "food": "🥞 แพนเค้กนุ่มฟู & 🍛 ข้าวแกงกะหรี่หอมๆ",
+        "isArtDay": false
+    },
+    {
+        "day": "Day 8",
+        "date": "6 Jun",
+        "title": "Tokyo Aesthetic Chill",
+        "route": "Tabata ➔ Yanaka ➔ Shibuya",
+        "sleep": "Hotel @ Tabata",
+        "weather": {
+            "temp": "19-27°C",
+            "icon": "🎨",
+            "desc": "เดินชิลวันสุดท้าย"
+        },
+        "ootd": "Vintage Look หรือเสื้อผ้าแนว Street",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Yanaka+Ginza+Tokyo+Sunset",
+        "activities": [
+            "Yanaka Ginza: เดินเล่นย่านแมวเหมียวสุดคลาสสิกใกล้ Tabata",
+            "SCAI The Bathhouse: ชมงานศิลปะในโรงอาบน้ำเก่า",
+            "Shibuya Sky: ดูวิวเมืองโตเกียวทิ้งท้ายทริป",
+            "Final Packing: ยัดของลงกระเป๋าเตรียมกลับบ้าน"
+        ],
+        "navi": [
+            {
+                "name": "Yanaka Ginza",
+                "code": "เดินจากสถานี Nippori"
+            }
+        ],
+        "food": "🍱 ซูชิสายพาน & ปาร์ตี้อาหารซูเปอร์ป้ายเหลือง",
+        "isArtDay": true
+    },
+    {
+        "day": "Day 9",
+        "date": "7 Jun",
+        "title": "Final Boarding",
+        "route": "Tabata ➔ Narita Airport",
+        "sleep": "BKK",
+        "weather": {
+            "temp": "20-27°C",
+            "icon": "✈️",
+            "desc": "Safe Flight"
+        },
+        "ootd": "เสื้อผ้าหลวมสบายที่สุดสำหรับนั่งเครื่อง 6 ชม.",
+        "visualLink": "https://www.google.com/search?tbm=isch&q=Narita+Airport+Terminal+1+Zipair",
+        "activities": [
+            "ตื่นสายๆ เช็คเอาท์ ➔ Skyliner จาก Nippori",
+            "NRT Terminal 1: Shopping Duty Free ขนมสุดท้าย",
+            "15:00 ZIPAIR: บินกลับกรุงเทพฯ"
+        ],
+        "navi": [
+            {
+                "name": "Skyliner",
+                "code": "Nippori Station"
+            }
+        ],
+        "food": "🍱 Ekiben (ข้าวกล่องรถไฟ) มื้อสุดท้าย",
+        "isArtDay": false
+    }
+];
 
         // 2. State Management (โหลดจาก Local ถ้ามี ไม่งั้นใช้ Default)
         let tripMeta = JSON.parse(localStorage.getItem('broTripMeta')) || defaultTripMeta;
