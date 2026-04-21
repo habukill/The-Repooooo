@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bro's Epic Japan Road Trip 2026</title>
+    <title>Bro's Alpine Sun-Seeker 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,175 +11,168 @@
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .tab-btn.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
         .gradient-text { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
-        .hover-scale { transition: transform 0.2s; }
-        .hover-scale:hover { transform: scale(1.02); }
         .weather-widget { background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2)); }
+        .art-tag { background-color: #ec4899; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: inline-block; }
     </style>
 </head>
 <body class="antialiased p-4 md:p-8">
 
     <header class="max-w-4xl mx-auto mb-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase tracking-wide"><span class="gradient-text">Japan</span> 2026</h1>
-        <p class="text-gray-400 text-lg">30 May - 7 Jun | 3 Pax | Kanto ➔ Chubu</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase tracking-wide"><span class="gradient-text">Alpine Sun-Seeker</span> 2026</h1>
+        <p class="text-gray-400 text-lg">30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo</p>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div class="glass-panel p-4 rounded-xl text-center hover-scale">
+            <div class="glass-panel p-4 rounded-xl text-center">
                 <span class="block text-2xl font-bold text-blue-400">9</span>
                 <span class="text-xs text-gray-400 uppercase">Days</span>
             </div>
-            <div class="glass-panel p-4 rounded-xl text-center hover-scale">
-                <span class="block text-2xl font-bold text-green-400">1,000+</span>
-                <span class="text-xs text-gray-400 uppercase">KM Driven</span>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-green-400">Sunny</span>
+                <span class="text-xs text-gray-400 uppercase">Focus</span>
             </div>
-            <div class="glass-panel p-4 rounded-xl text-center hover-scale">
-                <span class="block text-2xl font-bold text-purple-400">Corolla</span>
-                <span class="text-xs text-gray-400 uppercase">Wagon Hybrid</span>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-pink-400">Art</span>
+                <span class="text-xs text-gray-400 uppercase">Masterpiece</span>
             </div>
-            <div class="glass-panel p-4 rounded-xl text-center hover-scale">
-                <span class="block text-2xl font-bold text-red-400">Tabata</span>
+            <div class="glass-panel p-4 rounded-xl text-center">
+                <span class="block text-2xl font-bold text-red-400">Nirasaki</span>
                 <span class="text-xs text-gray-400 uppercase">Basecamp</span>
             </div>
         </div>
     </header>
 
     <main class="max-w-4xl mx-auto">
-        <div class="flex overflow-x-auto space-x-2 pb-4 mb-4 snap-x custom-scrollbar" id="tabs">
-            </div>
-
-        <div id="content-area" class="glass-panel rounded-2xl p-6 shadow-2xl transition-all duration-300">
-            </div>
+        <div class="flex overflow-x-auto space-x-2 pb-4 mb-4 snap-x" id="tabs"></div>
+        <div id="content-area" class="glass-panel rounded-2xl p-6 shadow-2xl transition-all duration-300"></div>
     </main>
 
     <script>
         const tripData = [
             {
-                day: "Day 1", date: "30 May", title: "The Beginning (NRT ➔ Nikko)",
-                route: "Narita Airport ➔ Nikko", sleep: "Nikko",
-                weather: { temp: "18-25°C", icon: "⛅", desc: "เย็นสบาย อาจมีละอองฝน" },
-                ootd: "เสื้อยืด + กางเกงขายาว พกแจ็คเก็ตบางๆ เผื่อลมแรง",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Nikko+Toshogu+Shrine+Shinkyo+Bridge+summer",
+                day: "Day 1", date: "30 May", title: "NRT ➔ The Sunset V.I.P.",
+                route: "Narita Airport ➔ Nirasaki", sleep: "日の沈み、また昇る (Nirasaki)",
+                weather: { temp: "18-25°C", icon: "☀️", desc: "ฟ้าโปร่ง ลุ้นวิวฟูจิยามเย็น" },
+                ootd: "เสื้อยืด + กางเกงชิโน่ (เตรียมเสื้อคลุมจิบเบียร์ดู Full Moon คืนนี้)",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Kofu+Basin+night+view+Fuji",
                 activities: [
-                    "รับรถ Toyota Rent a Car (Terminal 1 North Wing)",
-                    "ยิงยาวขึ้นทางด่วนเข้า Nikko (แวะพัก Michi-no-Eki กลางทาง)",
-                    "เดินเล่นศาลเจ้า Toshogu หรือโซนสะพานแดง Shinkyo"
+                    "รับรถ Toyota Rent NRT ➔ ยิงยาวทางด่วน Chuo Expwy",
+                    "Koshu Yumekouji: แวะกินข้าวเที่ยงตรอกเมืองเก่าหน้าสถานี Kofu",
+                    "Check-in: เข้าที่พัก Nirasaki ให้ทันดูพระอาทิตย์ตกดินหลัง Minami Alps",
+                    "Moonbathing: คืนนี้ข้างขึ้น 14 ค่ำ นอนดูเงาภูเขาอาบแสงจันทร์"
                 ],
-                navi: [{ name: "Toyota Rent a Car NRT", code: "Phone: 0476-32-1020" }, { name: "Toshogu Shrine", code: "Mapcode: 267 122 361*33" }],
-                food: "🥢 Yuba Soba (โซบะฟองเต้าหู้) & Yuba Croquette"
+                navi: [{ name: "Toyota NRT T1", code: "0476-32-1020" }, { name: "Nirasaki Airbnb", code: "0551-22-1111 (Nirasaki City)" }],
+                food: "🥢 Koshu Houtou (เส้นแบนต้มฟักทอง) & ไวน์ยามานาชิ",
+                isArtDay: false
             },
             {
-                day: "Day 2", date: "31 May", title: "Mountain Cruising (Nikko ➔ Matsumoto)",
-                route: "Nikko ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "15-24°C", icon: "🌤️", desc: "อากาศดี ลมเย็น" },
-                ootd: "เสื้อยืด + คาร์ดิแกน หรือเสื้อเชิ้ตคลุมเบาๆ ถ่ายรูปกับปราสาท",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Matsumoto+Castle+Japan",
+                day: "Day 2", date: "31 May", title: "Agile Art Exploration",
+                route: "Nirasaki ➔ Hokuto ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
+                weather: { temp: "15-23°C", icon: "🎨", desc: "Check weather first!" },
+                ootd: "เสื้อเชิ้ตโอเวอร์ไซส์ ถ่ายรูปแนว Architecture",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Kiyoharu+Art+Colony+Tadao+Ando",
                 activities: [
-                    "ขับรถข้ามเขา ทะลุ Japan Romantic Road",
-                    "ถึง Matsumoto ช่วงบ่าย/เย็น Check-in Airbnb",
-                    "เดินเล่นรอบปราสาท Matsumoto (มัตสึโมโต้) ตอนเย็น"
+                    "Agile Choice: แดดดีไป Kiyosato Terrace / เมฆเยอะไป Shosenkyo",
+                    "Kiyoharu Art Colony: เสพงานสถาปัตยกรรม Tadao Ando กลางป่าสน",
+                    "Mishakaike Pond: บึงน้ำมรกตกระจกสะท้อนป่า (ก่อนเข้า Matsumoto)",
+                    "Night: เดินเล่นรอบปราสาทมัตสึโมโต้"
                 ],
-                navi: [{ name: "Matsumoto Castle", code: "Mapcode: 75 861 462*26" }, { name: "Sanzoku-yaki Zone", code: "Phone: 0263-32-2902" }],
-                food: "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขาชิ้นยักษ์) แกล้มเบียร์"
+                navi: [{ name: "Kiyoharu Art Colony", code: "Mapcode: 161 582 866*60" }, { name: "Mishakaike Pond", code: "218 695 643*22" }],
+                food: "🍗 Sanzoku-yaki (ไก่ทอดโจรภูเขา) แกล้มเบียร์ท้องถิ่น",
+                isArtDay: true
             },
             {
-                day: "Day 3", date: "1 Jun", title: "Into the Alps (Kamikochi)",
-                route: "Matsumoto ➔ Sawando ➔ Kamikochi", sleep: "Hotel @ Kamikochi",
-                weather: { temp: "8-16°C", icon: "🌲", desc: "หนาวเย็น ดึกๆ อุณหภูมิเลขตัวเดียว" },
-                ootd: "เสื้อยืด + สเวตเตอร์ + แจ็คเก็ตกันลม (รองเท้าผ้าใบเดินสบายๆ)",
+                day: "Day 3", date: "1 Jun", title: "Deep Forest Escape",
+                route: "Matsumoto ➔ Kamikochi", sleep: "Hotel @ Kamikochi",
+                weather: { temp: "8-16°C", icon: "🌲", desc: "หนาวเย็น สดชื่นเลเวล 10" },
+                ootd: "Layering: เสื้อแขนยาว + เสื้อกั๊ก + แจ็คเก็ตกันลม",
                 visualLink: "https://www.google.com/search?tbm=isch&q=Kamikochi+Kappa+Bridge+summer",
-                activities: [
-                    "ทิ้งกระเป๋าใหญ่ไว้ Airbnb จัดแค่เป้เล็ก",
-                    "เอารถไปจอดลาน Sawando Parking",
-                    "นั่ง Taxi เหมา หรือ Bus เข้าอุทยาน Kamikochi",
-                    "เดินป่าโซนสะพาน Kappa-bashi ➔ Taisho Pond"
-                ],
-                navi: [{ name: "Sawando Parking (จอดรถ)", code: "Mapcode: 406 312 878*85" }],
-                food: "🥧 Apple Pie อบใหม่ที่ Trois Cinq & อาหารโรงแรม"
+                activities: ["จอดรถ Sawando ➔ เข้า Kamikochi", "เดินป่าเลียบแม่น้ำ Azusa สูดอากาศบริสุทธิ์", "นอนนิ่งๆ ฟังเสียงน้ำไหลข้างสะพานกัปปะ"],
+                navi: [{ name: "Sawando Parking", code: "406 312 878*85" }],
+                food: "🥧 Apple Pie Trois Cinq & อาหารโรงแรม",
+                isArtDay: false
             },
             {
-                day: "Day 4", date: "2 Jun", title: "Alps Retreat (Kamikochi ➔ Matsumoto)",
+                day: "Day 4", date: "2 Jun", title: "The Dot Lady & City Walk",
                 route: "Kamikochi ➔ Matsumoto", sleep: "Airbnb @ Matsumoto",
-                weather: { temp: "10-22°C", icon: "🌤️", desc: "เช้าหนาว บ่ายอุ่นขึ้น" },
-                ootd: "สไตล์ Onion (ใส่ซ้อนกัน) สายๆ เริ่มร้อนค่อยถอดแจ็คเก็ตเก็บ",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Nawate+Street+Matsumoto",
+                weather: { temp: "12-22°C", icon: "🌤️", desc: "อากาศเคลียร์ เดินสบาย" },
+                ootd: "ชุดพร้อมเดิน Gallery (เสื้อลายจุด Yayoi ต้องมา)",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Matsumoto+City+Museum+of+Art+Yayoi+Kusama",
                 activities: [
-                    "ตื่นเช้าสูดอากาศ ถ่ายรูปสะพาน Kappa-bashi แบบไร้ผู้คน",
-                    "สายๆ นั่งบัส/แท็กซี่ กลับมาเอารถที่ Sawando",
-                    "ขับกลับเข้าเมือง Matsumoto ช้อปปิ้งถนนกบ (Nawate Street)"
+                    "กลับมาเอารถที่ Sawando ➔ เข้าเมือง Matsumoto",
+                    "Matsumoto City Museum of Art (เสพงาน Yayoi Kusama)",
+                    "เดินเล่นถนน Nawate/Nakamachi หาซื้อของคราฟต์"
                 ],
-                navi: [{ name: "Matsumoto City Center", code: "Mapcode: 75 861 345*11" }],
-                food: "🍜 Shinshu Soba (โซบะเส้นสดทำมือ)"
+                navi: [{ name: "Matsumoto Art Museum", code: "75 861 635*34" }],
+                food: "🍜 Shinshu Soba (โซบะเส้นสดทำมือ)",
+                isArtDay: true
             },
             {
-                day: "Day 5", date: "3 Jun", title: "The Snow Wall (Tateyama ➔ Hakuba)",
+                day: "Day 5", date: "3 Jun", title: "Snow Wall Masterpiece",
                 route: "Matsumoto ➔ Ogizawa ➔ Murodo ➔ Hakuba", sleep: "Hakuba",
-                weather: { temp: "2-10°C", icon: "❄️", desc: "หนาวมาก ลมแรง แสงสะท้อนหิมะแสบตา" },
-                ootd: "🚨 เสื้อกันลมหนาๆ + แว่นกันแดด + รองเท้ากันน้ำ (สำคัญมาก หิมะละลายแฉะ)",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Yuki-no-Otani+Snow+Wall+Japan+June",
-                activities: [
-                    "08:00 ขับรถไป Ogizawa จอดรถที่ลานแบบเสียตังค์",
-                    "10:00 นั่งบัสไฟฟ้าขึ้นเขื่อน Kurobe ทะลุไป Murodo",
-                    "ถ่ายรูป Yuki-no-Otani (กำแพงหิมะ)",
-                    "15:00 นั่งกลับลงมาเอารถ ขับไป Hakuba"
-                ],
-                navi: [{ name: "Ogizawa Station (จอดรถ)", code: "Mapcode: 695 125 101*55" }, { name: "Kurobe Dam (จุดแวะ)", code: "Use Web Ticket QR Code" }],
-                food: "🍛 Kurobe Dam Curry & 🥩 Shinshu Beef Yakiniku (Hakuba)"
+                weather: { temp: "2-10°C", icon: "❄️", desc: "หนาวจัด แดดสะท้อนหิมะแรง" },
+                ootd: "เสื้อกันลมหนา + แว่นกันแดด (Must Item!)",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Yuki-no-Otani+Snow+Wall+June",
+                activities: ["Ogizawa ➔ Murodo: เดินชมกำแพงหิมะยักษ์", "ถ่ายรูปจุดสูงสุดของทริป ➔ ขับต่อไป Hakuba", "Check-in บ้านพักสไตล์ Cabin @ Hakuba"],
+                navi: [{ name: "Ogizawa Station", code: "695 125 101*55" }],
+                food: "🍛 แกงกะหรี่เขื่อน Kurobe & 🥩 เนื้อย่าง Shinshu A5",
+                isArtDay: false
             },
             {
-                day: "Day 6", date: "4 Jun", title: "The Long Drive (Hakuba ➔ Tokyo)",
-                route: "Hakuba ➔ Tokyo (Nishi-Nippori)", sleep: "Hotel @ Tabata",
-                weather: { temp: "15-26°C", icon: "🏙️", desc: "เข้าเมืองหลวง อากาศอุ่น/ร้อน" },
-                ootd: "กลับมาโหมดชิล เสื้อยืด กางเกงยีนส์/ชิโน่ เตรียมรับรถติด",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Hakuba+Mountain+Harbor",
+                day: "Day 6", date: "4 Jun", title: "Mountain Harbor ➔ Tokyo",
+                route: "Hakuba ➔ Tokyo (Tabata)", sleep: "Hotel @ Tabata",
+                weather: { temp: "15-26°C", icon: "🏙️", desc: "กลับเข้าเมือง อากาศอุ่น" },
+                ootd: "ชุดขับรถสบายๆ สไตล์ City Boy",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Hakuba+Mountain+Harbor+Summer",
                 activities: [
-                    "เช้าขึ้นกระเช้าไป Hakuba Mountain Harbor ดูวิวพาโนรามา",
-                    "13:00 ยิงยาวเข้าโตเกียว (ล้อต้องหมุน!)",
-                    "Drop เพื่อนและกระเป๋าที่โรงแรม Tabata",
-                    "ขับไปคืนรถที่ Nishi-Nippori ก่อน 20:00 น."
+                    "Hakuba Mountain Harbor: จิบกาแฟดูวิว Alps 3 ยอด",
+                    "ยิงยาวเข้าโตเกียว ➔ คืนรถ @ Nishi-Nippori",
+                    "Check-in Tabata Basecamp: แหล่งรวมของกินราคาถูก"
                 ],
-                navi: [{ name: "Hakuba Mountain Harbor", code: "Phone: 0261-72-3150" }, { name: "Toyota Rent a Car (N-Nippori)", code: "Phone: 03-3823-0100" }],
-                food: "🥐 กาแฟ City Bakery (Hakuba) & ของเสียบไม้แถว Tabata"
+                navi: [{ name: "Hakuba Harbor", code: "0261-72-3150" }, { name: "Toyota N-Nippori", code: "03-3823-0100" }],
+                food: "☕ City Bakery & 🍢 ยากิโทริโลคอลแถว Tabata",
+                isArtDay: false
             },
             {
-                day: "Day 7", date: "5 Jun", title: "The Magic Kingdom (Disney)",
-                route: "Tabata ➔ Maihama (Disneyland)", sleep: "Hotel @ Tabata",
-                weather: { temp: "18-26°C", icon: "☔", desc: "โอกาสเจอฝนสูง พกร่ม/เสื้อกันฝน" },
-                ootd: "เสื้อยืด + รองเท้าที่เปียกได้ (หรือเดินสบายสุดๆ) + เสื้อกันฝนใสๆ เผื่อลุย",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Tokyo+Disneyland+Castle+parade",
+                day: "Day 7", date: "5 Jun", title: "Cute Overload (Chiikawa Land)",
+                route: "Tabata ➔ Tokyo Station ➔ Harajuku", sleep: "Hotel @ Tabata",
+                weather: { temp: "18-26°C", icon: "💖", desc: "ระวังฝนปรอยโตเกียว" },
+                ootd: "ชุดเดินเมืองเน้นคล่องตัว พร้อมแบกถุงช้อปปิ้ง",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo+Station+Character+Street",
                 activities: [
-                    "นั่งรถไฟไป Tokyo Station ต่อสาย Keiyo Line ลง Maihama",
-                    "ลุย Disneyland แบบเต็มสตรีม (กด DPA รัวๆ)",
-                    "ดูพาเหรดและพลุปิดท้าย"
+                    "Chiikawa Land: เช้าไปลุย Tokyo Character Street (ต้องจองคิว!)",
+                    "Harajuku: เดินชิล Takeshita Street & Meiji Jingu",
+                    "City Chill: หาคาเฟ่เก๋ๆ นั่งเช็ค Backlog งานแบบหล่อๆ"
                 ],
-                navi: [{ name: "Public Transport", code: "ใช้ Suica/Pasmo แตะผ่าน" }],
-                food: "🍗 Smoked Turkey Leg & 🍡 Alien Mochi"
+                navi: [{ name: "Tokyo Station", code: "Character Street B1" }],
+                food: "🥞 แพนเค้กนุ่มฟู & 🍛 ข้าวแกงกะหรี่หอมๆ",
+                isArtDay: false
             },
             {
-                day: "Day 8", date: "6 Jun", title: "Otaku & Shopping (Tokyo)",
-                route: "Tabata ➔ Harajuku/Tokyo Station", sleep: "Hotel @ Tabata",
-                weather: { temp: "19-27°C", icon: "☁️", desc: "ร้อนชื้น เดินห้างดีที่สุด" },
-                ootd: "สายแฟชั่นจัดเต็ม OOTD เดินชิบูย่า/ฮาราจูกุ พร้อมลุย",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Chiikawa+Land+Tokyo",
+                day: "Day 8", date: "6 Jun", title: "Tokyo Aesthetic Chill",
+                route: "Tabata ➔ Yanaka ➔ Shibuya", sleep: "Hotel @ Tabata",
+                weather: { temp: "19-27°C", icon: "🎨", desc: "เดินชิลวันสุดท้าย" },
+                ootd: "Vintage Look หรือเสื้อผ้าแนว Street",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Yanaka+Ginza+Tokyo+Sunset",
                 activities: [
-                    "ลุย Chiikawa Land (ต้องจองคิว LivePocket ล่วงหน้า)",
-                    "ละลายทรัพย์ช้อปปิ้งของฝาก",
-                    "แพ็คกระเป๋ายัดของเตรียมกลับ"
+                    "Yanaka Ginza: เดินเล่นย่านแมวเหมียวสุดคลาสสิกใกล้ Tabata",
+                    "SCAI The Bathhouse: ชมงานศิลปะในโรงอาบน้ำเก่า",
+                    "Shibuya Sky: ดูวิวเมืองโตเกียวทิ้งท้ายทริป",
+                    "Final Packing: ยัดของลงกระเป๋าเตรียมกลับบ้าน"
                 ],
-                navi: [{ name: "Train System", code: "Yamanote Line is your friend" }],
-                food: "🍣 ซูเปอร์มาร์เก็ตป้ายเหลืองลด 50% แถว Tabata"
+                navi: [{ name: "Yanaka Ginza", code: "เดินจากสถานี Nippori" }],
+                food: "🍱 ซูชิสายพาน & ปาร์ตี้อาหารซูเปอร์ป้ายเหลือง",
+                isArtDay: true
             },
             {
-                day: "Day 9", date: "7 Jun", title: "Game Over (Return)",
-                route: "Tabata ➔ Nippori ➔ Narita Airport", sleep: "Home Sweet Home",
-                weather: { temp: "20-27°C", icon: "✈️", desc: "อุ่นๆ สบายๆ" },
-                ootd: "ชุดขึ้นเครื่องเน้นหลวมๆ สบายๆ ไม่รัดรูป",
-                visualLink: "https://www.google.com/search?tbm=isch&q=Keisei+Skyliner",
-                activities: [
-                    "ตื่นสายๆ เช็คเอาท์",
-                    "นั่งรถไฟ 1 ป้ายไป Nippori ต่อ Keisei Skyliner (40 นาที)",
-                    "ถึงสนามบิน 12:30 รอขึ้นเครื่อง ZIPAIR รอบ 15:00"
-                ],
-                navi: [{ name: "Keisei Skyliner", code: "จองตั๋วออนไลน์/ซื้อตู้" }],
-                food: "🍱 เบนโตะสถานีรถไฟ (Ekiben) ขากลับ"
+                day: "Day 9", date: "7 Jun", title: "Final Boarding",
+                route: "Tabata ➔ Narita Airport", sleep: "BKK",
+                weather: { temp: "20-27°C", icon: "✈️", desc: "Safe Flight" },
+                ootd: "เสื้อผ้าหลวมสบายที่สุดสำหรับนั่งเครื่อง 6 ชม.",
+                visualLink: "https://www.google.com/search?tbm=isch&q=Narita+Airport+Terminal+1+Zipair",
+                activities: ["ตื่นสายๆ เช็คเอาท์ ➔ Skyliner จาก Nippori", "NRT Terminal 1: Shopping Duty Free ขนมสุดท้าย", "15:00 ZIPAIR: บินกลับกรุงเทพฯ"],
+                navi: [{ name: "Skyliner", code: "Nippori Station" }],
+                food: "🍱 Ekiben (ข้าวกล่องรถไฟ) มื้อสุดท้าย",
+                isArtDay: false
             }
         ];
 
@@ -188,7 +181,6 @@
 
         function renderContent(dayIndex) {
             const data = tripData[dayIndex];
-            
             const naviHTML = data.navi.map(n => `
                 <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex justify-between items-center">
                     <span class="text-sm text-slate-300">${n.name}</span>
@@ -197,72 +189,42 @@
             `).join('');
 
             const activitiesHTML = data.activities.map(a => `
-                <li class="flex items-start mb-3">
-                    <span class="text-sky-400 mr-2 mt-0.5">⚡</span>
-                    <span class="text-slate-200">${a}</span>
-                </li>
+                <li class="flex items-start mb-3"><span class="text-sky-400 mr-2 mt-0.5">⚡</span><span class="text-slate-200">${a}</span></li>
             `).join('');
 
             contentArea.innerHTML = `
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b border-slate-700 pb-5 gap-4">
                     <div>
-                        <span class="text-sky-400 font-bold tracking-wider uppercase text-sm bg-sky-900/30 px-2 py-1 rounded">${data.date}</span>
+                        ${data.isArtDay ? '<span class="art-tag">Art & Architecture 🎨</span>' : ''}
                         <h2 class="text-2xl md:text-3xl font-bold mt-2 text-white">${data.title}</h2>
                     </div>
                     <div class="flex flex-col items-end gap-2 w-full md:w-auto">
-                        <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-full border border-slate-600 font-medium">
-                            🛌 ${data.sleep}
-                        </span>
-                        <a href="${data.visualLink}" target="_blank" rel="noopener noreferrer" 
-                           class="w-full md:w-auto text-center bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2">
-                            📸 ส่องรูปสถานที่จริง
-                        </a>
+                        <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-full border border-slate-600 font-medium">🛌 ${data.sleep}</span>
+                        <a href="${data.visualLink}" target="_blank" class="w-full md:w-auto text-center bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-lg flex items-center justify-center gap-2">📸 ส่องรูปสถานที่</a>
                     </div>
                 </div>
 
                 <div class="weather-widget rounded-xl p-4 mb-6 border border-sky-500/30 flex flex-col md:flex-row items-center gap-4">
                     <div class="flex items-center gap-3 w-full md:w-auto md:border-r md:border-sky-500/30 md:pr-4">
                         <span class="text-4xl">${data.weather.icon}</span>
-                        <div>
-                            <p class="text-xl font-bold text-white">${data.weather.temp}</p>
-                            <p class="text-xs text-sky-200">${data.weather.desc}</p>
-                        </div>
+                        <div><p class="text-xl font-bold text-white">${data.weather.temp}</p><p class="text-xs text-sky-200">${data.weather.desc}</p></div>
                     </div>
-                    <div class="w-full md:w-auto">
-                        <p class="text-sm text-sky-100"><span class="font-bold text-sky-300">👗 OOTD:</span> ${data.ootd}</p>
-                    </div>
+                    <div class="w-full md:w-auto"><p class="text-sm text-sky-100"><span class="font-bold text-sky-300">👗 OOTD:</span> ${data.ootd}</p></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-300 flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Mission / Plan
-                        </h3>
-                        <ul class="text-sm">
-                            ${activitiesHTML}
-                        </ul>
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-300 flex items-center">⚡ Mission</h3>
+                        <ul class="text-sm">${activitiesHTML}</ul>
                     </div>
-
                     <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h3 class="text-lg font-semibold mb-4 text-sky-300 flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                            GPS & Navigation
-                        </h3>
-                        <div class="space-y-3 mb-2">
-                            ${naviHTML}
-                            <p class="text-xs text-slate-400 mt-3 bg-slate-900/50 p-2 rounded border border-slate-700">
-                                💡 ทริค: GPS ญี่ปุ่นพิมพ์ "เบอร์โทรศัพท์" ลงไปเลย แม่นกว่า
-                            </p>
-                        </div>
+                        <h3 class="text-lg font-semibold mb-4 text-sky-300 flex items-center">📍 GPS / Code</h3>
+                        <div class="space-y-3">${naviHTML}</div>
                     </div>
                 </div>
 
                 <div class="mt-6 bg-gradient-to-r from-amber-900/20 to-orange-900/20 p-5 rounded-xl border border-amber-700/30">
-                    <h3 class="text-lg font-semibold mb-2 text-amber-400 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
-                        Target Food
-                    </h3>
+                    <h3 class="text-lg font-semibold mb-2 text-amber-400">😋 Target Food</h3>
                     <p class="text-slate-200 font-medium">${data.food}</p>
                 </div>
             `;
