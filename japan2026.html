@@ -541,15 +541,26 @@ const defaultTripData = [
             renderContent(currentDayIndex);
         });
 
-        // 8. Export Hack
+// 8. Export Hack (The Mobile-Friendly Version)
         document.getElementById('btn-export').addEventListener('click', () => {
             saveCurrentView();
-            const exportText = `const defaultTripMeta = ${JSON.stringify(tripMeta, null, 4)};\nconst defaultTripData = ${JSON.stringify(tripData, null, 4)};`;
-            navigator.clipboard.writeText(exportText).then(() => {
-                alert("✅ Success!\n\nก๊อปปี้ข้อมูล Trip Data ชุดใหม่ (9 วันเต็ม) ลง Clipboard เรียบร้อยแล้ว!\nนำไปวางทับโค้ดก้อนเดิมในไฟล์ HTML เพื่ออัปเดตถาวรได้เลย Bro!");
-            }).catch(err => {
-                alert("❌ Failed to copy. Your browser might block it.");
-            });
+            
+            // ดึงโค้ด HTML ทั้งหน้ามาเลย
+            let fullHTML = document.documentElement.outerHTML;
+            
+            // หาจุดที่จะเอาข้อมูลใหม่ไปยัดทับของเก่า
+            const metaRegex = /const defaultTripMeta = [\s\S]*?;/;
+            const dataRegex = /const defaultTripData = [\s\S]*?\];/;
+            
+            const newMetaCode = `const defaultTripMeta = ${JSON.stringify(tripMeta, null, 4)};`;
+            const newDataCode = `const defaultTripData = ${JSON.stringify(tripData, null, 4)};`;
+            
+            fullHTML = fullHTML.replace(metaRegex, newMetaCode).replace(dataRegex, newDataCode);
+            
+            // ก๊อปปี้ทั้งหน้าเว็บลง Clipboard
+            navigator.clipboard.writeText(`<!DOCTYPE html>\n<html lang="th">\n${fullHTML}\n</html>`).then(() => {
+                alert("✅ Mobile-Ready!\nก๊อปปี้โค้ด 'ทั้งหน้าเว็บ' แล้ว! \n\nตอนไปแก้ใน GitHub มือถือ ให้กด 'Select All (เลือกทั้งหมด)' แล้ว 'Paste (วาง)' ทับไปเลย Bro!");
+            }).catch(err => alert("❌ Failed."));
         });
 
         // Initialize
