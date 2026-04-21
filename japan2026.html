@@ -127,13 +127,9 @@
     </div>
 
     <script>
-        
-        // 1. The FULL 9-Days Default Data
-        const defaultTripMeta = {
-    "title": "Alpine Sun-Seeker",
-    "desc": "30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo"
-};
-const defaultTripData = [
+// 1. The FULL 9-Days Default Data (Hardcode in GitHub)
+        const defaultTripMeta = { title: "Alpine Sun-Seeker", desc: "30 May - 7 Jun | 3 Pax | Nirasaki ➔ Alps ➔ Tokyo", lastUpdated: Date.now() }; // <-- เพิ่ม lastUpdated
+        const defaultTripData = [
     {
         "day": "Day 1",
         "date": "30 May",
@@ -395,9 +391,22 @@ const defaultTripData = [
     }
 ];
 
-        // 2. State Management (โหลดจาก Local ถ้ามี ไม่งั้นใช้ Default)
-        let tripMeta = JSON.parse(localStorage.getItem('broTripMeta')) || defaultTripMeta;
-        let tripData = JSON.parse(localStorage.getItem('broTripData')) || defaultTripData;
+        let tripMeta, tripData;
+        const localMeta = JSON.parse(localStorage.getItem('broTripMeta'));
+        const localData = JSON.parse(localStorage.getItem('broTripData'));
+
+        // Logic: ถ้าข้อมูลใน Git (Hardcode) มี Timestamp ใหม่กว่า ให้ใช้ของ Git แล้วล้าง Local ทิ้งซะ!
+        if (localMeta && localMeta.lastUpdated && localMeta.lastUpdated >= defaultTripMeta.lastUpdated) {
+            tripMeta = localMeta;
+            tripData = localData;
+        } else {
+            tripMeta = JSON.parse(JSON.stringify(defaultTripMeta)); // Deep copy ป้องกันบั๊ก Reference
+            tripData = JSON.parse(JSON.stringify(defaultTripData));
+            // Update LocalStorage ให้ตรงกับ Git เผื่อไว้
+            localStorage.setItem('broTripMeta', JSON.stringify(tripMeta));
+            localStorage.setItem('broTripData', JSON.stringify(tripData));
+        }
+
         let isEditMode = false;
         let currentDayIndex = 0;
 
@@ -419,12 +428,13 @@ const defaultTripData = [
             }
         }
 
-        // 4. Save Current Form Data to Memory
+// 4. Save Current Form Data to Memory (อัปเดต Timestamp ทุกครั้งที่กด Save)
         function saveCurrentView() {
             if (!isEditMode) return;
             
             tripMeta.title = document.getElementById('edit-main-title').value;
             tripMeta.desc = document.getElementById('edit-main-desc').value;
+            tripMeta.lastUpdated = Date.now(); // <-- สำคัญ! ตีตราเวลาใหม่ทุกครั้งที่แก้!
 
             const data = tripData[currentDayIndex];
             data.title = document.getElementById('e-title').value;
@@ -620,26 +630,24 @@ const defaultTripData = [
             renderContent(currentDayIndex);
         });
 
-// 8. Export Hack (The Mobile-Friendly Version)
+// 8. The Smart Export Hack
         document.getElementById('btn-export').addEventListener('click', () => {
             saveCurrentView();
             
-            // ดึงโค้ด HTML ทั้งหน้ามาเลย
             let fullHTML = document.documentElement.outerHTML;
             
-            // หาจุดที่จะเอาข้อมูลใหม่ไปยัดทับของเก่า
             const metaRegex = /const defaultTripMeta = [\s\S]*?;/;
             const dataRegex = /const defaultTripData = [\s\S]*?\];/;
             
+            // ตอน Export มันจะเอา Timestamp ล่าสุดติดไปด้วย!
             const newMetaCode = `const defaultTripMeta = ${JSON.stringify(tripMeta, null, 4)};`;
             const newDataCode = `const defaultTripData = ${JSON.stringify(tripData, null, 4)};`;
             
             fullHTML = fullHTML.replace(metaRegex, newMetaCode).replace(dataRegex, newDataCode);
             
-            // ก๊อปปี้ทั้งหน้าเว็บลง Clipboard
             navigator.clipboard.writeText(`<!DOCTYPE html>\n<html lang="th">\n${fullHTML}\n</html>`).then(() => {
-                alert("✅ Mobile-Ready!\nก๊อปปี้โค้ด 'ทั้งหน้าเว็บ' แล้ว! \n\nตอนไปแก้ใน GitHub มือถือ ให้กด 'Select All (เลือกทั้งหมด)' แล้ว 'Paste (วาง)' ทับไปเลย Bro!");
-            }).catch(err => alert("❌ Failed."));
+                alert("✅ Sync Ready!\nก๊อปปี้โค้ดทั้งหน้าเว็บแล้ว!\nเอาไปวางทับใน GitHub ได้เลย ระบบจะบังคับให้ทุกเครื่องดึงข้อมูลเวอร์ชันนี้ไปใช้ทันที!");
+            });
         });
 
         // Initialize
