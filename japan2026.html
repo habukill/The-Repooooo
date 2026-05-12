@@ -39,6 +39,7 @@
 
     <main class="max-w-4xl mx-auto">
         <div class="flex overflow-x-auto space-x-2 pb-4 mb-4 snap-x custom-scrollbar" id="tabs"><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-sky-600 text-white border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.4)]">Day 1</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 2</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 3</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 4</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 5</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 6</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 7</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 8</button><button class="tab-btn snap-center whitespace-nowrap px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-slate-200">Day 9</button></div>
+        <div id="live-weather-status" class="text-xs md:text-sm text-sky-300 bg-sky-900/30 border border-sky-700/40 rounded-lg px-4 py-2 mb-3 flex items-center gap-2">🛰️ Loading live weather…</div>
         <div id="content-area" class="glass-panel rounded-2xl p-6 md:p-8 shadow-2xl transition-all duration-300 relative overflow-hidden">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b border-slate-700 pb-5 gap-4">
                         <div>
@@ -659,6 +660,136 @@ const defaultTripData = [
         // Initialize
         renderHeader();
         renderContent(0);
+
+        // --- LIVE WEATHER (Open-Meteo) -------------------------------------
+        // Coordinates + ISO date for each day of the 2026 itinerary.
+        // Index matches tripData order. If the user reorders days, mapping
+        // stays by index — keep the original 9-day layout for accuracy.
+        const TRIP_LOCATIONS = [
+            { lat: 35.7083, lon: 138.4458, date: "2026-05-30", place: "Nirasaki" },
+            { lat: 36.2381, lon: 137.9719, date: "2026-05-31", place: "Matsumoto" },
+            { lat: 36.2456, lon: 137.6356, date: "2026-06-01", place: "Kamikochi" },
+            { lat: 36.2381, lon: 137.9719, date: "2026-06-02", place: "Matsumoto" },
+            { lat: 36.6981, lon: 137.8378, date: "2026-06-03", place: "Hakuba" },
+            { lat: 35.7378, lon: 139.7619, date: "2026-06-04", place: "Tokyo" },
+            { lat: 35.7378, lon: 139.7619, date: "2026-06-05", place: "Tokyo" },
+            { lat: 35.7378, lon: 139.7619, date: "2026-06-06", place: "Tokyo" },
+            { lat: 35.7647, lon: 140.3864, date: "2026-06-07", place: "Narita" }
+        ];
+
+        const WMO_ICON = {
+            0:"☀️",1:"🌤️",2:"⛅",3:"☁️",
+            45:"🌫️",48:"🌫️",
+            51:"🌦️",53:"🌦️",55:"🌦️",56:"🌧️",57:"🌧️",
+            61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",
+            71:"❄️",73:"❄️",75:"❄️",77:"❄️",
+            80:"🌦️",81:"🌧️",82:"⛈️",85:"❄️",86:"❄️",
+            95:"⛈️",96:"⛈️",99:"⛈️"
+        };
+        const WMO_DESC_TH = {
+            0:"ฟ้าโปร่ง แดดจัด",1:"แดดบางช่วง",2:"เมฆบางส่วน",3:"เมฆมาก",
+            45:"หมอกลง",48:"หมอกเย็นจัด",
+            51:"ฝนปรอยเบาๆ",53:"ฝนปรอย",55:"ฝนปรอยหนัก",
+            56:"ฝนเยือกแข็งเบา",57:"ฝนเยือกแข็ง",
+            61:"ฝนเบา",63:"ฝนตก",65:"ฝนหนัก",
+            66:"ฝนเยือกแข็งเบา",67:"ฝนเยือกแข็งหนัก",
+            71:"หิมะเบา",73:"หิมะตก",75:"หิมะหนัก",77:"เกล็ดหิมะ",
+            80:"ฝนซู่เบา",81:"ฝนซู่",82:"ฝนซู่หนัก",
+            85:"หิมะซู่เบา",86:"หิมะซู่หนัก",
+            95:"พายุฝนฟ้าคะนอง",96:"พายุลูกเห็บ",99:"พายุลูกเห็บหนัก"
+        };
+
+        function isRainCode(c){ return (c>=51&&c<=67)||(c>=80&&c<=82)||c>=95; }
+        function isSnowCode(c){ return (c>=71&&c<=77)||c===85||c===86; }
+
+        function generateOutfit(maxC, minC, precipProb, code) {
+            const parts = [];
+            if (maxC < 5)        parts.push("โค้ทหนา + Heattech + ผ้าพันคอ + ถุงมือ");
+            else if (maxC < 12)  parts.push("แจ็คเก็ตกันลม + เสื้อแขนยาว + กางเกงยาว");
+            else if (maxC < 18)  parts.push("เสื้อแขนยาว + เสื้อกั๊ก/คาร์ดิแกน + กางเกงยาว");
+            else if (maxC < 24)  parts.push("เสื้อแขนยาวบางๆ + กางเกงชิโน่");
+            else if (maxC < 29)  parts.push("เสื้อยืด + กางเกงชิโน่/ขาสั้น");
+            else                 parts.push("เสื้อยืดบาง ระบายอากาศ + หมวกกันแดด");
+
+            if (minC < 5 && maxC >= 12) parts.push("(เช้า-เย็นหนาว พก Layer เสริม)");
+            if (isSnowCode(code)) parts.push("+ รองเท้ากันลื่น & แว่นกันแดดสะท้อนหิมะ");
+            const rainy = isRainCode(code) || (typeof precipProb === "number" && precipProb >= 50);
+            if (rainy) parts.push("+ ร่มพับ/เสื้อกันฝน");
+            else if (typeof precipProb === "number" && precipProb >= 30) parts.push("(ลุ้นฝน — พกร่มเล็กไว้)");
+
+            return parts.join(" ");
+        }
+
+        async function fetchDayWeather(loc) {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
+                        `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code` +
+                        `&start_date=${loc.date}&end_date=${loc.date}&timezone=Asia%2FTokyo`;
+            const r = await fetch(url);
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const j = await r.json();
+            const d = j.daily;
+            if (!d || !d.time || d.time.length === 0 || d.temperature_2m_max[0] == null) {
+                return null; // outside forecast window
+            }
+            return {
+                max: Math.round(d.temperature_2m_max[0]),
+                min: Math.round(d.temperature_2m_min[0]),
+                precip: d.precipitation_probability_max ? d.precipitation_probability_max[0] : null,
+                code: d.weather_code[0]
+            };
+        }
+
+        async function updateLiveWeather() {
+            const badge = document.getElementById('live-weather-status');
+            let updated = 0, failed = 0;
+
+            const results = await Promise.allSettled(
+                TRIP_LOCATIONS.map(loc => fetchDayWeather(loc))
+            );
+
+            results.forEach((res, idx) => {
+                if (!tripData[idx]) return;
+                if (res.status !== "fulfilled" || !res.value) {
+                    if (res.status === "rejected") failed++;
+                    return;
+                }
+                const w = res.value;
+                const icon = WMO_ICON[w.code] || tripData[idx].weather.icon;
+                const desc = WMO_DESC_TH[w.code] || tripData[idx].weather.desc;
+                const precipNote = (typeof w.precip === "number") ? ` · ฝน ${w.precip}%` : "";
+                tripData[idx].weather = {
+                    icon,
+                    temp: `${w.min}-${w.max}°C`,
+                    desc: `${desc}${precipNote}`
+                };
+                tripData[idx].ootd = generateOutfit(w.max, w.min, w.precip, w.code);
+                tripData[idx].weatherLive = true;
+                updated++;
+            });
+
+            if (badge) {
+                if (updated === 0) {
+                    badge.innerHTML = "📅 พยากรณ์ยังไม่อยู่ในช่วง 16 วันของ Open-Meteo — ใช้ข้อมูลอ้างอิงไปก่อน";
+                    badge.className = "text-xs md:text-sm text-amber-200 bg-amber-900/30 border border-amber-700/40 rounded-lg px-4 py-2 mb-3 flex items-center gap-2";
+                } else {
+                    const stamp = new Date().toLocaleString('th-TH', { hour:'2-digit', minute:'2-digit' });
+                    badge.innerHTML = `✅ อัปเดตพยากรณ์สด ${updated}/${TRIP_LOCATIONS.length} วัน (Open-Meteo · ${stamp})` +
+                                      (failed ? ` · ${failed} วันโหลดไม่สำเร็จ` : "");
+                    badge.className = "text-xs md:text-sm text-emerald-200 bg-emerald-900/30 border border-emerald-700/40 rounded-lg px-4 py-2 mb-3 flex items-center gap-2";
+                }
+            }
+
+            if (!isEditMode) renderContent(currentDayIndex);
+        }
+
+        updateLiveWeather().catch(err => {
+            const badge = document.getElementById('live-weather-status');
+            if (badge) {
+                badge.innerHTML = "⚠️ ดึงพยากรณ์อากาศไม่สำเร็จ — แสดงข้อมูลอ้างอิงแทน";
+                badge.className = "text-xs md:text-sm text-rose-200 bg-rose-900/30 border border-rose-700/40 rounded-lg px-4 py-2 mb-3 flex items-center gap-2";
+            }
+            console.error("Live weather update failed:", err);
+        });
 
 
 // 9. The Nuclear Button (Force Sync)
