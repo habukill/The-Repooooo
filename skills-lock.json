@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "china-stock-analysis": {
+      "source": "sugarforever/01coder-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/china-stock-analysis/SKILL.md",
+      "computedHash": "a7de1ec48a7a46867eccaa927cb100c4e3c248c71f5266762d7fdecd65558cd9"
+    }
+  }
+}
