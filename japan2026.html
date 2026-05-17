@@ -451,31 +451,44 @@ const defaultTripData = [
         async function fetchWeatherData(lat, lon, dateStr) {
             // Standard forecast first
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&start_date=${dateStr}&end_date=${dateStr}&forecast_days=16`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&hourly=temperature_2m&timezone=Asia%2FTokyo&start_date=${dateStr}&end_date=${dateStr}&forecast_days=16`;
                 const res = await fetch(url);
                 if (res.ok) {
                     const j = await res.json();
                     if (j.daily?.temperature_2m_max?.length) {
-                        return { maxT: Math.round(j.daily.temperature_2m_max[0]), minT: Math.round(j.daily.temperature_2m_min[0]), code: j.daily.weathercode[0], source: 'forecast' };
+                        return { maxT: Math.round(j.daily.temperature_2m_max[0]), minT: Math.round(j.daily.temperature_2m_min[0]), code: j.daily.weathercode[0], hourly: j.hourly?.temperature_2m?.slice(0,24)||[], source: 'forecast' };
                     }
                 }
             } catch {}
             // Ensemble API fallback (up to 35 days)
             try {
-                const url = `https://ensemble-api.open-meteo.com/v1/ensemble?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&start_date=${dateStr}&end_date=${dateStr}&models=gfs_seamless`;
+                const url = `https://ensemble-api.open-meteo.com/v1/ensemble?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&hourly=temperature_2m&timezone=Asia%2FTokyo&start_date=${dateStr}&end_date=${dateStr}&models=gfs_seamless`;
                 const res = await fetch(url);
                 if (!res.ok) return null;
                 const j = await res.json();
-                const d = j.daily;
+                const d = j.daily; const h = j.hourly;
                 if (!d) return null;
-                const mean = keys => { const v = keys.map(k => d[k]?.[0]).filter(x => x != null); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : null; };
-                const modeCode = keys => { const c = {}; keys.forEach(k => { const v = d[k]?.[0]; if (v != null) c[v] = (c[v] || 0) + 1; }); const e = Object.entries(c); return e.length ? parseInt(e.sort((a, b) => b[1] - a[1])[0][0]) : 0; };
+                const meanD = keys => { const v = keys.map(k => d[k]?.[0]).filter(x => x != null); return v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length) : null; };
+                const modeCode = keys => { const c = {}; keys.forEach(k => { const v = d[k]?.[0]; if (v != null) c[v]=(c[v]||0)+1; }); const e = Object.entries(c); return e.length ? parseInt(e.sort((a,b)=>b[1]-a[1])[0][0]) : 0; };
                 const maxKeys = Object.keys(d).filter(k => k.startsWith('temperature_2m_max'));
                 const minKeys = Object.keys(d).filter(k => k.startsWith('temperature_2m_min'));
                 const codeKeys = Object.keys(d).filter(k => k.startsWith('weathercode'));
                 if (!maxKeys.length) return null;
-                return { maxT: mean(maxKeys), minT: mean(minKeys), code: modeCode(codeKeys), source: 'ensemble' };
+                const hKeys = h ? Object.keys(h).filter(k => k.startsWith('temperature_2m')) : [];
+                const hourly = Array.from({length:24}, (_,i) => { const v=hKeys.map(k=>h[k]?.[i]).filter(x=>x!=null); return v.length?Math.round(v.reduce((a,b)=>a+b)/v.length):null; });
+                return { maxT: meanD(maxKeys), minT: meanD(minKeys), code: modeCode(codeKeys), hourly, source: 'ensemble' };
             } catch { return null; }
+        }
+
+        function getTimeSlots(hourly) {
+            if (!hourly?.length) return [];
+            const avg = (s,e) => { const v=hourly.slice(s,e+1).filter(t=>t!=null); return v.length?Math.round(v.reduce((a,b)=>a+b)/v.length):null; };
+            return [
+                { emoji:'🌅', label:'เช้า',     range:'06–09น.', temp:avg(6,9)   },
+                { emoji:'☀️', label:'กลางวัน',  range:'10–14น.', temp:avg(10,14) },
+                { emoji:'🌆', label:'เย็น',     range:'15–19น.', temp:avg(15,19) },
+                { emoji:'🌙', label:'กลางคืน', range:'20–23น.', temp:avg(20,23) },
+            ].filter(s => s.temp != null);
         }
 
         async function fetchDayWeather(dayIndex) {
@@ -486,7 +499,7 @@ const defaultTripData = [
                 const data = await fetchWeatherData(cfg.lat, cfg.lon, cfg.date);
                 if (!data) return null;
                 const { icon, label } = getWeatherIcon(data.code);
-                const result = { icon, label, temp: `${data.minT}–${data.maxT}°C`, maxT: data.maxT, minT: data.minT, code: data.code, city: cfg.city, lat: cfg.lat, lon: cfg.lon, ootd: getAutoOOTD(data.maxT, data.minT, data.code), source: data.source };
+                const result = { icon, label, temp: `${data.minT}–${data.maxT}°C`, maxT: data.maxT, minT: data.minT, code: data.code, hourly: data.hourly||[], city: cfg.city, lat: cfg.lat, lon: cfg.lon, ootd: getAutoOOTD(data.maxT, data.minT, data.code), source: data.source };
                 weatherCache[dayIndex] = result;
                 return result;
             } catch { return null; }
@@ -506,7 +519,7 @@ const defaultTripData = [
                     const data = await fetchWeatherData(pt.lat, pt.lon, pt.date);
                     if (!data) return { ...pt, error: true };
                     const { icon, label } = getWeatherIcon(data.code);
-                    return { ...pt, maxT: data.maxT, minT: data.minT, icon, label, temp: `${data.minT}–${data.maxT}°C`, ootd: getAutoOOTD(data.maxT, data.minT, data.code), source: data.source, error: false };
+                    return { ...pt, maxT: data.maxT, minT: data.minT, icon, label, temp: `${data.minT}–${data.maxT}°C`, hourly: data.hourly||[], ootd: getAutoOOTD(data.maxT, data.minT, data.code), source: data.source, error: false };
                 } catch { return { ...pt, error: true }; }
             }));
         }
@@ -590,7 +603,7 @@ const defaultTripData = [
                 `).join('');
 
                 const dayCfg = dayWeatherConfig[dayIndex] || {};
-                const windyUrl = dayCfg.lat ? `https://www.windy.com/?temp,${dayCfg.lat},${dayCfg.lon},12` : 'https://www.windy.com/';
+                const windyUrl = dayCfg.lat ? `https://www.yr.no/en/forecast/daily-table/${dayCfg.lat},${dayCfg.lon}` : 'https://www.yr.no/';
                 const tateyamaPlaceholder = dayIndex === 4 ? `
                     <div id="tateyama-widget" class="mb-8 rounded-xl border border-purple-500/30 bg-purple-900/10 p-5 shadow-lg">
                         <h3 class="text-purple-300 text-sm font-bold flex items-center gap-2">
@@ -630,7 +643,7 @@ const defaultTripData = [
                         </div>
                         <div class="w-full md:w-auto flex-1">
                             <p class="text-sm text-sky-100 leading-relaxed"><span class="font-bold text-sky-300 uppercase tracking-wide text-xs bg-sky-900/50 px-2 py-1 rounded mr-2">👗 OOTD</span> ${data.ootd}</p>
-                            <a href="${windyUrl}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors">🌐 ดูพยากรณ์อากาศแบบละเอียด (Windy)</a>
+                            <a href="${windyUrl}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors">🌐 ดูพยากรณ์รายวัน (Yr.no)</a>
                         </div>
                     </div>
 
@@ -667,10 +680,23 @@ const defaultTripData = [
                 fetchDayWeather(dayIndex).then(live => {
                     const widget = document.getElementById('live-weather-widget');
                     if (!live || !widget) return;
+                    const slots = getTimeSlots(live.hourly||[]);
+                    const slotHTML = slots.length ? `
+                        <div class="grid grid-cols-4 gap-2 mt-4 pt-4 border-t border-sky-500/20">
+                            ${slots.map(s => `
+                                <div class="text-center bg-slate-900/40 rounded-lg py-2 px-1">
+                                    <div class="text-lg mb-1">${s.emoji}</div>
+                                    <div class="text-sm font-bold text-white">${s.temp}°</div>
+                                    <div class="text-xs text-slate-300">${s.label}</div>
+                                    <div class="text-xs text-slate-500">${s.range}</div>
+                                </div>
+                            `).join('')}
+                        </div>` : '';
+                    widget.className = 'weather-widget rounded-xl p-5 mb-8 border border-sky-500/30 shadow-lg';
                     widget.innerHTML = `
-                        <div class="flex items-center gap-4 w-full md:w-auto md:border-r md:border-sky-500/30 md:pr-6">
+                        <div class="flex items-center gap-4 mb-3">
                             <span class="text-5xl drop-shadow-md">${live.icon}</span>
-                            <div>
+                            <div class="flex-1">
                                 <p class="text-2xl font-bold text-white tracking-wide">${live.temp}</p>
                                 <p class="text-sm text-sky-200 font-medium">${live.label}</p>
                                 <p class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
@@ -678,15 +704,13 @@ const defaultTripData = [
                                     LIVE · ${live.city}
                                 </p>
                             </div>
+                            <a href="https://www.yr.no/en/forecast/daily-table/${live.lat},${live.lon}" target="_blank" rel="noopener" class="shrink-0 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors text-right">🌐 Yr.no</a>
                         </div>
-                        <div class="w-full md:w-auto flex-1">
-                            <p class="text-sm text-sky-100 leading-relaxed">
-                                <span class="font-bold text-emerald-300 uppercase tracking-wide text-xs bg-emerald-900/40 px-2 py-1 rounded mr-2">👗 OOTD Auto</span>
-                                ${live.ootd}
-                            </p>
-                            <p class="text-xs text-slate-500 mt-1">แนะนำจากอุณหภูมิจริง ${live.minT}–${live.maxT}°C</p>
-                            <a href="https://www.windy.com/?temp,${live.lat},${live.lon},12" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors">🌐 ดูพยากรณ์อากาศแบบละเอียด (Windy)</a>
-                        </div>
+                        ${slotHTML}
+                        <p class="text-sm text-sky-100 leading-relaxed mt-4">
+                            <span class="font-bold text-emerald-300 uppercase tracking-wide text-xs bg-emerald-900/40 px-2 py-1 rounded mr-2">👗 OOTD Auto</span>
+                            ${live.ootd}
+                        </p>
                     `;
                 });
 
@@ -711,9 +735,14 @@ const defaultTripData = [
                                         </div>
                                         ${pt.error
                                             ? '<p class="text-xs text-slate-500 italic">ไม่สามารถโหลดข้อมูลได้</p>'
-                                            : `<p class="text-lg font-bold text-white">${pt.icon} ${pt.temp}</p>
-                                               <p class="text-xs text-sky-200 mt-1">${pt.label}</p>
-                                               <p class="text-xs text-emerald-300 mt-2 leading-relaxed border-t border-slate-700/50 pt-2">${pt.ootd}</p>`
+                                            : (() => {
+                                                const s = getTimeSlots(pt.hourly||[]);
+                                                const sh = s.length ? `<div class="grid grid-cols-2 gap-1 mt-2 pt-2 border-t border-slate-700/50">${s.map(t=>`<div class="text-center bg-slate-900/40 rounded p-1"><div>${t.emoji}</div><div class="text-xs font-bold text-white">${t.temp}°</div><div class="text-xs text-slate-500">${t.label}</div></div>`).join('')}</div>` : '';
+                                                return `<p class="text-lg font-bold text-white">${pt.icon} ${pt.temp}</p>
+                                                        <p class="text-xs text-sky-200 mt-1">${pt.label}</p>
+                                                        ${sh}
+                                                        <p class="text-xs text-emerald-300 mt-2 leading-relaxed border-t border-slate-700/50 pt-2">${pt.ootd}</p>`;
+                                              })()
                                         }
                                     </div>
                                 `).join('')}
