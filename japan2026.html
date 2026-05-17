@@ -408,6 +408,65 @@ const defaultTripData = [
     }
 ];
 
+        // --- Real-time Weather Config ---
+        const dayWeatherConfig = [
+            { lat: 35.706, lon: 138.448, city: "Nirasaki",      date: "2026-05-30" },
+            { lat: 36.238, lon: 137.972, city: "Matsumoto",     date: "2026-05-31" },
+            { lat: 36.245, lon: 137.659, city: "Kamikochi",     date: "2026-06-01" },
+            { lat: 36.238, lon: 137.972, city: "Matsumoto",     date: "2026-06-02" },
+            { lat: 36.586, lon: 137.598, city: "Tateyama/Alps", date: "2026-06-03" },
+            { lat: 36.696, lon: 137.859, city: "Hakuba",        date: "2026-06-04" },
+            { lat: 35.689, lon: 139.692, city: "Tokyo",         date: "2026-06-05" },
+            { lat: 35.689, lon: 139.692, city: "Tokyo",         date: "2026-06-06" },
+            { lat: 35.773, lon: 140.393, city: "Narita",        date: "2026-06-07" },
+        ];
+        const weatherCache = {};
+
+        function getWeatherIcon(code) {
+            if (code === 0)        return { icon: '☀️',  label: 'ท้องฟ้าแจ่มใส' };
+            if (code <= 3)         return { icon: '⛅',  label: 'มีเมฆบางส่วน' };
+            if (code <= 48)        return { icon: '🌫️', label: 'หมอกลง' };
+            if (code <= 55)        return { icon: '🌦️', label: 'ฝนปรอย' };
+            if (code <= 67)        return { icon: '🌧️', label: 'ฝนตก' };
+            if (code <= 77)        return { icon: '🌨️', label: 'หิมะตก' };
+            if (code <= 82)        return { icon: '🌦️', label: 'ฝนสั้นๆ' };
+            if (code <= 86)        return { icon: '🌨️', label: 'หิมะ' };
+            return                        { icon: '⛈️', label: 'พายุฝนฟ้าคะนอง' };
+        }
+
+        function getAutoOOTD(maxT, minT, code) {
+            const avg = (maxT + minT) / 2;
+            let out;
+            if (avg < 5)        out = '🧥 หนาวจัด! โค้ทหนามาก + Thermal + ถุงมือ + หมวก';
+            else if (avg < 10)  out = '🧥 แจ็คเก็ตหนา + Sweater + กางเกงขายาว';
+            else if (avg < 15)  out = '🫧 แจ็คเก็ตบาง + เสื้อแขนยาว + กางเกงขายาว';
+            else if (avg < 20)  out = '👕 Cardigan บาง + เสื้อยืด สบายๆ';
+            else if (avg < 25)  out = '👕 เสื้อยืด + กางเกงชิโน่ อากาศดี';
+            else                out = '🌞 เสื้อผ้าเบาระบาย ทาครีมกันแดดด้วย!';
+            if (code >= 51 && code <= 82) out += ' + 🌂 พกร่มด้วย';
+            return out;
+        }
+
+        async function fetchDayWeather(dayIndex) {
+            if (weatherCache[dayIndex]) return weatherCache[dayIndex];
+            const cfg = dayWeatherConfig[dayIndex];
+            if (!cfg) return null;
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${cfg.lat}&longitude=${cfg.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&start_date=${cfg.date}&end_date=${cfg.date}`;
+                const res = await fetch(url);
+                if (!res.ok) return null;
+                const json = await res.json();
+                if (!json.daily?.temperature_2m_max?.length) return null;
+                const maxT = Math.round(json.daily.temperature_2m_max[0]);
+                const minT = Math.round(json.daily.temperature_2m_min[0]);
+                const code = json.daily.weathercode[0];
+                const { icon, label } = getWeatherIcon(code);
+                const result = { icon, label, temp: `${minT}–${maxT}°C`, maxT, minT, code, city: cfg.city, ootd: getAutoOOTD(maxT, minT, code) };
+                weatherCache[dayIndex] = result;
+                return result;
+            } catch { return null; }
+        }
+
         // 2. State Management (โหลดจาก Local ถ้ามี ไม่งั้นใช้ Default)
         let tripMeta = JSON.parse(localStorage.getItem('broTripMeta')) || defaultTripMeta;
         let tripData = JSON.parse(localStorage.getItem('broTripData')) || defaultTripData;
@@ -503,15 +562,19 @@ const defaultTripData = [
                         </div>
                     </div>
 
-                    <div class="weather-widget rounded-xl p-5 mb-8 border border-sky-500/30 flex flex-col md:flex-row items-center gap-5 shadow-lg">
+                    <div id="live-weather-widget" class="weather-widget rounded-xl p-5 mb-8 border border-sky-500/30 flex flex-col md:flex-row items-center gap-5 shadow-lg">
                         <div class="flex items-center gap-4 w-full md:w-auto md:border-r md:border-sky-500/30 md:pr-6">
                             <span class="text-5xl drop-shadow-md">${data.weather.icon}</span>
                             <div>
                                 <p class="text-2xl font-bold text-white tracking-wide">${data.weather.temp}</p>
                                 <p class="text-sm text-sky-200 font-medium">${data.weather.desc}</p>
+                                <p class="text-xs text-yellow-400 mt-1 flex items-center gap-1">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                                    กำลังดึงพยากรณ์อากาศ...
+                                </p>
                             </div>
                         </div>
-                        <div class="w-full md:w-auto">
+                        <div class="w-full md:w-auto flex-1">
                             <p class="text-sm text-sky-100 leading-relaxed"><span class="font-bold text-sky-300 uppercase tracking-wide text-xs bg-sky-900/50 px-2 py-1 rounded mr-2">👗 OOTD</span> ${data.ootd}</p>
                         </div>
                     </div>
@@ -542,7 +605,33 @@ const defaultTripData = [
                     </div>
 
                 `;
-            } 
+
+                // Fetch live weather and update widget
+                fetchDayWeather(dayIndex).then(live => {
+                    const widget = document.getElementById('live-weather-widget');
+                    if (!live || !widget) return;
+                    widget.innerHTML = `
+                        <div class="flex items-center gap-4 w-full md:w-auto md:border-r md:border-sky-500/30 md:pr-6">
+                            <span class="text-5xl drop-shadow-md">${live.icon}</span>
+                            <div>
+                                <p class="text-2xl font-bold text-white tracking-wide">${live.temp}</p>
+                                <p class="text-sm text-sky-200 font-medium">${live.label}</p>
+                                <p class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    LIVE · ${live.city}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto flex-1">
+                            <p class="text-sm text-sky-100 leading-relaxed">
+                                <span class="font-bold text-emerald-300 uppercase tracking-wide text-xs bg-emerald-900/40 px-2 py-1 rounded mr-2">👗 OOTD Auto</span>
+                                ${live.ootd}
+                            </p>
+                            <p class="text-xs text-slate-500 mt-2">แนะนำจากอุณหภูมิจริง ${live.minT}–${live.maxT}°C</p>
+                        </div>
+                    `;
+                });
+            }
             // --- EDIT MODE ---
             else {
                 const activitiesEdit = data.activities.map((a, i) => `
