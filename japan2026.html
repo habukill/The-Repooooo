@@ -461,10 +461,35 @@ const defaultTripData = [
                 const minT = Math.round(json.daily.temperature_2m_min[0]);
                 const code = json.daily.weathercode[0];
                 const { icon, label } = getWeatherIcon(code);
-                const result = { icon, label, temp: `${minT}–${maxT}°C`, maxT, minT, code, city: cfg.city, ootd: getAutoOOTD(maxT, minT, code) };
+                const result = { icon, label, temp: `${minT}–${maxT}°C`, maxT, minT, code, city: cfg.city, lat: cfg.lat, lon: cfg.lon, ootd: getAutoOOTD(maxT, minT, code) };
                 weatherCache[dayIndex] = result;
                 return result;
             } catch { return null; }
+        }
+
+        // --- Tateyama Alpine Route Multi-Point Config (Day 5) ---
+        const tateyamaPoints = [
+            { name: "จอดรถ Ogizawa",      elev: "1,433m", emoji: "🚗", lat: 36.5695, lon: 137.6590, date: "2026-06-03" },
+            { name: "Kurobe Dam",          elev: "1,470m", emoji: "🚌", lat: 36.5621, lon: 137.6524, date: "2026-06-03" },
+            { name: "Daikanbo (กระเช้า)", elev: "2,316m", emoji: "🚡", lat: 36.5754, lon: 137.5657, date: "2026-06-03" },
+            { name: "Murodo / กำแพงหิมะ", elev: "2,450m", emoji: "❄️", lat: 36.5758, lon: 137.5987, date: "2026-06-03" },
+        ];
+
+        async function fetchTateyamaWeather() {
+            return Promise.all(tateyamaPoints.map(async pt => {
+                try {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${pt.lat}&longitude=${pt.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&start_date=${pt.date}&end_date=${pt.date}`;
+                    const res = await fetch(url);
+                    if (!res.ok) return { ...pt, error: true };
+                    const json = await res.json();
+                    if (!json.daily?.temperature_2m_max?.length) return { ...pt, error: true };
+                    const maxT = Math.round(json.daily.temperature_2m_max[0]);
+                    const minT = Math.round(json.daily.temperature_2m_min[0]);
+                    const code = json.daily.weathercode[0];
+                    const { icon, label } = getWeatherIcon(code);
+                    return { ...pt, maxT, minT, icon, label, temp: `${minT}–${maxT}°C`, ootd: getAutoOOTD(maxT, minT, code), error: false };
+                } catch { return { ...pt, error: true }; }
+            }));
         }
 
         // 2. State Management (โหลดจาก Local ถ้ามี ไม่งั้นใช้ Default)
@@ -545,6 +570,16 @@ const defaultTripData = [
                     </li>
                 `).join('');
 
+                const dayCfg = dayWeatherConfig[dayIndex] || {};
+                const windyUrl = dayCfg.lat ? `https://www.windy.com/?temp,${dayCfg.lat},${dayCfg.lon},12` : 'https://www.windy.com/';
+                const tateyamaPlaceholder = dayIndex === 4 ? `
+                    <div id="tateyama-widget" class="mb-8 rounded-xl border border-purple-500/30 bg-purple-900/10 p-5 shadow-lg">
+                        <h3 class="text-purple-300 text-sm font-bold flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                            กำลังโหลดอากาศแต่ละจุด Tateyama Alpine Route...
+                        </h3>
+                    </div>` : '';
+
                 contentArea.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 border-b border-slate-700 pb-5 gap-4">
                         <div>
@@ -576,8 +611,11 @@ const defaultTripData = [
                         </div>
                         <div class="w-full md:w-auto flex-1">
                             <p class="text-sm text-sky-100 leading-relaxed"><span class="font-bold text-sky-300 uppercase tracking-wide text-xs bg-sky-900/50 px-2 py-1 rounded mr-2">👗 OOTD</span> ${data.ootd}</p>
+                            <a href="${windyUrl}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors">🌐 ดูพยากรณ์อากาศแบบละเอียด (Windy)</a>
                         </div>
                     </div>
+
+                    ${tateyamaPlaceholder}
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="bg-slate-800/40 p-6 rounded-2xl border border-slate-700/50 shadow-inner">
@@ -627,10 +665,44 @@ const defaultTripData = [
                                 <span class="font-bold text-emerald-300 uppercase tracking-wide text-xs bg-emerald-900/40 px-2 py-1 rounded mr-2">👗 OOTD Auto</span>
                                 ${live.ootd}
                             </p>
-                            <p class="text-xs text-slate-500 mt-2">แนะนำจากอุณหภูมิจริง ${live.minT}–${live.maxT}°C</p>
+                            <p class="text-xs text-slate-500 mt-1">แนะนำจากอุณหภูมิจริง ${live.minT}–${live.maxT}°C</p>
+                            <a href="https://www.windy.com/?temp,${live.lat},${live.lon},12" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs text-sky-400 hover:text-sky-200 underline decoration-dotted transition-colors">🌐 ดูพยากรณ์อากาศแบบละเอียด (Windy)</a>
                         </div>
                     `;
                 });
+
+                // Tateyama multi-point weather (Day 5 only)
+                if (dayIndex === 4) {
+                    fetchTateyamaWeather().then(points => {
+                        const tw = document.getElementById('tateyama-widget');
+                        if (!tw) return;
+                        tw.innerHTML = `
+                            <h3 class="text-purple-300 font-bold text-sm mb-4 flex items-center gap-2">
+                                🏔️ อากาศแต่ละจุด · Tateyama Alpine Route <span class="text-xs font-normal text-slate-400">(3 Jun)</span>
+                            </h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${points.map(pt => `
+                                    <div class="bg-slate-800/60 rounded-xl p-4 border border-purple-500/20">
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <span class="text-2xl">${pt.emoji}</span>
+                                            <div>
+                                                <p class="text-xs text-purple-200 font-bold leading-tight">${pt.name}</p>
+                                                <p class="text-xs text-slate-500">${pt.elev} เหนือน้ำทะเล</p>
+                                            </div>
+                                        </div>
+                                        ${pt.error
+                                            ? '<p class="text-xs text-slate-500 italic">ไม่สามารถโหลดข้อมูลได้</p>'
+                                            : `<p class="text-lg font-bold text-white">${pt.icon} ${pt.temp}</p>
+                                               <p class="text-xs text-sky-200 mt-1">${pt.label}</p>
+                                               <p class="text-xs text-emerald-300 mt-2 leading-relaxed border-t border-slate-700/50 pt-2">${pt.ootd}</p>`
+                                        }
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <p class="text-xs text-slate-600 mt-3">อุณหภูมิจาก Open-Meteo · ตามพิกัดแต่ละจุดบน Alpine Route</p>
+                        `;
+                    });
+                }
             }
             // --- EDIT MODE ---
             else {
