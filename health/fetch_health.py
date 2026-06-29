@@ -54,6 +54,24 @@ def get_drive_credentials():
     return creds
 
 
+def fetch_daily_rollup(creds, data_type):
+    headers = {"Authorization": f"Bearer {creds.token}"}
+    results = []
+    params = {}
+    while True:
+        r = requests.get(f"{BASE_URL}/{data_type}/dataPoints:dailyRollUp", headers=headers, params=params)
+        if not r.ok:
+            print(f"ERROR {r.status_code} for {data_type} dailyRollUp: {r.text}")
+            break
+        data = r.json()
+        results.extend(data.get("dataPoints", []))
+        next_token = data.get("nextPageToken")
+        if not next_token:
+            break
+        params = {"pageToken": next_token}
+    return results
+
+
 def fetch(creds, data_type, paginate=False):
     headers = {"Authorization": f"Bearer {creds.token}"}
     results = []
@@ -144,8 +162,8 @@ def write_health_md(creds):
 
     # Steps + Active Zone Minutes + Calories
     lines.append("## Activity (Daily)")
-    lines.append("| วันที่ | Steps | Active Zone Min | Active Cal |")
-    lines.append("|--------|-------|----------------|------------|")
+    lines.append("| วันที่ | Steps | Active Zone Min | Active Cal | Total Cal |")
+    lines.append("|--------|-------|----------------|------------|-----------|")
     steps_data = {}
     for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
@@ -170,12 +188,20 @@ def write_health_md(creds):
         if date_obj:
             date = fmt_date(date_obj)
             active_cal_data[date] = active_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
-    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data))
+    total_cal_data = {}
+    for p in fetch_daily_rollup(creds, "total-calories"):
+        d = p.get("totalCalories", {})
+        date_obj = d.get("date") or d.get("interval", {}).get("civilStartTime", {}).get("date")
+        if date_obj:
+            date = fmt_date(date_obj)
+            total_cal_data[date] = round(d.get("kcal", 0), 0)
+    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data) + list(total_cal_data))
     for date in sorted(all_dates, reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
         active_cal = f"{int(active_cal_data[date])} kcal" if date in active_cal_data else "-"
-        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} |")
+        total_cal = f"{int(total_cal_data[date])} kcal" if date in total_cal_data else "-"
+        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} | {total_cal} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
