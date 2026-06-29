@@ -155,8 +155,8 @@ def write_health_md(creds):
 
     # Steps + Active Zone Minutes
     lines.append("## Activity (Daily)")
-    lines.append("| วันที่ | Steps | Active Zone Min |")
-    lines.append("|--------|-------|----------------|")
+    lines.append("| วันที่ | Steps | Active Zone Min | Calories |")
+    lines.append("|--------|-------|----------------|----------|")
     steps_data = {}
     for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
@@ -173,10 +173,19 @@ def write_health_md(creds):
         if date_obj:
             date = fmt_date(date_obj)
             azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
-    for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
+    cal_data = {}
+    for p in fetch(creds, "calories", paginate=True):
+        d = p.get("calories", {})
+        civil = d.get("interval", {}).get("civilStartTime", {})
+        date_obj = civil.get("date", {})
+        if date_obj:
+            date = fmt_date(date_obj)
+            cal_data[date] = cal_data.get(date, 0) + round(d.get("kilocalories", 0), 1)
+    for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys()) + list(cal_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
-        lines.append(f"| {date} | {steps} | {azm} min |")
+        cal = f"{int(cal_data[date])} kcal" if date in cal_data else "-"
+        lines.append(f"| {date} | {steps} | {azm} min | {cal} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
