@@ -226,26 +226,20 @@ def write_health_md(creds):
     weight_data = {}
     for p in fetch(creds, "weight", paginate=True):
         d = p.get("weight", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if not date_obj:
-            date_obj = d.get("date", {})
+        date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            kg = d.get("weightKg") or d.get("kg") or d.get("weight")
-            if kg:
-                weight_data[date] = round(float(kg), 1)
+            grams = d.get("weightGrams")
+            if grams:
+                weight_data[date] = round(float(grams) / 1000, 1)
     fat_data = {}
     for p in fetch(creds, "body-fat", paginate=True):
         d = p.get("bodyFat", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if not date_obj:
-            date_obj = d.get("date", {})
+        date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            pct = d.get("percentage") or d.get("percent") or d.get("value")
-            if pct:
+            pct = d.get("percentage")
+            if pct is not None:
                 fat_data[date] = round(float(pct), 1)
     for date in sorted(set(list(weight_data) + list(fat_data)), reverse=True):
         w = weight_data.get(date)
@@ -280,8 +274,8 @@ def write_health_md(creds):
         date_obj = d.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            pct = d.get("percentage") or d.get("averagePercentage") or d.get("value")
-            if pct:
+            pct = d.get("averagePercentage")
+            if pct is not None:
                 spo2_data[date] = round(float(pct), 1)
     skintemp_data = {}
     for p in fetch(creds, "daily-sleep-temperature-derivations"):
@@ -289,14 +283,20 @@ def write_health_md(creds):
         date_obj = d.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            val = d.get("baselineDeviationCelsius") or d.get("variationCelsius") or d.get("celsius") or d.get("value")
-            if val is not None:
-                skintemp_data[date] = round(float(val), 2)
+            nightly = d.get("nightlyTemperatureCelsius")
+            baseline = d.get("baselineTemperatureCelsius")
+            if nightly is not None:
+                deviation = round(nightly - baseline, 2) if baseline is not None else None
+                skintemp_data[date] = (round(nightly, 1), round(baseline, 1) if baseline else "-", f"{deviation:+.2f}" if deviation is not None else "-")
     all_wellness = set(list(br_data) + list(spo2_data) + list(skintemp_data))
     for date in sorted(all_wellness, reverse=True):
         br = f"{br_data[date]} brpm" if date in br_data else "-"
         spo2 = f"{spo2_data[date]}%" if date in spo2_data else "-"
-        skintemp = f"{skintemp_data[date]:+.2f}°C" if date in skintemp_data else "-"
+        if date in skintemp_data:
+            nightly, baseline, dev = skintemp_data[date]
+            skintemp = f"{nightly}°C (base {baseline}°C, {dev})"
+        else:
+            skintemp = "-"
         lines.append(f"| {date} | {br} | {spo2} | {skintemp} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
