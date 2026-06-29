@@ -44,7 +44,9 @@ def fetch(creds, data_type, params=None):
         headers=headers,
         params={**default_params, **params},
     )
-    r.raise_for_status()
+    if not r.ok:
+        print(f"ERROR {r.status_code} for {data_type}: {r.text}")
+        r.raise_for_status()
     return r.json().get("dataPoints", [])
 
 
