@@ -1,5 +1,7 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+ICT = timezone(timedelta(hours=7))
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -75,7 +77,7 @@ def fmt_date(d):
 
 
 def write_health_md(creds):
-    updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+    updated = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
     lines = [f"# Health Data — อัพเดท {updated}\n"]
 
     # Sleep
@@ -86,9 +88,18 @@ def write_health_md(creds):
         s = p.get("sleep", {})
         interval = s.get("interval", {})
         summary = s.get("summary", {})
-        date = interval.get("startTime", "")[:10]
-        start = interval.get("startTime", "")[11:16] or "-"
-        end = interval.get("endTime", "")[11:16] or "-"
+        raw_start = interval.get("startTime", "")
+        raw_end = interval.get("endTime", "")
+        if raw_start:
+            dt_start = datetime.fromisoformat(raw_start.replace("Z", "+00:00")).astimezone(ICT)
+            date = dt_start.strftime("%Y-%m-%d")
+            start = dt_start.strftime("%H:%M")
+        else:
+            date, start = "", "-"
+        if raw_end:
+            end = datetime.fromisoformat(raw_end.replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M")
+        else:
+            end = "-"
         minutes_asleep = int(summary.get("minutesAsleep", 0))
         stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
         deep = stages.get("DEEP", 0)
