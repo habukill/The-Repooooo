@@ -1,0 +1,38 @@
+name: Fetch Health Data
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 07:00 ICT (UTC+7) daily
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r health/requirements.txt
+
+      - name: Write credentials
+        run: |
+          echo '${{ secrets.GOOGLE_HEALTH_CREDENTIALS }}' > health/credentials.json
+          echo '${{ secrets.GOOGLE_HEALTH_TOKEN }}' > health/token.json
+
+      - name: Fetch health data
+        run: cd health && python fetch_health.py
+
+      - name: Commit health_data.md
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add health/health_data.md
+          git commit -m "chore: update health_data.md" || echo "no changes"
+          git push
