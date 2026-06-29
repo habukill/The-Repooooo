@@ -30,3 +30,27 @@ jobs:
       - name: Fetch health data
         run: cd health && python fetch_health.py
 
+      - name: Encrypt and commit health data
+        env:
+          HEALTH_ENCRYPT_KEY: ${{ secrets.HEALTH_ENCRYPT_KEY }}
+        run: |
+          cd health
+          python -c "
+          import os
+          from cryptography.fernet import Fernet
+          key = os.environ['HEALTH_ENCRYPT_KEY'].encode()
+          f = Fernet(key)
+          for name in ['health_data.md', 'sleep_stages.md']:
+              if os.path.exists(name):
+                  with open(name, 'rb') as fp:
+                      data = fp.read()
+                  with open(name + '.enc', 'wb') as fp:
+                      fp.write(f.encrypt(data))
+                  print(f'encrypted {name}')
+          "
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add health_data.md.enc sleep_stages.md.enc
+          git diff --cached --quiet || git commit -m "chore: update encrypted health data"
+          git push
+

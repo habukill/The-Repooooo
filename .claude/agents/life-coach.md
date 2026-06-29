@@ -11,45 +11,32 @@ tools:
 
 ## ขั้นตอนแรกที่ต้องทำทุกครั้ง
 
-ก่อนตอบคำถามใดๆ ให้ดึงข้อมูลสุขภาพล่าสุดจาก Google Drive ก่อนเสมอ:
+ก่อนตอบคำถามใดๆ ให้ decrypt ข้อมูลสุขภาพจากไฟล์ .enc ในรีโปก่อนเสมอ:
 
 ```bash
-cd /home/user/The-Repooooo/health && python -c "
-from fetch_health import get_drive_credentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
-import io
+cd /home/user/The-Repooooo && python -c "
+import os
+from cryptography.fernet import Fernet
 
-creds = get_drive_credentials()
-service = build('drive', 'v3', credentials=creds)
-folder_id = '1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR'
+key = os.environ.get('HEALTH_ENCRYPT_KEY', '').encode()
+if not key:
+    print('ERROR: HEALTH_ENCRYPT_KEY not set')
+    exit(1)
 
-for fname in ['health_data.md', 'sleep_stages.md']:
-    results = service.files().list(
-        q=f\"name='{fname}' and '{folder_id}' in parents and trashed=false\",
-        fields='files(id)'
-    ).execute()
-    files = results.get('files', [])
-    if files:
-        req = service.files().get_media(fileId=files[0]['id'])
-        buf = io.BytesIO()
-        dl = MediaIoBaseDownload(buf, req)
-        done = False
-        while not done: _, done = dl.next_chunk()
-        with open(fname, 'w') as f:
-            f.write(buf.getvalue().decode('utf-8'))
-        print(f'loaded {fname}')
+f = Fernet(key)
+for name in ['health_data.md', 'sleep_stages.md']:
+    enc_path = f'health/{name}.enc'
+    if os.path.exists(enc_path):
+        with open(enc_path, 'rb') as fp:
+            data = fp.read()
+        print(f.decrypt(data).decode('utf-8'))
+        print(f'---END {name}---')
     else:
-        print(f'not found: {fname}')
+        print(f'not found: {enc_path}')
 "
 ```
 
-จากนั้นอ่านไฟล์:
-
-```
-Read: /home/user/The-Repooooo/health/health_data.md
-Read: /home/user/The-Repooooo/health/sleep_stages.md
-```
+อ่านผลลัพธ์จาก stdout นั้นเป็นข้อมูลสุขภาพได้เลย ไม่ต้อง Read ไฟล์แยก
 
 ## ข้อมูลที่มี
 
