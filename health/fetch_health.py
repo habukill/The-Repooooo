@@ -1,4 +1,3 @@
-import json
 import os
 from datetime import datetime, timedelta
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -11,7 +10,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
     "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
 ]
-BASE_URL = "https://health.googleapis.com/v4/users/-/dataTypes"
+BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
 
 
 def get_credentials():
@@ -32,47 +31,61 @@ def get_credentials():
     return creds
 
 
-def fetch(creds, data_type, extra_filter=""):
+def fetch(creds, data_type):
     headers = {"Authorization": f"Bearer {creds.token}"}
-    now = datetime.utcnow()
-    week_ago = now - timedelta(days=7)
-    time_filter = (
-        f'startTime > "{week_ago.strftime("%Y-%m-%dT%H:%M:%SZ")}" '
-        f'AND endTime < "{now.strftime("%Y-%m-%dT%H:%M:%SZ")}"'
-    )
-    filter_str = f"{time_filter} AND {extra_filter}" if extra_filter else time_filter
-    r = requests.get(
-        f"{BASE_URL}/{data_type}/dataPoints",
-        headers=headers,
-        params={"filter": filter_str},
-    )
+    r = requests.get(f"{BASE_URL}/{data_type}/dataPoints", headers=headers)
     if not r.ok:
         print(f"ERROR {r.status_code} for {data_type}: {r.text}")
-        r.raise_for_status()
+        return []
     return r.json().get("dataPoints", [])
 
 
+def fetch_daily_rollup(creds, data_type):
+    headers = {"Authorization": f"Bearer {creds.token}"}
+    now = datetime.utcnow()
+    week_ago = now - timedelta(days=7)
+    params = {
+        "startDate": week_ago.strftime("%Y-%m-%d"),
+        "endDate": now.strftime("%Y-%m-%d"),
+    }
+    r = requests.get(
+        f"{BASE_URL}/{data_type}/dataPoints:dailyRollup",
+        headers=headers,
+        params=params,
+    )
+    if not r.ok:
+        print(f"ERROR {r.status_code} for {data_type} dailyRollup: {r.text}")
+        return []
+    return r.json().get("dataPoints", [])
+
+
+def fmt_date(d):
+    return f"{d['year']}-{d['month']:02d}-{d['day']:02d}"
+
+
 def write_health_md(creds):
-    today = datetime.now().strftime("%Y-%m-%d %H:%M")
-    lines = [f"# Health Data — อัพเดท {today}\n"]
+    updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+    lines = [f"# Health Data — อัพเดท {updated}\n"]
 
     # Sleep
     lines.append("## Sleep (7 วันล่าสุด)")
-    lines.append("| วันที่ | เข้านอน | ตื่น | รวม | Deep | REM |")
-    lines.append("|--------|---------|------|-----|------|-----|")
+    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | Deep | REM |")
+    lines.append("|--------|---------|------|---------|------|-----|")
     for p in fetch(creds, "sleep"):
-        d = p.get("value", {})
-        date = p.get("startTime", "")[:10]
-        duration = round(d.get("durationMilliseconds", 0) / 3600000, 1)
-        deep = round(
-            d.get("sleepStageData", {}).get("deepSleepDurationMilliseconds", 0) / 3600000, 1
+        s = p.get("sleep", {})
+        interval = s.get("interval", {})
+        summary = s.get("summary", {})
+        date = interval.get("startTime", "")[:10]
+        start = interval.get("startTime", "")[11:16] or "-"
+        end = interval.get("endTime", "")[11:16] or "-"
+        minutes_asleep = int(summary.get("minutesAsleep", 0))
+        stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
+        deep = stages.get("DEEP", 0)
+        rem = stages.get("REM", 0)
+        total = round(minutes_asleep / 60, 1)
+        lines.append(
+            f"| {date} | {start} | {end} | {total}h | {deep}m | {rem}m |"
         )
-        rem = round(
-            d.get("sleepStageData", {}).get("remSleepDurationMilliseconds", 0) / 3600000, 1
-        )
-        start = p.get("startTime", "")[11:16] if p.get("startTime") else "-"
-        end = p.get("endTime", "")[11:16] if p.get("endTime") else "-"
-        lines.append(f"| {date} | {start} | {end} | {duration}h | {deep}h | {rem}h |")
 
     lines.append("")
 
@@ -80,34 +93,38 @@ def write_health_md(creds):
     lines.append("## Heart Metrics (Daily)")
     lines.append("| วันที่ | Resting HR | HRV |")
     lines.append("|--------|-----------|-----|")
-    hr_data = {
-        p["startTime"][:10]: p["value"].get("beatsPerMinute")
-        for p in fetch(creds, "daily-resting-heart-rate")
-    }
-    hrv_data = {
-        p["startTime"][:10]: p["value"].get("rmssd")
-        for p in fetch(creds, "daily-heart-rate-variability")
-    }
-    for date in sorted(set(list(hr_data.keys()) + list(hrv_data.keys()))):
+    hr_data = {}
+    for p in fetch(creds, "daily-resting-heart-rate"):
+        d = p.get("dailyRestingHeartRate", {})
+        if "date" in d:
+            hr_data[fmt_date(d["date"])] = d.get("beatsPerMinute", "-")
+    hrv_data = {}
+    for p in fetch(creds, "daily-heart-rate-variability"):
+        d = p.get("dailyHeartRateVariability", {})
+        if "date" in d:
+            hrv_data[fmt_date(d["date"])] = d.get("rmssd", "-")
+    for date in sorted(set(list(hr_data.keys()) + list(hrv_data.keys())), reverse=True):
         hr = hr_data.get(date, "-")
         hrv = hrv_data.get(date, "-")
         lines.append(f"| {date} | {hr} bpm | {hrv} ms |")
 
     lines.append("")
 
-    # Steps + Active Zone Minutes
+    # Steps + Active Zone Minutes (daily rollup)
     lines.append("## Activity (Daily)")
     lines.append("| วันที่ | Steps | Active Zone Min |")
     lines.append("|--------|-------|----------------|")
-    steps_data = {
-        p["startTime"][:10]: p["value"].get("steps")
-        for p in fetch(creds, "steps")
-    }
-    azm_data = {
-        p["startTime"][:10]: p["value"].get("totalMinutes")
-        for p in fetch(creds, "active-zone-minutes")
-    }
-    for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys()))):
+    steps_data = {}
+    for p in fetch_daily_rollup(creds, "steps"):
+        d = p.get("steps", {})
+        if "date" in d:
+            steps_data[fmt_date(d["date"])] = d.get("count", "-")
+    azm_data = {}
+    for p in fetch_daily_rollup(creds, "active-zone-minutes"):
+        d = p.get("activeZoneMinutes", {})
+        if "date" in d:
+            azm_data[fmt_date(d["date"])] = d.get("totalMinutes", "-")
+    for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
         lines.append(f"| {date} | {steps} | {azm} min |")
