@@ -174,13 +174,13 @@ def write_health_md(creds):
             date = fmt_date(date_obj)
             azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
     cal_data = {}
-    for p in fetch(creds, "calories", paginate=True):
-        d = p.get("calories", {})
+    for p in fetch(creds, "active-energy-burned", paginate=True):
+        d = p.get("activeEnergyBurned", {})
         civil = d.get("interval", {}).get("civilStartTime", {})
         date_obj = civil.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            cal_data[date] = cal_data.get(date, 0) + round(d.get("kilocalories", 0), 1)
+            cal_data[date] = cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys()) + list(cal_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
