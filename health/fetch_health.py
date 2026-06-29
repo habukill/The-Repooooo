@@ -82,8 +82,8 @@ def write_health_md(creds):
 
     # Sleep
     lines.append("## Sleep")
-    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | Efficiency | Score | Light | Deep | REM | Awake | Restless | Sound Sleep | Time to Sleep | Interruptions | Sleeping HR |")
-    lines.append("|--------|---------|------|---------|------------|-------|-------|------|-----|-------|----------|-------------|---------------|---------------|-------------|")
+    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | อยู่บนเตียง | Efficiency | Time to Sleep | Light | Deep | REM | Awake | Restless |")
+    lines.append("|--------|---------|------|---------|------------|------------|---------------|-------|------|-----|-------|----------|")
     for p in fetch(creds, "sleep"):
         s = p.get("sleep", {})
         interval = s.get("interval", {})
@@ -101,31 +101,20 @@ def write_health_md(creds):
         else:
             end = "-"
         minutes_asleep = int(summary.get("minutesAsleep", 0))
+        minutes_in_bed = int(summary.get("minutesInSleepPeriod", 0))
         total = round(minutes_asleep / 60, 1)
+        in_bed = round(minutes_in_bed / 60, 1)
+        efficiency = f"{int(minutes_asleep / minutes_in_bed * 100)}%" if minutes_in_bed > 0 else "-"
         stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
         light = stages.get("LIGHT", "-")
         deep = stages.get("DEEP", "-")
         rem = stages.get("REM", "-")
         awake = stages.get("AWAKE", "-")
-        efficiency = summary.get("sleepEfficiencyPercent", "-")
-        if efficiency != "-":
-            efficiency = f"{int(efficiency)}%"
-        score = summary.get("sleepScore", "-")
-        restless = summary.get("minutesRestless", "-")
-        if restless != "-":
-            restless = f"{int(restless)}m"
-        sound_sleep = summary.get("minutesSoundSleep", "-")
-        if sound_sleep != "-":
-            sound_sleep = f"{round(int(sound_sleep)/60, 1)}h"
-        time_to_sleep = summary.get("minutesToFallAsleep", "-")
-        if time_to_sleep != "-":
-            time_to_sleep = f"{int(time_to_sleep)}m"
-        interruptions = summary.get("numberOfAwakenings", "-")
-        sleeping_hr = summary.get("averageHeartRate", "-")
-        if sleeping_hr != "-":
-            sleeping_hr = f"{int(sleeping_hr)} bpm"
+        restless = stages.get("RESTLESS", "-")
+        time_to_sleep_raw = summary.get("minutesToFallAsleep")
+        time_to_sleep = f"{int(time_to_sleep_raw)}m" if time_to_sleep_raw is not None else "-"
         lines.append(
-            f"| {date} | {start} | {end} | {total}h | {efficiency} | {score} | {light}m | {deep}m | {rem}m | {awake}m | {restless} | {sound_sleep} | {time_to_sleep} | {interruptions} | {sleeping_hr} |"
+            f"| {date} | {start} | {end} | {total}h | {in_bed}h | {efficiency} | {time_to_sleep} | {light}m | {deep}m | {rem}m | {awake}m | {restless}m |"
         )
 
     lines.append("")
@@ -155,8 +144,8 @@ def write_health_md(creds):
 
     # Steps + Active Zone Minutes + Calories
     lines.append("## Activity (Daily)")
-    lines.append("| วันที่ | Steps | Active Zone Min | Active Cal | Total Cal | BMR |")
-    lines.append("|--------|-------|----------------|------------|-----------|-----|")
+    lines.append("| วันที่ | Steps | Active Zone Min | Active Cal |")
+    lines.append("|--------|-------|----------------|------------|")
     steps_data = {}
     for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
@@ -181,28 +170,12 @@ def write_health_md(creds):
         if date_obj:
             date = fmt_date(date_obj)
             active_cal_data[date] = active_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
-    total_cal_data = {}
-    for p in fetch(creds, "total-calories", paginate=True):
-        d = p.get("totalCalories", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            total_cal_data[date] = total_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
-    bmr_data = {}
-    for p in fetch(creds, "basal-metabolic-rate"):
-        d = p.get("basalMetabolicRate", {})
-        if "date" in d:
-            date = fmt_date(d["date"])
-            bmr_data[date] = int(d.get("rateKcalPerDay", 0))
-    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data) + list(total_cal_data) + list(bmr_data))
+    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data))
     for date in sorted(all_dates, reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
         active_cal = f"{int(active_cal_data[date])} kcal" if date in active_cal_data else "-"
-        total_cal = f"{int(total_cal_data[date])} kcal" if date in total_cal_data else "-"
-        bmr = f"{bmr_data[date]} kcal" if date in bmr_data else "-"
-        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} | {total_cal} | {bmr} |")
+        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
