@@ -1,9 +1,7 @@
-import json
 import os
 from datetime import datetime, timedelta
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
-from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
@@ -13,6 +11,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
     "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
     "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+    "https://www.googleapis.com/auth/drive.file",
 ]
 BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
 
@@ -142,15 +141,8 @@ def write_health_md(creds):
     print("health_data.md updated")
 
 
-def upload_to_drive(file_path):
-    sa_path = os.path.join(os.path.dirname(__file__), "service_account.json")
-    if not os.path.exists(sa_path):
-        print("No service_account.json found, skipping Drive upload")
-        return
+def upload_to_drive(file_path, creds):
     folder_id = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
-    creds = service_account.Credentials.from_service_account_file(
-        sa_path, scopes=["https://www.googleapis.com/auth/drive.file"]
-    )
     service = build("drive", "v3", credentials=creds)
 
     # Check if file already exists in folder
@@ -175,4 +167,4 @@ def upload_to_drive(file_path):
 if __name__ == "__main__":
     creds = get_credentials()
     write_health_md(creds)
-    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"))
+    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"), creds)
