@@ -223,14 +223,61 @@ def write_health_md(creds):
     print("health_data.md updated")
 
 
-def upload_to_drive(file_path):
+def write_sleep_stages_md(creds):
+    updated = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
+    lines = [f"# Sleep Stages Timeline — อัพเดท {updated}\n"]
+    lines.append("ข้อมูล timeline การนอนรายคืน แต่ละบรรทัดคือ segment ของ sleep stage\n")
+
+    for p in fetch(creds, "sleep"):
+        s = p.get("sleep", {})
+        interval = s.get("interval", {})
+        stages = s.get("stages", [])
+        if not stages:
+            continue
+        raw_start = interval.get("startTime", "")
+        if raw_start:
+            dt_start = datetime.fromisoformat(raw_start.replace("Z", "+00:00")).astimezone(ICT)
+            date = dt_start.strftime("%Y-%m-%d")
+            start = dt_start.strftime("%H:%M")
+        else:
+            continue
+        raw_end = interval.get("endTime", "")
+        end = datetime.fromisoformat(raw_end.replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M") if raw_end else "-"
+
+        summary = s.get("summary", {})
+        minutes_asleep = int(summary.get("minutesAsleep", 0))
+        total = round(minutes_asleep / 60, 1)
+
+        lines.append(f"## {date} ({start} – {end}, นอนหลับ {total}h)")
+        lines.append("| เวลา | Stage | นาที |")
+        lines.append("|------|-------|------|")
+        for stage in stages:
+            st_raw = stage.get("startTime", "")
+            et_raw = stage.get("endTime", "")
+            stype = stage.get("type", "")
+            if not st_raw or not et_raw:
+                continue
+            st = datetime.fromisoformat(st_raw.replace("Z", "+00:00")).astimezone(ICT)
+            et = datetime.fromisoformat(et_raw.replace("Z", "+00:00")).astimezone(ICT)
+            duration = int((et - st).total_seconds() / 60)
+            lines.append(f"| {st.strftime('%H:%M')}–{et.strftime('%H:%M')} | {stype} | {duration}m |")
+        lines.append("")
+
+    out_path = os.path.join(os.path.dirname(__file__), "sleep_stages.md")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+    print("sleep_stages.md updated")
+
+
+def upload_to_drive(file_path, file_name=None):
     folder_id = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
+    if file_name is None:
+        file_name = os.path.basename(file_path)
     creds = get_drive_credentials()
     service = build("drive", "v3", credentials=creds)
 
-    # Check if file already exists in folder
     results = service.files().list(
-        q=f"name='health_data.md' and '{folder_id}' in parents and trashed=false",
+        q=f"name='{file_name}' and '{folder_id}' in parents and trashed=false",
         fields="files(id)"
     ).execute()
     files = results.get("files", [])
@@ -238,16 +285,18 @@ def upload_to_drive(file_path):
     media = MediaFileUpload(file_path, mimetype="text/markdown")
     if files:
         service.files().update(fileId=files[0]["id"], media_body=media).execute()
-        print("health_data.md updated in Google Drive")
+        print(f"{file_name} updated in Google Drive")
     else:
         service.files().create(
-            body={"name": "health_data.md", "parents": [folder_id]},
+            body={"name": file_name, "parents": [folder_id]},
             media_body=media
         ).execute()
-        print("health_data.md uploaded to Google Drive")
+        print(f"{file_name} uploaded to Google Drive")
 
 
 if __name__ == "__main__":
     creds = get_credentials()
     write_health_md(creds)
+    write_sleep_stages_md(creds)
     upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"))
+    upload_to_drive(os.path.join(os.path.dirname(__file__), "sleep_stages.md"))
