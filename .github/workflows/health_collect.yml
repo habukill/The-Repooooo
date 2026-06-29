@@ -30,10 +30,3 @@ jobs:
       - name: Fetch health data
         run: cd health && python fetch_health.py
 
-      - name: Commit health_data.md
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add health/health_data.md
-          git commit -m "chore: update health_data.md" || echo "no changes"
-          git push
