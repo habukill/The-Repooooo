@@ -32,6 +32,21 @@ def get_credentials():
     return creds
 
 
+def discover_api(creds):
+    """Print API structure to understand correct endpoints and params."""
+    headers = {"Authorization": f"Bearer {creds.token}"}
+    # Try listing available data types
+    for url in [
+        "https://health.googleapis.com/v4/users/-/dataTypes",
+        "https://health.googleapis.com/v4/users/-/dataTypes/sleep",
+        "https://health.googleapis.com/v4/users/-/dataTypes/sleep/dataPoints",
+    ]:
+        r = requests.get(url, headers=headers)
+        print(f"\nGET {url}")
+        print(f"Status: {r.status_code}")
+        print(f"Response: {r.text[:500]}")
+
+
 def fetch(creds, data_type, params=None):
     if params is None:
         params = {}
@@ -121,4 +136,5 @@ def write_health_md(creds):
 
 if __name__ == "__main__":
     creds = get_credentials()
+    discover_api(creds)
     write_health_md(creds)
