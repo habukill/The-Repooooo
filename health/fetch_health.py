@@ -7,12 +7,12 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import requests
 
-SCOPES = [
+HEALTH_SCOPES = [
     "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
     "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
     "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
-    "https://www.googleapis.com/auth/drive.file",
 ]
+DRIVE_SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
 
 
@@ -22,12 +22,30 @@ def get_credentials():
     creds_path = os.path.join(os.path.dirname(__file__), "credentials.json")
 
     if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+        creds = Credentials.from_authorized_user_file(token_path, HEALTH_SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(creds_path, HEALTH_SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open(token_path, "w") as f:
+            f.write(creds.to_json())
+    return creds
+
+
+def get_drive_credentials():
+    creds = None
+    token_path = os.path.join(os.path.dirname(__file__), "drive_token.json")
+    creds_path = os.path.join(os.path.dirname(__file__), "credentials.json")
+
+    if os.path.exists(token_path):
+        creds = Credentials.from_authorized_user_file(token_path, DRIVE_SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(creds_path, DRIVE_SCOPES)
             creds = flow.run_local_server(port=0)
         with open(token_path, "w") as f:
             f.write(creds.to_json())
@@ -141,8 +159,9 @@ def write_health_md(creds):
     print("health_data.md updated")
 
 
-def upload_to_drive(file_path, creds):
+def upload_to_drive(file_path):
     folder_id = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
+    creds = get_drive_credentials()
     service = build("drive", "v3", credentials=creds)
 
     # Check if file already exists in folder
@@ -167,4 +186,4 @@ def upload_to_drive(file_path, creds):
 if __name__ == "__main__":
     creds = get_credentials()
     write_health_md(creds)
-    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"), creds)
+    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"))

@@ -25,7 +25,7 @@ jobs:
         run: |
           echo '${{ secrets.GOOGLE_HEALTH_CREDENTIALS }}' > health/credentials.json
           echo '${{ secrets.GOOGLE_HEALTH_TOKEN }}' > health/token.json
-          echo '${{ secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT }}' > health/service_account.json
+          echo '${{ secrets.GOOGLE_DRIVE_TOKEN }}' > health/drive_token.json
 
       - name: Fetch health data
         run: cd health && python fetch_health.py
