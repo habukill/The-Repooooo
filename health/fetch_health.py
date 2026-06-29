@@ -32,35 +32,19 @@ def get_credentials():
     return creds
 
 
-def discover_api(creds):
-    """Print API structure to understand correct endpoints and params."""
-    headers = {"Authorization": f"Bearer {creds.token}"}
-    # Try listing available data types
-    for url in [
-        "https://health.googleapis.com/v4/users/-/dataTypes",
-        "https://health.googleapis.com/v4/users/-/dataTypes/sleep",
-        "https://health.googleapis.com/v4/users/-/dataTypes/sleep/dataPoints",
-    ]:
-        r = requests.get(url, headers=headers)
-        print(f"\nGET {url}")
-        print(f"Status: {r.status_code}")
-        print(f"Response: {r.text[:500]}")
-
-
-def fetch(creds, data_type, params=None):
-    if params is None:
-        params = {}
+def fetch(creds, data_type, extra_filter=""):
     headers = {"Authorization": f"Bearer {creds.token}"}
     now = datetime.utcnow()
     week_ago = now - timedelta(days=7)
-    default_params = {
-        "startTime": week_ago.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "endTime": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    }
+    time_filter = (
+        f'startTime > "{week_ago.strftime("%Y-%m-%dT%H:%M:%SZ")}" '
+        f'AND endTime < "{now.strftime("%Y-%m-%dT%H:%M:%SZ")}"'
+    )
+    filter_str = f"{time_filter} AND {extra_filter}" if extra_filter else time_filter
     r = requests.get(
         f"{BASE_URL}/{data_type}/dataPoints",
         headers=headers,
-        params={**default_params, **params},
+        params={"filter": filter_str},
     )
     if not r.ok:
         print(f"ERROR {r.status_code} for {data_type}: {r.text}")
@@ -117,11 +101,11 @@ def write_health_md(creds):
     lines.append("|--------|-------|----------------|")
     steps_data = {
         p["startTime"][:10]: p["value"].get("steps")
-        for p in fetch(creds, "steps", {"rollup": "daily"})
+        for p in fetch(creds, "steps")
     }
     azm_data = {
         p["startTime"][:10]: p["value"].get("totalMinutes")
-        for p in fetch(creds, "active-zone-minutes", {"rollup": "daily"})
+        for p in fetch(creds, "active-zone-minutes")
     }
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys()))):
         steps = steps_data.get(date, "-")
@@ -136,5 +120,4 @@ def write_health_md(creds):
 
 if __name__ == "__main__":
     creds = get_credentials()
-    discover_api(creds)
     write_health_md(creds)
