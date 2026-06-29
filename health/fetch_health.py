@@ -153,10 +153,10 @@ def write_health_md(creds):
 
     lines.append("")
 
-    # Steps + Active Zone Minutes
+    # Steps + Active Zone Minutes + Calories
     lines.append("## Activity (Daily)")
-    lines.append("| วันที่ | Steps | Active Zone Min | Calories |")
-    lines.append("|--------|-------|----------------|----------|")
+    lines.append("| วันที่ | Steps | Active Zone Min | Active Cal | Total Cal | BMR |")
+    lines.append("|--------|-------|----------------|------------|-----------|-----|")
     steps_data = {}
     for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
@@ -173,19 +173,36 @@ def write_health_md(creds):
         if date_obj:
             date = fmt_date(date_obj)
             azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
-    cal_data = {}
+    active_cal_data = {}
     for p in fetch(creds, "active-energy-burned", paginate=True):
         d = p.get("activeEnergyBurned", {})
         civil = d.get("interval", {}).get("civilStartTime", {})
         date_obj = civil.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            cal_data[date] = cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
-    for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys()) + list(cal_data.keys())), reverse=True):
+            active_cal_data[date] = active_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
+    total_cal_data = {}
+    for p in fetch(creds, "total-calories", paginate=True):
+        d = p.get("totalCalories", {})
+        civil = d.get("interval", {}).get("civilStartTime", {})
+        date_obj = civil.get("date", {})
+        if date_obj:
+            date = fmt_date(date_obj)
+            total_cal_data[date] = total_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
+    bmr_data = {}
+    for p in fetch(creds, "basal-metabolic-rate"):
+        d = p.get("basalMetabolicRate", {})
+        if "date" in d:
+            date = fmt_date(d["date"])
+            bmr_data[date] = int(d.get("rateKcalPerDay", 0))
+    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data) + list(total_cal_data) + list(bmr_data))
+    for date in sorted(all_dates, reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
-        cal = f"{int(cal_data[date])} kcal" if date in cal_data else "-"
-        lines.append(f"| {date} | {steps} | {azm} min | {cal} |")
+        active_cal = f"{int(active_cal_data[date])} kcal" if date in active_cal_data else "-"
+        total_cal = f"{int(total_cal_data[date])} kcal" if date in total_cal_data else "-"
+        bmr = f"{bmr_data[date]} kcal" if date in bmr_data else "-"
+        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} | {total_cal} | {bmr} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
