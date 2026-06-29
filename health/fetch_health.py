@@ -31,32 +31,22 @@ def get_credentials():
     return creds
 
 
-def fetch(creds, data_type):
+def fetch(creds, data_type, paginate=False):
     headers = {"Authorization": f"Bearer {creds.token}"}
-    r = requests.get(f"{BASE_URL}/{data_type}/dataPoints", headers=headers)
-    if not r.ok:
-        print(f"ERROR {r.status_code} for {data_type}: {r.text}")
-        return []
-    return r.json().get("dataPoints", [])
-
-
-def fetch_daily_rollup(creds, data_type):
-    headers = {"Authorization": f"Bearer {creds.token}"}
-    now = datetime.utcnow()
-    week_ago = now - timedelta(days=7)
-    params = {
-        "startDate": week_ago.strftime("%Y-%m-%d"),
-        "endDate": now.strftime("%Y-%m-%d"),
-    }
-    r = requests.get(
-        f"{BASE_URL}/{data_type}/dataPoints:dailyRollup",
-        headers=headers,
-        params=params,
-    )
-    if not r.ok:
-        print(f"ERROR {r.status_code} for {data_type} dailyRollup: {r.text}")
-        return []
-    return r.json().get("dataPoints", [])
+    results = []
+    params = {}
+    while True:
+        r = requests.get(f"{BASE_URL}/{data_type}/dataPoints", headers=headers, params=params)
+        if not r.ok:
+            print(f"ERROR {r.status_code} for {data_type}: {r.text}")
+            break
+        data = r.json()
+        results.extend(data.get("dataPoints", []))
+        next_token = data.get("nextPageToken")
+        if not paginate or not next_token:
+            break
+        params = {"pageToken": next_token}
+    return results
 
 
 def fmt_date(d):
@@ -115,18 +105,20 @@ def write_health_md(creds):
     lines.append("| วันที่ | Steps | Active Zone Min |")
     lines.append("|--------|-------|----------------|")
     steps_data = {}
-    for p in fetch(creds, "steps"):
+    for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
-        interval = d.get("interval", {})
-        date = interval.get("startTime", "")[:10]
-        if date:
+        civil = d.get("interval", {}).get("civilStartTime", {})
+        date_obj = civil.get("date", {})
+        if date_obj:
+            date = fmt_date(date_obj)
             steps_data[date] = steps_data.get(date, 0) + int(d.get("count", 0))
     azm_data = {}
-    for p in fetch(creds, "active-zone-minutes"):
+    for p in fetch(creds, "active-zone-minutes", paginate=True):
         d = p.get("activeZoneMinutes", {})
-        interval = d.get("interval", {})
-        date = interval.get("startTime", "")[:10]
-        if date:
+        civil = d.get("interval", {}).get("civilStartTime", {})
+        date_obj = civil.get("date", {})
+        if date_obj:
+            date = fmt_date(date_obj)
             azm_data[date] = azm_data.get(date, 0) + int(d.get("totalMinutes", 0))
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
