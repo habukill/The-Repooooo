@@ -7,9 +7,9 @@ from google.auth.transport.requests import Request
 import requests
 
 SCOPES = [
-    "https://www.googleapis.com/auth/health.sleep.readonly",
-    "https://www.googleapis.com/auth/health.activity.readonly",
-    "https://www.googleapis.com/auth/health.metrics.readonly",
+    "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+    "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+    "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
 ]
 BASE_URL = "https://health.googleapis.com/v4/users/-/dataTypes"
 
