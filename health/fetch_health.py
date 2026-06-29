@@ -115,8 +115,8 @@ def write_health_md(creds):
 
     # Sleep
     lines.append("## Sleep")
-    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | อยู่บนเตียง | Efficiency | Time to Sleep | Light | Deep | REM | Awake | Restless |")
-    lines.append("|--------|---------|------|---------|------------|------------|---------------|-------|------|-----|-------|----------|")
+    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | อยู่บนเตียง | Efficiency | Light | Deep | REM | Awake | Restless |")
+    lines.append("|--------|---------|------|---------|------------|------------|-------|------|-----|-------|----------|")
     for p in fetch(creds, "sleep"):
         s = p.get("sleep", {})
         interval = s.get("interval", {})
@@ -143,11 +143,9 @@ def write_health_md(creds):
         deep = stages.get("DEEP", "-")
         rem = stages.get("REM", "-")
         awake = stages.get("AWAKE", "-")
-        restless = stages.get("RESTLESS", "-")
-        time_to_sleep_raw = summary.get("minutesToFallAsleep")
-        time_to_sleep = f"{int(time_to_sleep_raw)}m" if time_to_sleep_raw is not None else "-"
+        restless = stages.get("RESTLESS", 0)
         lines.append(
-            f"| {date} | {start} | {end} | {total}h | {in_bed}h | {efficiency} | {time_to_sleep} | {light}m | {deep}m | {rem}m | {awake}m | {restless}m |"
+            f"| {date} | {start} | {end} | {total}h | {in_bed}h | {efficiency} | {light}m | {deep}m | {rem}m | {awake}m | {restless}m |"
         )
 
     lines.append("")
