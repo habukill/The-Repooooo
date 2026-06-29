@@ -1,8 +1,12 @@
+import json
 import os
 from datetime import datetime, timedelta
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
+from google.oauth2 import service_account
 from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 import requests
 
 SCOPES = [
@@ -138,6 +142,37 @@ def write_health_md(creds):
     print("health_data.md updated")
 
 
+def upload_to_drive(file_path):
+    sa_path = os.path.join(os.path.dirname(__file__), "service_account.json")
+    if not os.path.exists(sa_path):
+        print("No service_account.json found, skipping Drive upload")
+        return
+    folder_id = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
+    creds = service_account.Credentials.from_service_account_file(
+        sa_path, scopes=["https://www.googleapis.com/auth/drive.file"]
+    )
+    service = build("drive", "v3", credentials=creds)
+
+    # Check if file already exists in folder
+    results = service.files().list(
+        q=f"name='health_data.md' and '{folder_id}' in parents and trashed=false",
+        fields="files(id)"
+    ).execute()
+    files = results.get("files", [])
+
+    media = MediaFileUpload(file_path, mimetype="text/markdown")
+    if files:
+        service.files().update(fileId=files[0]["id"], media_body=media).execute()
+        print("health_data.md updated in Google Drive")
+    else:
+        service.files().create(
+            body={"name": "health_data.md", "parents": [folder_id]},
+            media_body=media
+        ).execute()
+        print("health_data.md uploaded to Google Drive")
+
+
 if __name__ == "__main__":
     creds = get_credentials()
     write_health_md(creds)
+    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"))
