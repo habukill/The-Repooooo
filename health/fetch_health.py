@@ -126,7 +126,7 @@ def write_health_md(creds):
         if date_obj:
             date = fmt_date(date_obj)
             if date >= cutoff:
-                azm_data[date] = azm_data.get(date, 0) + int(d.get("minutesInZone", d.get("totalMinutes", 0)))
+                azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
