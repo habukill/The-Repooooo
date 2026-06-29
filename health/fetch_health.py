@@ -224,8 +224,8 @@ def write_health_md(creds):
     lines.append("| วันที่ | น้ำหนัก | Fat% | Fat Mass | Lean Mass |")
     lines.append("|--------|---------|------|----------|-----------|")
     weight_data = {}
-    for p in fetch(creds, "body-weight", paginate=True):
-        d = p.get("bodyWeight", {})
+    for p in fetch(creds, "weight", paginate=True):
+        d = p.get("weight", {})
         civil = d.get("interval", {}).get("civilStartTime", {})
         date_obj = civil.get("date", {})
         if not date_obj:
@@ -236,8 +236,8 @@ def write_health_md(creds):
             if kg:
                 weight_data[date] = round(float(kg), 1)
     fat_data = {}
-    for p in fetch(creds, "body-fat-percentage", paginate=True):
-        d = p.get("bodyFatPercentage", {})
+    for p in fetch(creds, "body-fat", paginate=True):
+        d = p.get("bodyFat", {})
         civil = d.get("interval", {}).get("civilStartTime", {})
         date_obj = civil.get("date", {})
         if not date_obj:
@@ -263,11 +263,11 @@ def write_health_md(creds):
 
     # Wellness Metrics
     lines.append("## Wellness (Daily)")
-    lines.append("| วันที่ | Breathing Rate | SpO2 | Skin Temp Var | Resilience | Readiness |")
-    lines.append("|--------|---------------|------|--------------|------------|-----------|")
+    lines.append("| วันที่ | Breathing Rate | SpO2 | Skin Temp Var |")
+    lines.append("|--------|---------------|------|--------------|")
     br_data = {}
-    for p in fetch(creds, "breathing-rate"):
-        d = p.get("breathingRate", {})
+    for p in fetch(creds, "daily-respiratory-rate"):
+        d = p.get("dailyRespiratoryRate", {})
         date_obj = d.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
@@ -275,8 +275,8 @@ def write_health_md(creds):
             if bpm:
                 br_data[date] = round(float(bpm), 1)
     spo2_data = {}
-    for p in fetch(creds, "blood-oxygen-saturation"):
-        d = p.get("bloodOxygenSaturation", {})
+    for p in fetch(creds, "daily-oxygen-saturation"):
+        d = p.get("dailyOxygenSaturation", {})
         date_obj = d.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
@@ -284,40 +284,20 @@ def write_health_md(creds):
             if pct:
                 spo2_data[date] = round(float(pct), 1)
     skintemp_data = {}
-    for p in fetch(creds, "skin-temperature-variation"):
-        d = p.get("skinTemperatureVariation", {})
+    for p in fetch(creds, "daily-sleep-temperature-derivations"):
+        d = p.get("dailySleepTemperatureDerivations", {})
         date_obj = d.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            val = d.get("variationCelsius") or d.get("celsius") or d.get("value")
+            val = d.get("baselineDeviationCelsius") or d.get("variationCelsius") or d.get("celsius") or d.get("value")
             if val is not None:
                 skintemp_data[date] = round(float(val), 2)
-    resilience_data = {}
-    for p in fetch(creds, "resilience"):
-        d = p.get("resilience", {})
-        date_obj = d.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            val = d.get("score") or d.get("level") or d.get("value")
-            if val:
-                resilience_data[date] = val
-    readiness_data = {}
-    for p in fetch(creds, "daily-readiness"):
-        d = p.get("dailyReadiness", {})
-        date_obj = d.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            val = d.get("score") or d.get("value")
-            if val:
-                readiness_data[date] = val
-    all_wellness = set(list(br_data) + list(spo2_data) + list(skintemp_data) + list(resilience_data) + list(readiness_data))
+    all_wellness = set(list(br_data) + list(spo2_data) + list(skintemp_data))
     for date in sorted(all_wellness, reverse=True):
         br = f"{br_data[date]} brpm" if date in br_data else "-"
         spo2 = f"{spo2_data[date]}%" if date in spo2_data else "-"
         skintemp = f"{skintemp_data[date]:+.2f}°C" if date in skintemp_data else "-"
-        resilience = resilience_data.get(date, "-")
-        readiness = readiness_data.get(date, "-")
-        lines.append(f"| {date} | {br} | {spo2} | {skintemp} | {resilience} | {readiness} |")
+        lines.append(f"| {date} | {br} | {spo2} | {skintemp} |")
 
     out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
