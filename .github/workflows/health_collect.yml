@@ -2,7 +2,7 @@ name: Fetch Health Data
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 07:00 ICT (UTC+7) daily
+    - cron: '0 5 * * *'  # 12:00 ICT (UTC+7) daily
   workflow_dispatch:
 
 jobs:
