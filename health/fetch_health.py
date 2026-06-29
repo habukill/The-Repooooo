@@ -82,8 +82,8 @@ def write_health_md(creds):
 
     # Sleep
     lines.append("## Sleep")
-    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | Deep | REM |")
-    lines.append("|--------|---------|------|---------|------|-----|")
+    lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | Efficiency | Score | Light | Deep | REM | Awake | Restless | Sound Sleep | Time to Sleep | Interruptions | Sleeping HR |")
+    lines.append("|--------|---------|------|---------|------------|-------|-------|------|-----|-------|----------|-------------|---------------|---------------|-------------|")
     for p in fetch(creds, "sleep"):
         s = p.get("sleep", {})
         interval = s.get("interval", {})
@@ -101,12 +101,31 @@ def write_health_md(creds):
         else:
             end = "-"
         minutes_asleep = int(summary.get("minutesAsleep", 0))
-        stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
-        deep = stages.get("DEEP", 0)
-        rem = stages.get("REM", 0)
         total = round(minutes_asleep / 60, 1)
+        stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
+        light = stages.get("LIGHT", "-")
+        deep = stages.get("DEEP", "-")
+        rem = stages.get("REM", "-")
+        awake = stages.get("AWAKE", "-")
+        efficiency = summary.get("sleepEfficiencyPercent", "-")
+        if efficiency != "-":
+            efficiency = f"{int(efficiency)}%"
+        score = summary.get("sleepScore", "-")
+        restless = summary.get("minutesRestless", "-")
+        if restless != "-":
+            restless = f"{int(restless)}m"
+        sound_sleep = summary.get("minutesSoundSleep", "-")
+        if sound_sleep != "-":
+            sound_sleep = f"{round(int(sound_sleep)/60, 1)}h"
+        time_to_sleep = summary.get("minutesToFallAsleep", "-")
+        if time_to_sleep != "-":
+            time_to_sleep = f"{int(time_to_sleep)}m"
+        interruptions = summary.get("numberOfAwakenings", "-")
+        sleeping_hr = summary.get("averageHeartRate", "-")
+        if sleeping_hr != "-":
+            sleeping_hr = f"{int(sleeping_hr)} bpm"
         lines.append(
-            f"| {date} | {start} | {end} | {total}h | {deep}m | {rem}m |"
+            f"| {date} | {start} | {end} | {total}h | {efficiency} | {score} | {light}m | {deep}m | {rem}m | {awake}m | {restless} | {sound_sleep} | {time_to_sleep} | {interruptions} | {sleeping_hr} |"
         )
 
     lines.append("")
