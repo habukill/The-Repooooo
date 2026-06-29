@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -76,11 +76,10 @@ def fmt_date(d):
 
 def write_health_md(creds):
     updated = datetime.now().strftime("%Y-%m-%d %H:%M")
-    cutoff = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d")
     lines = [f"# Health Data — อัพเดท {updated}\n"]
 
     # Sleep
-    lines.append("## Sleep (7 วันล่าสุด)")
+    lines.append("## Sleep")
     lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | Deep | REM |")
     lines.append("|--------|---------|------|---------|------|-----|")
     for p in fetch(creds, "sleep"):
@@ -110,15 +109,13 @@ def write_health_md(creds):
         d = p.get("dailyRestingHeartRate", {})
         if "date" in d:
             date = fmt_date(d["date"])
-            if date >= cutoff:
-                hr_data[date] = d.get("beatsPerMinute", "-")
+            hr_data[date] = d.get("beatsPerMinute", "-")
     hrv_data = {}
     for p in fetch(creds, "daily-heart-rate-variability"):
         d = p.get("dailyHeartRateVariability", {})
         if "date" in d:
             date = fmt_date(d["date"])
-            if date >= cutoff:
-                hrv_data[date] = round(d.get("averageHeartRateVariabilityMilliseconds", 0), 1)
+            hrv_data[date] = round(d.get("averageHeartRateVariabilityMilliseconds", 0), 1)
     for date in sorted(set(list(hr_data.keys()) + list(hrv_data.keys())), reverse=True):
         hr = hr_data.get(date, "-")
         hrv = hrv_data.get(date, "-")
@@ -137,8 +134,7 @@ def write_health_md(creds):
         date_obj = civil.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            if date >= cutoff:
-                steps_data[date] = steps_data.get(date, 0) + int(d.get("count", 0))
+            steps_data[date] = steps_data.get(date, 0) + int(d.get("count", 0))
     azm_data = {}
     for p in fetch(creds, "active-zone-minutes", paginate=True):
         d = p.get("activeZoneMinutes", {})
@@ -146,8 +142,7 @@ def write_health_md(creds):
         date_obj = civil.get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            if date >= cutoff:
-                azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
+            azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
