@@ -286,8 +286,10 @@ def write_health_md(creds):
             nightly = d.get("nightlyTemperatureCelsius")
             baseline = d.get("baselineTemperatureCelsius")
             if nightly is not None:
+                nightly = float(nightly)
+                baseline = float(baseline) if baseline is not None else None
                 deviation = round(nightly - baseline, 2) if baseline is not None else None
-                skintemp_data[date] = (round(nightly, 1), round(baseline, 1) if baseline else "-", f"{deviation:+.2f}" if deviation is not None else "-")
+                skintemp_data[date] = (round(nightly, 1), round(baseline, 1) if baseline is not None else "-", f"{deviation:+.2f}" if deviation is not None else "-")
     all_wellness = set(list(br_data) + list(spo2_data) + list(skintemp_data))
     for date in sorted(all_wellness, reverse=True):
         br = f"{br_data[date]} brpm" if date in br_data else "-"
