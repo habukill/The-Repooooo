@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date as date_type
 
 ICT = timezone(timedelta(hours=7))
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -54,21 +54,36 @@ def get_drive_credentials():
     return creds
 
 
-def fetch_daily_rollup(creds, data_type):
+def fetch_daily_rollup(creds, data_type, max_range_days=90):
     headers = {"Authorization": f"Bearer {creds.token}"}
     results = []
-    params = {}
-    while True:
-        r = requests.get(f"{BASE_URL}/{data_type}/dataPoints:dailyRollUp", headers=headers, params=params)
-        if not r.ok:
-            print(f"ERROR {r.status_code} for {data_type} dailyRollUp: {r.text}")
-            break
-        data = r.json()
-        results.extend(data.get("dataPoints", []))
-        next_token = data.get("nextPageToken")
-        if not next_token:
-            break
-        params = {"pageToken": next_token}
+    end_dt = datetime.now(ICT).date()
+    # fetch from 2 years ago to cover all history
+    start_dt = end_dt.replace(year=end_dt.year - 2)
+    chunk = timedelta(days=max_range_days)
+    current_start = start_dt
+    while current_start < end_dt:
+        current_end = min(current_start + chunk, end_dt)
+        body = {
+            "range": {
+                "start": {"date": {"year": current_start.year, "month": current_start.month, "day": current_start.day}},
+                "end":   {"date": {"year": current_end.year,   "month": current_end.month,   "day": current_end.day}},
+            }
+        }
+        page_token = None
+        while True:
+            if page_token:
+                body["pageToken"] = page_token
+            r = requests.post(f"{BASE_URL}/{data_type}/dataPoints:dailyRollUp", headers=headers, json=body)
+            if not r.ok:
+                print(f"ERROR {r.status_code} for {data_type} dailyRollUp: {r.text}")
+                break
+            data = r.json()
+            results.extend(data.get("rollupDataPoints", []))
+            page_token = data.get("nextPageToken")
+            if not page_token:
+                break
+        current_start = current_end
     return results
 
 
@@ -189,12 +204,13 @@ def write_health_md(creds):
             date = fmt_date(date_obj)
             active_cal_data[date] = active_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
     total_cal_data = {}
-    for p in fetch_daily_rollup(creds, "total-calories"):
+    for p in fetch_daily_rollup(creds, "total-calories", max_range_days=14):
+        date_obj = p.get("civilStartTime", {}).get("date")
         d = p.get("totalCalories", {})
-        date_obj = d.get("date") or d.get("interval", {}).get("civilStartTime", {}).get("date")
-        if date_obj:
+        if date_obj and d:
             date = fmt_date(date_obj)
-            total_cal_data[date] = round(d.get("kcal", 0), 0)
+            kcal = d.get("kcal_sum") or d.get("kcalSum") or d.get("kcal") or 0
+            total_cal_data[date] = int(kcal)
     all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data) + list(total_cal_data))
     for date in sorted(all_dates, reverse=True):
         steps = steps_data.get(date, "-")
