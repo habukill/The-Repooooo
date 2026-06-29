@@ -102,7 +102,7 @@ def write_health_md(creds):
     for p in fetch(creds, "daily-heart-rate-variability"):
         d = p.get("dailyHeartRateVariability", {})
         if "date" in d:
-            hrv_data[fmt_date(d["date"])] = d.get("rmssd", "-")
+            hrv_data[fmt_date(d["date"])] = round(d.get("averageHeartRateVariabilityMilliseconds", 0), 1)
     for date in sorted(set(list(hr_data.keys()) + list(hrv_data.keys())), reverse=True):
         hr = hr_data.get(date, "-")
         hrv = hrv_data.get(date, "-")
@@ -115,15 +115,19 @@ def write_health_md(creds):
     lines.append("| วันที่ | Steps | Active Zone Min |")
     lines.append("|--------|-------|----------------|")
     steps_data = {}
-    for p in fetch_daily_rollup(creds, "steps"):
+    for p in fetch(creds, "steps"):
         d = p.get("steps", {})
-        if "date" in d:
-            steps_data[fmt_date(d["date"])] = d.get("count", "-")
+        interval = d.get("interval", {})
+        date = interval.get("startTime", "")[:10]
+        if date:
+            steps_data[date] = steps_data.get(date, 0) + int(d.get("count", 0))
     azm_data = {}
-    for p in fetch_daily_rollup(creds, "active-zone-minutes"):
+    for p in fetch(creds, "active-zone-minutes"):
         d = p.get("activeZoneMinutes", {})
-        if "date" in d:
-            azm_data[fmt_date(d["date"])] = d.get("totalMinutes", "-")
+        interval = d.get("interval", {})
+        date = interval.get("startTime", "")[:10]
+        if date:
+            azm_data[date] = azm_data.get(date, 0) + int(d.get("totalMinutes", 0))
     for date in sorted(set(list(steps_data.keys()) + list(azm_data.keys())), reverse=True):
         steps = steps_data.get(date, "-")
         azm = azm_data.get(date, "-")
