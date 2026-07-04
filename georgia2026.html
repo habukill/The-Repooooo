@@ -36,7 +36,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
         .vibe-box { background: #f1f2f6; border-left: 4px solid var(--secondary); }
-        .vibe-box strong { display: block; margin-bottom: 5px; }
+        .vibe-box .vibe-label { display: block; margin-bottom: 5px; font-weight: 800; }
         .car-box { border-left: 4px solid var(--accent); }
         .car-box strong { color: var(--accent); }
         .car-box ul { margin: 8px 0 0 0; padding-left: 20px; line-height: 1.7; }
@@ -96,6 +96,12 @@
         .back-link { margin-top: 24px; font-size: 0.9rem; color: #636e72; text-decoration: none; }
         .back-link:hover { text-decoration: underline; }
         .nav-links { display: flex; gap: 16px; margin-top: 24px; }
+        .night-table { width: 100%; max-width: 720px; background: var(--card-bg); border-radius: 16px; padding: 8px 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .night-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f2f6; font-size: 0.88rem; }
+        .night-row:last-child { border-bottom: none; }
+        .night-row .night-date { color: #636e72; }
+        .night-row .night-city { font-weight: 700; }
+        .city-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #0e6655; background: #d1f2eb; padding: 2px 9px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -117,8 +123,19 @@
     </div>
     <div style="height:14px"></div>
 
+    <div class="night-table">
+        <div class="night-row"><span class="night-date">🌙 คืน 1 — 9 ต.ค. (ศุกร์)</span><span class="night-city">🏨 Tbilisi</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 2 — 10 ต.ค. (เสาร์)</span><span class="night-city">🏨 Kazbegi (Stepantsminda)</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 3 — 11 ต.ค. (อาทิตย์)</span><span class="night-city">🏨 Sighnaghi (Kakheti)</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 4 — 12 ต.ค. (จันทร์)</span><span class="night-city">🏨 Sighnaghi (Kakheti)</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 5 — 13 ต.ค. (อังคาร)</span><span class="night-city">🏨 Kutaisi</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 6 — 14 ต.ค. (พุธ)</span><span class="night-city">🏨 Kutaisi</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 7 — 15 ต.ค. (พฤหัส)</span><span class="night-city">🏨 Tbilisi</span></div>
+        <div class="night-row"><span class="night-date">✈️ 16 ต.ค. (ศุกร์)</span><span class="night-city" style="font-weight:400; color:#636e72;">บินกลับไทย 21:00 น. — ไม่มีที่พัก</span></div>
+    </div>
+
     <div class="info-box vibe-box">
-        <strong>Vibe Check:</strong>
+        <span class="vibe-label">Vibe Check:</span>
         บินลง Tbilisi เช่ารถ 7 ที่นั่งคันเดียว ขับวนโร้ดทริปเก็บไฮไลท์ธรรมชาติเด็ดๆ ของจอร์เจีย ตั้งแต่ภูเขาหิมะคอเคซัสที่ Kazbegi หุบเขาไวน์ Kakheti ไปจนถึงแคนยอนสีเขียวมรกตที่ Kutaisi วนกลับมาปิดทริปที่เมืองเก่า Tbilisi ก่อนบินกลับ ราคาโดยรวมถูกกว่ายุโรปมาก อาหารอร่อย คนน่ารัก และคนไทยเข้าประเทศได้แบบ<strong>ไม่ต้องขอวีซ่า</strong>
         <span class="warning">*Note: ถนนขึ้น Gergeti Trinity Church ชันและเป็นหินลูกรัง รถทั่วไปขึ้นไม่ไหว ต้องเปลี่ยนไปนั่งรถ 4x4 ท้องถิ่นแทนช่วงนั้น</span>
     </div>
@@ -259,7 +276,7 @@
     <div class="plan-container">
         <ul class="timeline">
             <li>
-                <span class="date">Day 1 (9 ต.ค., ศุกร์) | Bangkok ✈️ Tbilisi</span>
+                <span class="date">Day 1 (9 ต.ค., ศุกร์) | Bangkok ✈️ Tbilisi <span class="city-tag">🏨 นอน Tbilisi</span></span>
                 <div class="route">✈️ ถึงสนามบิน Tbilisi (TBS) ~20:00 น.</div>
                 <div class="detail">ถึง Tbilisi ตอนค่ำ เช็คอินโรงแรมในเมืองเก่า พักผ่อน เตรียมรับรถเช่าเช้าวันถัดไป</div>
                 <div class="weather-info">
@@ -268,7 +285,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 2 (10 ต.ค., เสาร์) | Tbilisi → Kazbegi (Stepantsminda)</span>
+                <span class="date">Day 2 (10 ต.ค., เสาร์) | Tbilisi → Kazbegi (Stepantsminda) <span class="city-tag">🏨 นอน Kazbegi</span></span>
                 <div class="route">🚗 Tbilisi → Ananuri → Gudauri → Kazbegi (~3 ชม.) → 🚙 4x4 ขึ้น Gergeti Trinity Church</div>
                 <div class="detail">
                     เช้ารับรถเช่า 7 ที่นั่ง ขับเส้นทาง Georgian Military Highway แวะถ่ายรูป <strong>Ananuri Fortress</strong> ริมอ่างเก็บน้ำสีฟ้า ต่อไปแวะ <strong>Russia-Georgia Friendship Monument</strong> ที่ Gudauri ชมวิว Devil's Valley ถึง Kazbegi/Stepantsminda เปลี่ยนไปนั่งรถ 4x4 ท้องถิ่นขึ้นไป <strong>Gergeti Trinity Church</strong> ชมวิวยอดเขา Kazbek แบบใกล้ชิด
@@ -292,7 +309,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 3 (11 ต.ค., อาทิตย์) | Kazbegi → Sighnaghi (Kakheti)</span>
+                <span class="date">Day 3 (11 ต.ค., อาทิตย์) | Kazbegi → Sighnaghi (Kakheti) <span class="city-tag">🏨 นอน Sighnaghi</span></span>
                 <div class="route">🚗 Kazbegi → Tbilisi → Sighnaghi (~5 ชม. รวมพัก)</div>
                 <div class="detail">เช้าเดินเล่นชิลๆ ในหมู่บ้าน Stepantsminda หรือเดินเทรลสั้นไปน้ำตก Gveleti ก่อนขับยาวย้อนผ่าน Tbilisi ไปยังเขตไวน์ <strong>Kakheti</strong> เช็คอินเมืองกำแพงโบราณ <strong>Sighnaghi</strong> เย็นเดินชมวิวหุบเขา Alazani จากกำแพงเมือง</div>
                 <figure class="day-photo">
@@ -305,7 +322,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 4 (12 ต.ค., จันทร์) | Kakheti Wine Day</span>
+                <span class="date">Day 4 (12 ต.ค., จันทร์) | Kakheti Wine Day <span class="city-tag">🏨 นอน Sighnaghi</span></span>
                 <div class="route">🚗 Sighnaghi → Bodbe Monastery → Telavi/Tsinandali → กลับ Sighnaghi</div>
                 <div class="detail">
                     วันเต็มในหุบเขาไวน์ที่เก่าแก่ที่สุดในโลก (8,000 ปี) แวะ <strong>Bodbe Monastery</strong> ชมวิวหุบเขา ต่อไป <strong>Telavi</strong> หรือ <strong>Tsinandali Estate</strong> ชิมไวน์จากไร่ท้องถิ่น แวะโบสถ์ <strong>Alaverdi Monastery</strong> กลางไร่องุ่น (ต.ค.: คาบเกี่ยวเทศกาลเก็บองุ่น Rtveli มีโอกาสเห็น/ร่วมกิจกรรมกับชาวไร่)
@@ -317,7 +334,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 5 (13 ต.ค., อังคาร) | Kakheti → Uplistsikhe → Kutaisi</span>
+                <span class="date">Day 5 (13 ต.ค., อังคาร) | Kakheti → Uplistsikhe → Kutaisi <span class="city-tag">🏨 นอน Kutaisi</span></span>
                 <div class="route">🚗 Sighnaghi → Tbilisi → Uplistsikhe/Gori → (แวะ Borjomi ได้ถ้าเวลาเหลือ) → Kutaisi (~6 ชม. รวมแวะ)</div>
                 <div class="detail">ขับข้ามประเทศจากตะวันออกไปตะวันตก แวะเมืองถ้ำโบราณ <strong>Uplistsikhe</strong> ใกล้ Gori เดินสำรวจห้องหินแกะสลักอายุ 3,000 ปี ถ้าเวลาเหลือแวะ <strong>Borjomi</strong> เดินเล่นสวนน้ำแร่สั้นๆ ก่อนเข้าที่พัก Kutaisi ช่วงค่ำ</div>
                 <figure class="day-photo">
@@ -330,7 +347,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 6 (14 ต.ค., พุธ) | Kutaisi Canyon Day</span>
+                <span class="date">Day 6 (14 ต.ค., พุธ) | Kutaisi Canyon Day <span class="city-tag">🏨 นอน Kutaisi</span></span>
                 <div class="route">🚗 Kutaisi → Martvili Canyon (~1 ชม.) → Okatse Canyon (~1 ชม.) → Sataplia (~40 นาที) → Kutaisi</div>
                 <div class="detail">
                     วันเต็มลุยแคนยอนสีเขียวมรกตของ Imereti นั่งเรือพายชม <strong>Martvili Canyon</strong> ตอนเช้า บ่ายเดินทางเดินเหล็กแขวนชม <strong>Okatse Canyon</strong> ปิดท้ายด้วย <strong>Sataplia Nature Reserve</strong> ดูรอยเท้าไดโนเสาร์และถ้ำเล็กๆ ก่อนกลับเข้าเมือง Kutaisi พักผ่อน
@@ -354,7 +371,7 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 7 (15 ต.ค., พฤหัส) | Kutaisi → Tbilisi (Old Town)</span>
+                <span class="date">Day 7 (15 ต.ค., พฤหัส) | Kutaisi → Tbilisi (Old Town) <span class="city-tag">🏨 นอน Tbilisi</span></span>
                 <div class="route">🚗 Kutaisi → Tbilisi (~4 ชม.)</div>
                 <div class="detail">
                     เช้าขับยาวกลับ Tbilisi เย็นเดินเล่นเมืองเก่า <strong>Old Tbilisi</strong> ตึกไม้แกะสลักสไตล์เปอร์เซีย นั่งกระเช้าขึ้น <strong>Narikala Fortress</strong> ชมวิวเมืองยามเย็น ปิดท้ายด้วยการแช่โรงอาบน้ำแร่กำมะถันสไตล์ดั้งเดิม
