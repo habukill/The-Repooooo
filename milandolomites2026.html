@@ -47,9 +47,30 @@
         .section-sub { color: #636e72; font-size: 0.9rem; margin: 0 0 14px 0; }
 
         .stat-row { display: flex; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; width: 100%; max-width: 720px; }
-        .stat-chip { flex: 1; min-width: 100px; background: var(--card-bg); border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+        .stat-chip { flex: 1; min-width: 90px; background: var(--card-bg); border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
         .stat-chip .num { font-size: 1.3rem; font-weight: 800; color: var(--secondary); }
-        .stat-chip .lbl { font-size: 0.75rem; color: #636e72; }
+        .stat-chip .lbl { font-size: 0.72rem; color: #636e72; }
+
+        /* Budget lodging zone cards */
+        .zone-heading { font-weight: 800; font-size: 1rem; margin: 18px 0 10px 0; display: flex; align-items: center; gap: 8px; }
+        .zone-heading .zone-badge { font-size: 0.7rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; color: white; }
+        .zone-badge.west { background: #0984e3; }
+        .zone-badge.east { background: #d35400; }
+        .budget-grid { display: flex; flex-direction: column; gap: 10px; }
+        .budget-card { display: flex; gap: 12px; background: var(--card-bg); border-radius: 12px; padding: 12px 14px; box-shadow: 0 6px 16px rgba(0,0,0,0.05); align-items: flex-start; }
+        .budget-num { flex: 0 0 24px; font-weight: 800; color: #b2bec3; }
+        .budget-content { flex: 1; }
+        .budget-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .budget-name { font-weight: 700; font-size: 0.95rem; }
+        .cost-tier { font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+        .cost-1 { background: #d3f9e9; color: #00875a; }
+        .cost-2 { background: #fff3cd; color: #856404; }
+        .cost-3 { background: #fdecea; color: #c0392b; }
+        .budget-desc { font-size: 0.83rem; color: #636e72; margin-top: 3px; line-height: 1.5; }
+        .price-callout {
+            background: #e0f7ee; border-left: 4px solid #00b894; border-radius: 10px;
+            padding: 12px 16px; margin-top: 14px; font-size: 0.87rem; line-height: 1.7; color: #00543a;
+        }
 
         /* Ranking cards */
         .rank-grid { display: flex; flex-direction: column; gap: 12px; }
@@ -92,6 +113,7 @@
         .date { font-weight: 700; color: var(--secondary); font-size: 0.95rem; display: block; }
         .detail { margin-top: 5px; font-size: 0.95rem; line-height: 1.6; }
         .route { display: inline-block; font-size: 0.8rem; font-weight: 700; color: #4a3f8f; background: #ecebfd; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
+        .move-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #d35400; background: #fdf0e4; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
         .milan-tag2 { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #0b3d66; background: #dfeaff; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
         .link-btn { display: inline-block; margin-top: 8px; font-size: 0.85rem; color: var(--secondary); text-decoration: none; font-weight: 600; background: #ecebfd; padding: 4px 10px; border-radius: 20px; }
         .link-btn:hover { background: #d6d3f7; }
@@ -122,17 +144,119 @@
 
     <div class="stat-row">
         <div class="stat-chip"><div class="num">8</div><div class="lbl">วันทั้งทริป</div></div>
-        <div class="stat-chip"><div class="num">5</div><div class="lbl">คืนใน Ortisei</div></div>
-        <div class="stat-chip"><div class="num">2</div><div class="lbl">คืนใน Milan</div></div>
+        <div class="stat-chip"><div class="num">3</div><div class="lbl">คืนโซนตะวันตก</div></div>
+        <div class="stat-chip"><div class="num">2</div><div class="lbl">คืนโซนตะวันออก</div></div>
+        <div class="stat-chip"><div class="num">2</div><div class="lbl">คืนมิลาน</div></div>
         <div class="stat-chip"><div class="num">5</div><div class="lbl">คน / 1 คัน</div></div>
     </div>
     <div style="height:14px"></div>
 
     <div class="info-box vibe-box">
         <strong>Vibe Check:</strong>
-        แผนฉบับสุดท้าย: บินถึงมิลานเช้าวันที่ <strong>9 ต.ค.</strong> เช่ารถ 7 ที่นั่งคันเดียวให้ครบ 5 คน ออกเดินทางราว 10 โมงเช้า มุ่งหน้าขึ้นเขาไป Dolomites ทันที พักฐานเดียวที่ <strong>Ortisei</strong> 5 คืน ขับเดย์ทริปเก็บไฮไลท์รอบๆ ทุกวัน แล้ววันที่ <strong>14 ต.ค.</strong> ขับกลับมิลาน พักในเมืองมิลานอีก 2 คืน เที่ยวเมืองชิลๆ ก่อนขึ้นเครื่องกลับไทยคืนวันที่ <strong>16 ต.ค. เวลา 22:00 น.</strong>
-        <span class="warning">*Note: บางกระเช้า/รีฟูจิโอ/เทรลเริ่มปรับเวลาหรือปิดให้บริการตามฤดูกาลแล้วในช่วงนี้ เช็คหมายเหตุสีน้ำตาลของแต่ละจุดด้านล่างก่อนไปด้วยนะ</span>
+        ปรับใหม่เป็น <strong>2 ฐานที่พักสาย budget</strong> แทนการนอนที่เดียวยาวๆ เพื่อคุมงบที่พักให้เหลือประมาณ <strong>คืนละ 10,000 บาท</strong> ต่อคืน (ลดจากเดิมมาก): บินถึงมิลานเช้าวันที่ 9 ต.ค. เช่ารถ 7 ที่นั่ง ขับตรงไป<strong>โซนตะวันตก</strong> (ใกล้ Seceda/Alpe di Siusi/Val di Funes) พัก 3 คืน แล้ววันที่ 12 ต.ค. ย้ายข้ามเขาไป<strong>โซนตะวันออก</strong> (ใกล้ Tre Cime/Lago di Braies/Passo Giau) พัก 2 คืน ก่อนขับกลับมิลานพักอีก 2 คืนแล้วบินกลับไทยคืนวันที่ 16 ต.ค. เวลา 22:00 น.
+        <span class="warning">*Note: เมืองที่แนะนำด้านล่างเป็น "โซน" ที่ควรมองหาที่พัก ไม่ใช่โรงแรมเจาะจง ต้องไปเช็คราคาจริงในแต่ละแพลตฟอร์ม (Booking.com/Airbnb) เอง เพราะราคาผันผวนตามช่วงจอง</span>
     </div>
+
+    <section class="block">
+        <h2 class="section-title">🏨 เลือกที่พัก 2 โซน (งบเป้าหมาย ~10,000 บาท/คืน)</h2>
+        <p class="section-sub">จัดแรงค์เมืองที่น่าไปพักจากถูกสุดไปแพงสุดในแต่ละโซน ไล่เช็คราคาได้เลย</p>
+
+        <div class="zone-heading"><span class="zone-badge west">WEST</span> ใกล้ Seceda / Alpe di Siusi / Val di Funes (พัก 3 คืน: 9-11 ต.ค.)</div>
+        <div class="budget-grid">
+            <div class="budget-card">
+                <div class="budget-num">1</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Val di Funes (San Pietro / Santa Maddalena)</span><span class="cost-tier cost-1">$ ถูกสุด</span></div>
+                    <div class="budget-desc">ที่พักแบบ agriturismo/farmhouse ในหุบเขาเดียวกับจุดถ่ายรูปวันที่ 2 เลย บรรยากาศดีมาก ห่างจาก Ortisei/กระเช้า Seceda ~20-25 นาที</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">2</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Fiè allo Sciliar (Völs am Schlern)</span><span class="cost-tier cost-1">$ ถูก</span></div>
+                    <div class="budget-desc">หมู่บ้านเงียบ ราคาดี ห่างจากกระเช้า Alpe di Siusi ~10 นาที ไม่ค่อยมีนักท่องเที่ยวเยอะเท่าโซน Val Gardena</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">3</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Siusi allo Sciliar (Seis am Schlern)</span><span class="cost-tier cost-2">$$ กลาง</span></div>
+                    <div class="budget-desc">มีกระเช้าขึ้น Alpe di Siusi ของตัวเอง (วันที่ 3 ไม่ต้องขับเลย) ห่างจาก Ortisei ~20 นาที</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">4</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Castelrotto (Kastelruth)</span><span class="cost-tier cost-2">$$ กลาง</span></div>
+                    <div class="budget-desc">เมืองเก่าน่ารักรอบจัตุรัสกลาง ระยะทางใกล้เคียง Siusi allo Sciliar</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">5</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Chiusa (Klausen) / Bressanone (Brixen)</span><span class="cost-tier cost-1">$ ถูก แต่ไกล</span></div>
+                    <div class="budget-desc">เมืองจริงในหุบเขาหลัก มีตัวเลือกโรงแรม/B&amp;B ราคาปกติเยอะสุด แต่ไกลจาก Ortisei ที่สุด ~25-35 นาที</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">6</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Ortisei / Santa Cristina / Selva (Val Gardena)</span><span class="cost-tier cost-3">$$$ แพงสุด</span></div>
+                    <div class="budget-desc">ใกล้สุด สะดวกสุด แต่เป็นโซนรีสอร์ตหลักราคาแพงตลอดปี หลีกเลี่ยงถ้างบจำกัด</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="zone-heading"><span class="zone-badge east">EAST</span> ใกล้ Tre Cime / Lago di Braies / Passo Giau / Cinque Torri / Sorapis (พัก 2 คืน: 12-13 ต.ค.)</div>
+        <div class="budget-grid">
+            <div class="budget-card">
+                <div class="budget-num">1</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Villabassa (Niederdorf)</span><span class="cost-tier cost-1">$ ถูกสุด</span></div>
+                    <div class="budget-desc">ติดกับ Dobbiaco เลย ถูกกว่านิดหน่อย ระยะทางเท่ากันทุกจุด (~20 นาทีถึง Braies, ~35 นาทีถึง Tre Cime)</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">2</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Monguelfo-Tesido (Welsberg-Taisten)</span><span class="cost-tier cost-1">$ ถูก</span></div>
+                    <div class="budget-desc">ลึกเข้าไปใน Val Pusteria อีกนิด ราคาถูกมาก แต่บวกเวลาขับเพิ่มอีก ~10 นาทีทุกจุด</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">3</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Dobbiaco (Toblach)</span><span class="cost-tier cost-2">$$ กลาง</span></div>
+                    <div class="budget-desc">บาลานซ์ดีที่สุด ใกล้ Lago di Braies (~20-25 นาที) และ Tre Cime (~35 นาที) มีสถานีรถไฟด้วย</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">4</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Calalzo di Cadore</span><span class="cost-tier cost-1">$ ถูก</span></div>
+                    <div class="budget-desc">เมืองจริงไม่เน้นท่องเที่ยว ราคาถูก เหมาะฝั่ง Cortina/Giau/Cinque Torri/Sorapis (~30 นาที) แต่ไกลจาก Braies มาก (~1 ชม. 15 นาที)</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">5</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">San Vito di Cadore</span><span class="cost-tier cost-2">$$ กลาง</span></div>
+                    <div class="budget-desc">ใกล้ Cortina/Giau/Cinque Torri/Sorapis มาก (~15-20 นาที) แต่ไกลจาก Braies (~50 นาที)</div>
+                </div>
+            </div>
+            <div class="budget-card">
+                <div class="budget-num">6</div>
+                <div class="budget-content">
+                    <div class="budget-title-row"><span class="budget-name">Cortina d'Ampezzo / Auronzo di Cadore</span><span class="cost-tier cost-3">$$$ แพงสุด</span></div>
+                    <div class="budget-desc">สะดวกสุด ใกล้ทุกจุดที่สุด แต่เป็นเมืองรีสอร์ตหรู ราคาแพงสุดในโซนนี้</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="price-callout">
+            💰 ถ้าเน้นถูกสุดจริงๆ: <strong>Val di Funes (west) + Villabassa (east)</strong> น่าจะกดราคาได้ต่ำสุด แต่ต้องยอมขับเพิ่มอีกนิดในวันที่ 2 (Seceda) เพราะ Val di Funes ไกลจาก Ortisei กว่า Siusi/Castelrotto
+        </div>
+    </section>
 
     <div class="info-box season-box">
         <strong>🍂 บรรยากาศช่วง 9-16 ตุลาคม 2026</strong>
@@ -172,7 +296,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Tre Cime di Lavaredo</span><span class="tier tier-Splus">S+</span></div>
                     <div class="rank-desc">เดินลูปรอบยอดเขาหินปูน 3 ยอด สัญลักษณ์ตัวจริงของ Dolomites <span class="seasonal-note">ต.ค.: คนน้อยลงเยอะ อากาศใส และมีโอกาสเห็นหิมะบางๆ แต้มยอดเขา</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 13 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 13 ต.ค. (จากโซนตะวันออก)</span></div>
                 </div>
             </div>
 
@@ -182,7 +306,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Seceda</span><span class="tier tier-S">S</span></div>
                     <div class="rank-desc">สันเขาโค้งคมสุดไอคอนิก ฉากหลังเทือกเขา Odle นั่งกระเช้าขึ้นง่าย <span class="seasonal-note">ต.ค.: ฟ้าใสกว่าหน้าร้อนมาก เห็นวิวไกลชัดเจน</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 10 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 10 ต.ค. (จากโซนตะวันตก)</span></div>
                 </div>
             </div>
 
@@ -192,7 +316,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Passo Giau</span><span class="tier tier-S">S</span></div>
                     <div class="rank-desc">ถนนโค้งหักศอก 29 โค้งไต่สู่ความสูง 2,236m วิวพาโนรามา 360° <span class="seasonal-note">ต.ค.: เย็น/เช้าหนาวจัด มีโอกาสเจอหิมะแรกของฤดู</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค. (วันย้ายฐานที่พัก)</span></div>
                 </div>
             </div>
 
@@ -202,7 +326,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Val di Funes / Santa Maddalena</span><span class="tier tier-S">S</span></div>
                     <div class="rank-desc">โบสถ์เล็กกลางทุ่งหญ้า ฉากหลังยอดเขา Odle แหลมคม <span class="seasonal-note">ต.ค.: ต้นสน Larch เริ่มเปลี่ยนสีทองบางส่วนแล้ว</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 10 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 10 ต.ค. (จากโซนตะวันตก)</span></div>
                 </div>
             </div>
 
@@ -212,7 +336,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Lago di Braies</span><span class="tier tier-A">A</span></div>
                     <div class="rank-desc">ทะเลสาบสีเทอร์ควอยซ์สุดฮิต เรือพายไม้จอดริมน้ำ <span class="seasonal-note">ต.ค.: ⚠️ ระดับน้ำลดลงมากจากปลายซัมเมอร์ สีน้ำอาจไม่เข้มเท่ารูปหน้าร้อน แต่คนน้อยกว่ามาก</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 13 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 13 ต.ค. (จากโซนตะวันออก)</span></div>
                 </div>
             </div>
 
@@ -222,7 +346,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Alpe di Siusi (Seiser Alm)</span><span class="tier tier-A">A</span></div>
                     <div class="rank-desc">ทุ่งอัลไพน์บนที่สูงผืนใหญ่ที่สุดในยุโรป <span class="seasonal-note">ต.ค.: ทุ่งหญ้าเปลี่ยนเป็นสีน้ำตาลทอง ต้นลาร์ชบางส่วนเริ่มเหลือง</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป (เดินเต็มวัน) — วันที่ 11 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป (เดินเต็มวัน) — วันที่ 11 ต.ค. (จากโซนตะวันตก)</span></div>
                 </div>
             </div>
 
@@ -232,7 +356,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Cinque Torri &amp; Passo Falzarego</span><span class="tier tier-B">B+</span></div>
                     <div class="rank-desc">หินยอดแหลม 5 ก้อน บวกพิพิธภัณฑ์กลางแจ้งสนามเพลาะสงครามโลกครั้งที่ 1 บน Lagazuoi <span class="seasonal-note">ต.ค.: ⚠️ กระเช้านั่งปิดหลัง 11 ต.ค. ทริปนี้ไปวันที่ 12 ต.ค. ต้องเดินขึ้นแทน (~45-60 นาที)</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค. (วันย้ายฐานที่พัก)</span></div>
                 </div>
             </div>
 
@@ -242,7 +366,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Passo Pordoi / Sella Ronda</span><span class="tier tier-B">B</span></div>
                     <div class="rank-desc">ถนนเลียบเขาเชื่อม 4 ช่องเขารอบ Gruppo del Sella <span class="seasonal-note">ต.ค.: กระเช้า Sass Pordoi ยังเปิดปกติถึง 1 พ.ย.</span></div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ อยู่ในทริป — วันที่ 12 ต.ค. (วันย้ายฐานที่พัก)</span></div>
                 </div>
             </div>
 
@@ -262,7 +386,7 @@
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Lago di Sorapis</span><span class="tier tier-C">C</span></div>
                     <div class="rank-desc">ทะเลสาบสีฟ้าน้ำนมจากธารน้ำแข็ง เดินเทรลไป-กลับ ~4 ชม. <span class="seasonal-note">ต.ค.: ⚠️ รีฟูจิโอ Vandelli มักปิดแล้ว เทรลเสี่ยงลื่น/น้ำแข็งบางจุด เดินเฉพาะถ้าเช็คสภาพอากาศ/เส้นทางแล้วปลอดภัยจริง</span></div>
-                    <div class="plan-pills"><span class="pill pill-weather">🌤️ อยู่ในทริป (ตามสภาพอากาศ) — วันที่ 14 ต.ค.</span></div>
+                    <div class="plan-pills"><span class="pill pill-weather">🌤️ อยู่ในทริป (ตามสภาพอากาศ) — วันที่ 14 ต.ค. (เช็คเอาท์โซนตะวันออก)</span></div>
                 </div>
             </div>
 
@@ -272,9 +396,9 @@
     <div class="plan-container">
         <ul class="timeline">
             <li>
-                <span class="date">Day 1 (9 ต.ค., ศุกร์) | Bangkok ✈️ Milan → Ortisei</span>
-                <div class="route">🚗 Milan Malpensa → A4 → A22 → Ortisei (~4-4.5 ชม.)</div>
-                <div class="detail">ถึงมิลานเช้า รับรถเช่า 7 ที่นั่งที่สนามบิน Malpensa ออกเดินทางราว 10 โมงเช้า ขับขึ้นเหนือมุ่งสู่ Ortisei เช็คอินโรงแรม<strong>ที่เดียวที่จะพักตลอด 5 คืนในเขต Dolomites</strong> เย็นเดินเล่นในเมือง ปรับตัวคืนแรก</div>
+                <span class="date">Day 1 (9 ต.ค., ศุกร์) | Bangkok ✈️ Milan → โซนตะวันตก</span>
+                <div class="route">🚗 Milan Malpensa → A4 → A22 → โซนตะวันตก เช่น Ortisei/Siusi/Val di Funes (~4-4.5 ชม.)</div>
+                <div class="detail">ถึงมิลานเช้า รับรถเช่า 7 ที่นั่งที่สนามบิน Malpensa ออกเดินทางราว 10 โมงเช้า ขับขึ้นเหนือมุ่งสู่<strong>โซนตะวันตก</strong> (เลือกที่พักจากลิสต์ budget ด้านบน) เช็คอิน เย็นเดินเล่น ปรับตัวคืนแรก</div>
                 <figure class="day-photo">
                     <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Duomo_di_Milano.JPG?width=800" alt="Duomo di Milano">
                     <figcaption>Duomo di Milano จุดเริ่มต้นทริป</figcaption>
@@ -286,9 +410,9 @@
             </li>
             <li>
                 <span class="date">Day 2 (10 ต.ค., เสาร์) | Seceda &amp; Val di Funes</span>
-                <div class="route">🚡 กระเช้า Ortisei → Seceda &nbsp;/&nbsp; 🚗 ไป Val di Funes (~30 นาที)</div>
+                <div class="route">🚡 กระเช้า Ortisei → Seceda &nbsp;/&nbsp; 🚗 ไป Val di Funes (~20-30 นาทีจากโซนตะวันตก)</div>
                 <div class="detail">
-                    เช้านั่งกระเช้าขึ้น <strong>Seceda</strong> เดินเล่นบนสันเขาชมวิว Odle บ่ายขับไป <strong>Val di Funes</strong> ถ่ายรูปโบสถ์ Santa Maddalena กับฉากหลังยอดเขา (ต.ค.: เริ่มเห็นต้น Larch เปลี่ยนสีทองบางส่วน) เย็นกลับมานอนที่ Ortisei
+                    เช้านั่งกระเช้าขึ้น <strong>Seceda</strong> เดินเล่นบนสันเขาชมวิว Odle บ่ายขับไป <strong>Val di Funes</strong> ถ่ายรูปโบสถ์ Santa Maddalena กับฉากหลังยอดเขา (ต.ค.: เริ่มเห็นต้น Larch เปลี่ยนสีทองบางส่วน) เย็นกลับที่พักโซนตะวันตก
                     <a href="https://www.google.com/search?q=Seceda+ridge+Odle+view&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
                 <figure class="day-photo">
@@ -321,10 +445,10 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 4 (12 ต.ค., จันทร์) | เดย์ทริป Sella Ronda + Cinque Torri + Passo Giau</span>
-                <div class="route">🚗🚡 Ortisei → Passo Gardena → Passo Sella (แวะถ่ายรูป) → กระเช้า Sass Pordoi 2,950m → Passo Falzarego → Cinque Torri → Passo Giau → Ortisei (~5 ชม. รวมแวะจุดต่างๆ)</div>
+                <span class="date">Day 4 (12 ต.ค., จันทร์) | ย้ายฐาน: ตะวันตก → Sella Ronda + Cinque Torri + Passo Giau → ตะวันออก <span class="move-tag">ย้ายที่พัก</span></span>
+                <div class="route">🚗🚡 เช็คเอาท์โซนตะวันตก → Passo Gardena → Passo Sella (แวะถ่ายรูป) → กระเช้า Sass Pordoi 2,950m → Passo Falzarego → Cinque Torri → Passo Giau → เช็คอินโซนตะวันออก (~5 ชม. รวมแวะจุดต่างๆ)</div>
                 <div class="detail">
-                    ขับเส้น Sella Ronda แบบแวะจริงจัง หยุดถ่ายรูปที่ <strong>Passo Sella</strong> นั่งกระเช้าขึ้น <strong>Sass Pordoi</strong> ชมวิว 360° แวะ <strong>Cinque Torri</strong> ถ่ายรูปหินยอดแหลม 5 ก้อน (⚠️ กระเช้านั่งขึ้นจุดนี้ปิดหลัง 11 ต.ค. ต้องเดินขึ้นแทน ~45-60 นาที) ปิดท้ายวันด้วย Passo Giau ชมพระอาทิตย์ตก แล้วขับกลับ Ortisei
+                    เช็คเอาท์ที่พักโซนตะวันตกแต่เช้า ขับเส้น Sella Ronda แบบแวะจริงจัง หยุดถ่ายรูปที่ <strong>Passo Sella</strong> นั่งกระเช้าขึ้น <strong>Sass Pordoi</strong> ชมวิว 360° แวะ <strong>Cinque Torri</strong> ถ่ายรูปหินยอดแหลม 5 ก้อน (⚠️ กระเช้านั่งขึ้นจุดนี้ปิดหลัง 11 ต.ค. ต้องเดินขึ้นแทน ~45-60 นาที) ปิดท้ายวันด้วย Passo Giau ชมพระอาทิตย์ตก แล้วขับเข้าเช็คอินที่พัก<strong>โซนตะวันออก</strong> (เลือกจากลิสต์ budget ด้านบน)
                     <a href="https://www.google.com/search?q=Sass+Pordoi+cable+car+view&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
                 <figure class="day-photo">
@@ -345,9 +469,9 @@
                 </div>
             </li>
             <li>
-                <span class="date">Day 5 (13 ต.ค., อังคาร) | เดย์ทริป Lago di Braies &amp; Tre Cime di Lavaredo</span>
-                <div class="route">🚗 Ortisei → Lago di Braies (~1.5 ชม.) → Tre Cime/Auronzo (~45 นาที) → Ortisei (~1.75 ชม.)</div>
-                <div class="detail">ตื่นเช้ามืดขับไป <strong>Lago di Braies</strong> (ต.ค.: น้ำลดจากหน้าร้อนพอสมควร) แล้วไปเดินลูป <strong>Tre Cime di Lavaredo</strong> เต็มๆ (ระยะทาง ~10 กม. ใช้เวลา ~3-4 ชม.) เย็นขับกลับ Ortisei</div>
+                <span class="date">Day 5 (13 ต.ค., อังคาร) | Lago di Braies &amp; Tre Cime di Lavaredo</span>
+                <div class="route">🚗 โซนตะวันออก → Lago di Braies (~20-45 นาที แล้วแต่เมือง) → Tre Cime/Auronzo (~35-45 นาที) → กลับที่พัก</div>
+                <div class="detail">ตื่นเช้ามืดขับไป <strong>Lago di Braies</strong> (ต.ค.: น้ำลดจากหน้าร้อนพอสมควร) แล้วไปเดินลูป <strong>Tre Cime di Lavaredo</strong> เต็มๆ (ระยะทาง ~10 กม. ใช้เวลา ~3-4 ชม.) เย็นขับกลับที่พักโซนตะวันออก ระยะทางสั้นกว่าตอนพักเดียวที่ Ortisei มาก</div>
                 <figure class="day-photo">
                     <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pragser_wildsee.JPG?width=800" alt="Lago di Braies">
                     <figcaption>Lago di Braies ยามเช้า</figcaption>
@@ -363,7 +487,7 @@
             </li>
             <li>
                 <span class="date">Day 6 (14 ต.ค., พุธ) | เช็คเอาท์ → Lago di Sorapis → กลับ Milan <span class="milan-tag2">เข้าเมืองมิลาน</span></span>
-                <div class="route">🚗 เช็คเอาท์ Ortisei → Passo Tre Croci (~1.75 ชม.) → 🥾 Lago di Sorapis (เทรล ~4 ชม.) → 🚗 Cortina → Belluno → A27 → A4 → Milan (~5-5.5 ชม.)</div>
+                <div class="route">🚗 เช็คเอาท์โซนตะวันออก → Passo Tre Croci → 🥾 Lago di Sorapis (เทรล ~4 ชม.) → 🚗 Cortina → Belluno → A27 → A4 → Milan</div>
                 <div class="detail">
                     เช็คเอาท์แต่เช้าเก็บกระเป๋าใส่ท้ายรถ ขับไป Passo Tre Croci เดินเทรลไปกลับ <strong>Lago di Sorapis</strong> (เทรลปานกลาง-ยาก มีช่วงเกาะเชือก/สะพานไม้แคบ ⚠️ ช่วง ต.ค. รีฟูจิโอ Vandelli มักปิดแล้วและเทรลเสี่ยงลื่น/น้ำแข็ง ควรเช็คสภาพอากาศให้ชัวร์ก่อนไป ถ้าไม่มั่นใจข้ามวันนี้แล้วขับตรงไปมิลานเลย) เสร็จแล้วขับยาวกลับมิลาน <strong>คืนรถที่สาขาในตัวเมือง</strong> เช็คอินโรงแรมมิลาน 2 คืนสุดท้าย
                     <a href="https://www.google.com/search?q=Lago+di+Sorapis+trail&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
