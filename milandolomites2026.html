@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milan - Dolomites Trip 2026: Self-Drive Comparison</title>
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #6c5ce7;
+            --accent: #e17055;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header { text-align: center; margin-bottom: 24px; }
+        .header h1 { margin: 0; font-size: 2rem; font-weight: 800; }
+        .header p { color: #636e72; margin-top: 5px; }
+
+        .hero-img { width: 100%; max-width: 720px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .hero-img img { width: 100%; display: block; border-radius: 16px; max-height: 360px; object-fit: cover; }
+
+        .info-box {
+            width: 100%; max-width: 720px; background: var(--card-bg);
+            border-radius: 16px; padding: 20px 24px; margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .vibe-box { background: #f1f2f6; border-left: 4px solid var(--secondary); }
+        .vibe-box strong { display: block; margin-bottom: 5px; }
+        .car-box { border-left: 4px solid var(--accent); }
+        .car-box strong { color: var(--accent); }
+        .car-box ul { margin: 8px 0 0 0; padding-left: 20px; line-height: 1.7; }
+        .warning { color: #d63031; font-size: 0.85rem; margin-top: 8px; display: block; }
+
+        section.block { width: 100%; max-width: 720px; margin-bottom: 24px; }
+        .section-title { font-size: 1.3rem; font-weight: 800; margin: 0 0 4px 0; }
+        .section-sub { color: #636e72; font-size: 0.9rem; margin: 0 0 14px 0; }
+
+        /* Ranking cards */
+        .rank-grid { display: flex; flex-direction: column; gap: 12px; }
+        .rank-card {
+            display: flex; gap: 14px; background: var(--card-bg); border-radius: 14px;
+            padding: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.05); align-items: center;
+        }
+        .rank-num {
+            flex: 0 0 28px; font-weight: 800; font-size: 1rem; color: #b2bec3; text-align: center;
+        }
+        .rank-card img { width: 92px; height: 92px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+        .rank-content { flex: 1; min-width: 0; }
+        .rank-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .rank-name { font-weight: 700; font-size: 1rem; }
+        .tier {
+            font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 20px; color: white;
+        }
+        .tier-Splus { background: #d63031; }
+        .tier-S { background: #e17055; }
+        .tier-A { background: #fdcb6e; color: #6d4c00; }
+        .tier-B { background: #74b9ff; color: #0b3d66; }
+        .rank-desc { font-size: 0.85rem; color: #636e72; margin-top: 4px; line-height: 1.5; }
+        .plan-pills { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .pill { font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+        .pill-yes5 { background: #dfe6fd; color: #3742fa; }
+        .pill-yes6 { background: #e0f7ee; color: #00875a; }
+        .pill-partial { background: #fff3cd; color: #856404; }
+        .pill-no { background: #f1f2f6; color: #b2bec3; text-decoration: line-through; }
+
+        /* Comparison table */
+        .diff-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.05); font-size: 0.88rem; }
+        .diff-table th, .diff-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f1f2f6; vertical-align: top; }
+        .diff-table th { background: #2d3436; color: white; font-size: 0.85rem; }
+        .diff-table tr:last-child td { border-bottom: none; }
+        .diff-table td:first-child { font-weight: 700; color: #636e72; width: 32%; }
+
+        .exclusive-box {
+            background: #e0f7ee; border-left: 4px solid #00b894; border-radius: 10px;
+            padding: 14px 16px; margin-top: 14px; font-size: 0.9rem; line-height: 1.7;
+        }
+        .exclusive-box strong { color: #00875a; display: block; margin-bottom: 6px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 16px; background: #dfe6e9; padding: 5px; border-radius: 12px; width: 100%; max-width: 720px; }
+        .tab-btn { flex: 1; padding: 12px 16px; border: none; background: transparent; font-weight: 700; font-size: 0.95rem; color: #636e72; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; }
+        .tab-btn.active { background: var(--card-bg); color: var(--secondary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .plan-container { display: none; width: 100%; max-width: 720px; background: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease; }
+        .plan-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+
+        .stat-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+        .stat-chip { flex: 1; min-width: 120px; background: #f1f2f6; border-radius: 10px; padding: 10px 12px; text-align: center; }
+        .stat-chip .num { font-size: 1.3rem; font-weight: 800; color: var(--secondary); }
+        .stat-chip .lbl { font-size: 0.75rem; color: #636e72; }
+
+        .timeline { list-style: none; padding: 0; margin: 0; }
+        .timeline li { position: relative; padding-left: 20px; margin-bottom: 26px; }
+        .timeline li::before { content: ''; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; }
+        .timeline li::after { content: ''; position: absolute; left: 3px; top: 18px; width: 2px; height: calc(100% + 7px); background: #dfe6e9; }
+        .timeline li:last-child::after { display: none; }
+        .date { font-weight: 700; color: var(--secondary); font-size: 0.95rem; display: block; }
+        .detail { margin-top: 5px; font-size: 0.95rem; line-height: 1.6; }
+        .route { display: inline-block; font-size: 0.8rem; font-weight: 700; color: #4a3f8f; background: #ecebfd; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
+        .new-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #00875a; background: #d3f9e9; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+        .link-btn { display: inline-block; margin-top: 8px; font-size: 0.85rem; color: var(--secondary); text-decoration: none; font-weight: 600; background: #ecebfd; padding: 4px 10px; border-radius: 20px; }
+        .link-btn:hover { background: #d6d3f7; }
+        .day-photo { margin-top: 10px; }
+        .day-photo img { width: 100%; border-radius: 12px; display: block; max-height: 300px; object-fit: cover; }
+        .day-photo figcaption { font-size: 0.78rem; color: #b2bec3; margin-top: 4px; text-align: right; }
+        .weather-info { background: #fafafa; border: 1px solid #eeeeee; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; color: #636e72; margin-top: 12px; border-left: 4px solid #00cec9; display: flex; flex-direction: column; gap: 4px; }
+        .weather-info strong { color: #2d3436; }
+        .temp-badge { background: #2d3436; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin-right: 6px; }
+
+        .photo-credit { width: 100%; max-width: 720px; font-size: 0.78rem; color: #b2bec3; text-align: center; margin-top: 16px; line-height: 1.5; }
+        .photo-credit a { color: #b2bec3; }
+        .back-link { margin-top: 24px; font-size: 0.9rem; color: #636e72; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Milan - Dolomites 2026 🚗🏔️</h1>
+        <p>เช่ารถขับเองจากมิลาน ลุยยอดเขาหินปูน Dolomites</p>
+    </div>
+
+    <div class="hero-img">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_di_Giau.jpg?width=1200" alt="Passo Giau, Dolomites">
+    </div>
+
+    <div class="info-box vibe-box">
+        <strong>Vibe Check:</strong>
+        บินลงมิลาน เช่ารถขับขึ้นเหนือไปยัง Dolomites เก็บทะเลสาบสีเทอร์ควอยซ์ สันเขาหินปูนสุดดราม่า ถนนโค้งหักศอกวิวพันล้าน แล้ววนกลับมิลานเพื่อบินกลับ ช่วงที่เหมาะที่สุดคือกลางเดือนมิถุนายน - ต้นเดือนกันยายน (หิมะละลายหมด กระเช้า/พาสภูเขาเปิดเต็มที่)
+        <span class="warning">*Note: Lago di Braies ต้องจองที่จอดรถ/ตั๋วรถบัสล่วงหน้าช่วงไฮซีซั่น และ Tre Cime ควรไปถึงก่อน 8 โมงเช้าไม่งั้นที่จอดรถ Auronzo เต็ม</span>
+    </div>
+
+    <div class="info-box car-box">
+        <strong>🚗 Car Rental Checklist</strong>
+        <ul>
+            <li><strong>ใบขับขี่:</strong> คนไทยใช้ใบขับขี่ไทยตัวจริงคู่กับ "ใบอนุญาตขับขี่สากล (International Driving Permit)" แบบอนุสัญญาเจนีวา 1949 ที่กรมขนส่งไทยออกให้ อิตาลีรับรองใบนี้อยู่แล้ว</li>
+            <li><strong>จองรถ:</strong> รับรถที่สนามบิน Milan Malpensa (MXP) สะดวกสุด แนะนำรถ compact/SUV เกียร์ธรรมดาราคาถูกกว่าอัตโนมัติมาก จองล่วงหน้า 1-2 เดือน (Europcar, Hertz, Avis, Sixt)</li>
+            <li><strong>ขับขวา:</strong> อิตาลีขับเลนขวา สลับข้างกับไทย ต้องระวังตอนแยก/วงเวียนช่วงแรกๆ</li>
+            <li><strong>ZTL Zone:</strong> ในตัวเมืองมิลาน (Area C/ZTL) มีกล้องจับรถที่ไม่ได้รับอนุญาตเข้าเขตเมืองชั้นใน ปรับหนักถ้าขับเข้าไปโดยไม่รู้ตัว เลี่ยงจอดรถไว้นอกโซนแล้วเดิน/นั่งรถไฟฟ้าเข้าเมืองแทน</li>
+            <li><strong>ทางด่วน (Autostrada):</strong> เป็นระบบเก็บเงินตามระยะทาง (Telepass/บัตรเครดิตที่ด่าน) เตรียมบัตรเครดิตไว้จ่ายที่ตู้ได้เลย</li>
+            <li><strong>ถนนภูเขา:</strong> พาส Passo Giau, Passo Pordoi, Passo Sella มีโค้งหักศอกเยอะมาก ขับเกียร์ต่ำลงเขา ระวังนักปั่นจักรยานที่มาปั่นขึ้นพาสเยอะมากช่วงซัมเมอร์</li>
+            <li><strong>น้ำมัน:</strong> คืนรถแบบเติมเต็มถัง (Full-to-Full) เช็คปั๊มใกล้สนามบินก่อนคืนรถ</li>
+        </ul>
+    </div>
+
+    <section class="block">
+        <h2 class="section-title">🏆 จัดแรงค์ไฮไลท์ Dolomites</h2>
+        <p class="section-sub">เรียงจากที่ห้ามพลาดที่สุด ไปจนถึงตัวเลือกเสริม พร้อมบอกว่าอยู่ในแพลนไหนบ้าง</p>
+        <div class="rank-grid">
+
+            <div class="rank-card">
+                <div class="rank-num">1</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tre_cime_di_Lavaredo.jpg?width=300" alt="Tre Cime di Lavaredo">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Tre Cime di Lavaredo</span><span class="tier tier-Splus">S+</span></div>
+                    <div class="rank-desc">เดินลูปรอบยอดเขาหินปูน 3 ยอด สัญลักษณ์ตัวจริงของ Dolomites วิวสวยรอบทาง เดินง่ายกว่าที่คิด</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">2</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pragser_wildsee.JPG?width=300" alt="Lago di Braies">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Lago di Braies</span><span class="tier tier-Splus">S+</span></div>
+                    <div class="rank-desc">ทะเลสาบสีเทอร์ควอยซ์ในกรอบภูเขา เรือพายไม้จอดริมน้ำ ต้องไปเช้ามืดเพื่อเลี่ยงคนแน่น</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">3</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Odles_as_seen_from_Seceda.JPG?width=300" alt="Seceda">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Seceda</span><span class="tier tier-S">S</span></div>
+                    <div class="rank-desc">สันเขาโค้งคมสุดไอคอนิก ฉากหลังเทือกเขา Odle นั่งกระเช้าขึ้นง่าย ไม่ต้องเดินเทรลไกล</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">4</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_di_Giau.jpg?width=300" alt="Passo Giau">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Passo Giau</span><span class="tier tier-S">S</span></div>
+                    <div class="rank-desc">ถนนโค้งหักศอก 29 โค้งไต่สู่ความสูง 2,236m วิวพาโนรามา 360° ช่วงเช้า/เย็นแสงสวยที่สุด</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">5</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Val_di_Funes.JPG?width=300" alt="Val di Funes">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Val di Funes / Santa Maddalena</span><span class="tier tier-A">A</span></div>
+                    <div class="rank-desc">โบสถ์เล็กกลางทุ่งหญ้า ฉากหลังยอดเขา Odle แหลมคม ภาพโปสการ์ดที่คุ้นตาที่สุดของ Dolomites</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">6</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Seiser_Alm_01.jpg?width=300" alt="Alpe di Siusi">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Alpe di Siusi (Seiser Alm)</span><span class="tier tier-A">A</span></div>
+                    <div class="rank-desc">ทุ่งอัลไพน์บนที่สูงผืนใหญ่ที่สุดในยุโรป เดินเทรลชิลๆ ท่ามกลางทุ่งหญ้าและวัวเล็มหญ้า</div>
+                    <div class="plan-pills"><span class="pill pill-partial">5D4N มองจาก Seceda</span><span class="pill pill-yes6">6D5N เดินเต็มวัน</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">7</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lago_di_Sorapis_1.jpg?width=300" alt="Lago di Sorapis">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Lago di Sorapis</span><span class="tier tier-A">A</span></div>
+                    <div class="rank-desc">ทะเลสาบสีฟ้าน้ำนมจากธารน้ำแข็ง เดินเทรลไป-กลับ ~4 ชม. มีช่วงเกาะเชือก/สะพานไม้นิดหน่อย</div>
+                    <div class="plan-pills"><span class="pill pill-no">5D4N ✗</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">8</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cinque_Torri_seggiovia_02.jpg?width=300" alt="Cinque Torri">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Cinque Torri &amp; Passo Falzarego</span><span class="tier tier-B">B+</span></div>
+                    <div class="rank-desc">หินยอดแหลม 5 ก้อน บวกพิพิธภัณฑ์กลางแจ้งสนามเพลาะสงครามโลกครั้งที่ 1 บน Lagazuoi</div>
+                    <div class="plan-pills"><span class="pill pill-no">5D4N ✗</span><span class="pill pill-yes6">6D5N ✓</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">9</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_pordoi.jpg?width=300" alt="Passo Pordoi">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Passo Pordoi / Sella Ronda</span><span class="tier tier-B">B</span></div>
+                    <div class="rank-desc">ถนนเลียบเขาเชื่อม 4 ช่องเขารอบ Gruppo del Sella วิวสวยตลอดทาง มีกระเช้าขึ้น Sass Pordoi 2,950m</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ขับผ่าน</span><span class="pill pill-yes6">6D5N แวะ+นั่งกระเช้า</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">10</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cortina_d%27Ampezzo.jpg?width=300" alt="Cortina d'Ampezzo">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Cortina d'Ampezzo</span><span class="tier tier-B">B</span></div>
+                    <div class="rank-desc">เมืองสกีรีสอร์ตหรู ฉายา "ราชินีแห่ง Dolomites" ใช้เป็นฐานเที่ยวโซนตะวันออก ร้านอาหาร/คาเฟ่ครบ</div>
+                    <div class="plan-pills"><span class="pill pill-yes5">5D4N ✓ (ฐานที่พัก)</span><span class="pill pill-yes6">6D5N ✓ (ฐานที่พัก)</span></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="block">
+        <h2 class="section-title">⚖️ เปรียบเทียบ 5 วัน 4 คืน vs 6 วัน 5 คืน</h2>
+        <p class="section-sub">ทั้งสองแพลนขับรถ Milan → Dolomites → Milan เหมือนกัน ต่างกันที่ความเข้มข้นของวันเดินเขา</p>
+        <table class="diff-table">
+            <tr><th></th><th>5 วัน 4 คืน</th><th>6 วัน 5 คืน</th></tr>
+            <tr><td>คืนที่พักใน Dolomites</td><td>4 คืน (Val Gardena x2, Cortina x2)</td><td>5 คืน (Val Gardena x3, Cortina x2)</td></tr>
+            <tr><td>จำนวนไฮไลท์หลักที่ได้เที่ยว</td><td>6 จุด</td><td>9 จุด</td></tr>
+            <tr><td>Alpe di Siusi</td><td>มองจากบนสัน Seceda เท่านั้น ไม่ได้ลงไปเดินเทรลในทุ่ง</td><td>เพิ่มวันเดินเทรลเต็มวันในทุ่งอัลไพน์</td></tr>
+            <tr><td>Lago di Sorapis</td><td>ตัดออก (เวลาไม่พอสำหรับเทรล 4 ชม.)</td><td>เพิ่มเข้ามาเป็นทริปเดินเขาไฮไลท์ของทริป</td></tr>
+            <tr><td>Cinque Torri &amp; Passo Falzarego</td><td>ตัดออก</td><td>เพิ่มเข้ามา แวะระหว่างทางกลับจาก Sorapis</td></tr>
+            <tr><td>การขับผ่าน Sella Ronda</td><td>ขับผ่านรวดเดียวไป Cortina ไม่ค่อยได้แวะ</td><td>แวะถ่ายรูป Passo Sella + นั่งกระเช้า Sass Pordoi</td></tr>
+            <tr><td>จังหวะทริป</td><td>ค่อนข้างเร่ง วันละ 1 ไฮไลท์ใหญ่ + ขับรถเยอะ</td><td>ผ่อนคลายกว่า มีวันเดินเขาเต็มวันแยกจากวันขับรถ</td></tr>
+            <tr><td>เหมาะกับใคร</td><td>คนมีเวลาน้อย อยากเก็บจุดเช็คอินคลาสสิกให้ครบ</td><td>คนอยากเดินเขาลึกขึ้น เผื่อวันสำรองกรณีอากาศ/ฝนแปรปรวน</td></tr>
+        </table>
+        <div class="exclusive-box">
+            <strong>📍 ที่เที่ยวที่มีเฉพาะแพลน 6 วัน 5 คืน</strong>
+            1) Alpe di Siusi แบบเดินเทรลเต็มวัน (ไม่ใช่แค่มองจาก Seceda) &nbsp;•&nbsp;
+            2) Lago di Sorapis ทะเลสาบสีฟ้าน้ำนมกลางป่า &nbsp;•&nbsp;
+            3) Cinque Torri &amp; พิพิธภัณฑ์กลางแจ้ง Passo Falzarego (Lagazuoi) &nbsp;•&nbsp;
+            4) จุดแวะถ่ายรูป/นั่งกระเช้าเพิ่มบน Sella Ronda (Passo Sella, Sass Pordoi)
+        </div>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showPlan('plan5')">แพลน 5 วัน 4 คืน 🕐</button>
+        <button class="tab-btn" onclick="showPlan('plan6')">แพลน 6 วัน 5 คืน 🌄</button>
+    </div>
+
+    <div id="plan5" class="plan-container active">
+        <div class="stat-row">
+            <div class="stat-chip"><div class="num">4</div><div class="lbl">คืนใน Dolomites</div></div>
+            <div class="stat-chip"><div class="num">6</div><div class="lbl">ไฮไลท์หลัก</div></div>
+            <div class="stat-chip"><div class="num">2</div><div class="lbl">ฐานที่พัก</div></div>
+        </div>
+        <ul class="timeline">
+            <li>
+                <span class="date">Day 1 | Milan → Val Gardena</span>
+                <div class="route">🚗 Milan Malpensa → A4 → A22 → Ortisei/Santa Cristina (~4.5-5 ชม.)</div>
+                <div class="detail">รับรถเช่าที่สนามบิน Malpensa ขับขึ้นเหนือมุ่งสู่ Val Gardena เช็คอินโรงแรม เย็นเดินเล่นในเมือง Ortisei ปรับตัวคืนแรก</div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Duomo_di_Milano.JPG?width=800" alt="Duomo di Milano">
+                    <figcaption>Duomo di Milano จุดเริ่มต้นทริป</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">14°C - 26°C</span><strong>อากาศ:</strong> มิลานร้อนได้ กลางวันแดดจัด บนภูเขาเย็นลงตอนเย็น</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อยืด+เสื้อคลุมบางพกติดรถ รองเท้าเดินสบาย</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 2 | Seceda &amp; Val di Funes</span>
+                <div class="route">🚡 กระเช้า Ortisei → Seceda &nbsp;/&nbsp; 🚗 ไป Val di Funes (~30 นาที)</div>
+                <div class="detail">
+                    เช้านั่งกระเช้าขึ้น <strong>Seceda</strong> เดินเล่นบนสันเขาชมวิว Odle บ่ายขับไป <strong>Val di Funes</strong> ถ่ายรูปโบสถ์ Santa Maddalena กับฉากหลังยอดเขา
+                    <a href="https://www.google.com/search?q=Seceda+ridge+Odle+view&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Odles_as_seen_from_Seceda.JPG?width=800" alt="Seceda ridge">
+                    <figcaption>สันเขา Seceda มองไปทาง Odle</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Val_di_Funes.JPG?width=800" alt="Val di Funes">
+                    <figcaption>Val di Funes / Santa Maddalena</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">10°C - 20°C</span><strong>อากาศ:</strong> บนสันเขาลมแรงและเย็นกว่าข้างล่างมาก มีโอกาสฝนบ่ายแบบพายุฤดูร้อน</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม/แจ็คเก็ตกันฝนบางๆ รองเท้าเทรล พกครีมกันแดดเพราะแดดแรงบนที่สูง</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 3 | Val Gardena → Cortina + Passo Giau</span>
+                <div class="route">🚗 Passo Gardena → Passo Sella → Passo Pordoi → Passo Falzarego → Cortina (~2 ชม. รวมแวะถ่ายรูป)</div>
+                <div class="detail">
+                    ขับข้ามเทือกเขาผ่านเส้นทาง Sella Ronda แวะถ่ายรูประหว่างทางสั้นๆ เช็คอินโรงแรมโซน Cortina d'Ampezzo เย็นขับขึ้น <strong>Passo Giau</strong> (~20 นาทีจากตัวเมือง) ชมพระอาทิตย์ตกบนพาส 2,236m
+                    <a href="https://www.google.com/search?q=Passo+Giau+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_pordoi.jpg?width=800" alt="Passo Pordoi">
+                    <figcaption>Passo Pordoi ระหว่างเส้นทาง Sella Ronda</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_di_Giau.jpg?width=800" alt="Passo Giau">
+                    <figcaption>Passo Giau ยามเย็น</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">9°C - 18°C</span><strong>อากาศ:</strong> บนพาสลมแรงและหนาวตอนเย็น อุณหภูมิลดฮวบหลังพระอาทิตย์ตก</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาวชั้นนอกหนาหน่อยไว้ใส่ตอนเย็นบนพาส</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 4 | Lago di Braies &amp; Tre Cime di Lavaredo</span>
+                <div class="route">🚗 Cortina → Lago di Braies (~45 นาที) → Tre Cime/Auronzo (~45 นาที)</div>
+                <div class="detail">
+                    ตื่นเช้ามืดไป <strong>Lago di Braies</strong> ก่อน 8 โมงเพื่อเลี่ยงคนแน่นและหาที่จอดรถได้ ถ่ายรูปเรือพายริมทะเลสาบ จากนั้นขับไป Auronzo ขึ้นเดินลูป <strong>Tre Cime di Lavaredo</strong> (ระยะทาง ~10 กม. ใช้เวลา ~3-4 ชม.)
+                    <a href="https://www.google.com/search?q=Tre+Cime+di+Lavaredo+hiking+loop&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pragser_wildsee.JPG?width=800" alt="Lago di Braies">
+                    <figcaption>Lago di Braies ยามเช้า</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tre_cime_di_Lavaredo.jpg?width=800" alt="Tre Cime di Lavaredo">
+                    <figcaption>Tre Cime di Lavaredo</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">8°C - 19°C</span><strong>อากาศ:</strong> เช้ามืดหนาวจัดริมทะเลสาบ กลางวันแดดแรงตอนเดินเทรล</div>
+                    <div>👗 <strong>OOTD:</strong> ใส่เป็นชั้นๆ (layer) ถอดง่ายเวลาแดดแรง รองเท้าเทรลกันลื่นจำเป็นมาก</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 5 | Cortina → Milan ✈️</span>
+                <div class="route">🚗 Cortina → Belluno → A27 → A4 → Milan Malpensa (~5.5-6 ชม.)</div>
+                <div class="detail">เช้าชิลในตัวเมือง Cortina หรือแวะจุดชมวิว Cinque Torri สั้นๆ ก่อนขับยาวกลับมิลาน คืนรถที่สนามบิน เผื่อเวลาอย่างน้อย 3 ชม.ก่อนไฟลท์</div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">15°C - 27°C</span><strong>อากาศ:</strong> กลับลงที่ราบมิลานอุณหภูมิสูงขึ้นเรื่อยๆ</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="plan6" class="plan-container">
+        <div class="stat-row">
+            <div class="stat-chip"><div class="num">5</div><div class="lbl">คืนใน Dolomites</div></div>
+            <div class="stat-chip"><div class="num">9</div><div class="lbl">ไฮไลท์หลัก</div></div>
+            <div class="stat-chip"><div class="num">2</div><div class="lbl">ฐานที่พัก</div></div>
+        </div>
+        <ul class="timeline">
+            <li>
+                <span class="date">Day 1 | Milan → Val Gardena</span>
+                <div class="route">🚗 Milan Malpensa → A4 → A22 → Ortisei/Santa Cristina (~4.5-5 ชม.)</div>
+                <div class="detail">เหมือนแพลน 5 วันเป๊ะๆ รับรถที่สนามบิน ขับขึ้นเหนือ เช็คอิน เดินเล่นเมือง Ortisei ปรับตัวคืนแรก</div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Duomo_di_Milano.JPG?width=800" alt="Duomo di Milano">
+                    <figcaption>Duomo di Milano จุดเริ่มต้นทริป</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">14°C - 26°C</span><strong>อากาศ:</strong> มิลานร้อนได้ กลางวันแดดจัด บนภูเขาเย็นลงตอนเย็น</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อยืด+เสื้อคลุมบางพกติดรถ รองเท้าเดินสบาย</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 2 | Seceda &amp; Val di Funes</span>
+                <div class="route">🚡 กระเช้า Ortisei → Seceda &nbsp;/&nbsp; 🚗 ไป Val di Funes (~30 นาที)</div>
+                <div class="detail">เหมือนแพลน 5 วัน เช้า Seceda บ่าย Val di Funes ถ่ายรูปโบสถ์ Santa Maddalena</div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Odles_as_seen_from_Seceda.JPG?width=800" alt="Seceda ridge">
+                    <figcaption>สันเขา Seceda มองไปทาง Odle</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Val_di_Funes.JPG?width=800" alt="Val di Funes">
+                    <figcaption>Val di Funes / Santa Maddalena</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">10°C - 20°C</span><strong>อากาศ:</strong> บนสันเขาลมแรงและเย็นกว่าข้างล่างมาก มีโอกาสฝนบ่ายแบบพายุฤดูร้อน</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันลม/แจ็คเก็ตกันฝนบางๆ รองเท้าเทรล พกครีมกันแดด</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 3 | Alpe di Siusi เต็มวัน <span class="new-tag">NEW</span></span>
+                <div class="route">🚡 กระเช้า Siusi/Ortisei → Alpe di Siusi → เดินเทรลสู่ Bullaccia/Punta Santner</div>
+                <div class="detail">
+                    วันเต็มบนทุ่งอัลไพน์ที่ใหญ่ที่สุดในยุโรป นั่งกระเช้าขึ้นแล้วเดินเทรลชิลๆ ท่ามกลางทุ่งหญ้าและวัวเล็มหญ้า ฉากหลังยอดเขา Sassolungo แวะรีฟูจิโอกินอาหารพื้นเมืองกลางทาง (แพลน 5 วันไม่มีวันนี้ เห็นแค่ทุ่งนี้จากมุมสูงตอนอยู่บน Seceda)
+                    <a href="https://www.google.com/search?q=Alpe+di+Siusi+hiking+trail&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Seiser_Alm_01.jpg?width=800" alt="Alpe di Siusi">
+                    <figcaption>ทุ่ง Alpe di Siusi (Seiser Alm)</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">11°C - 21°C</span><strong>อากาศ:</strong> อากาศเปิดโล่งแดดแรง แต่ที่สูงลมเย็นตลอดวัน</div>
+                    <div>👗 <strong>OOTD:</strong> หมวก/แว่นกันแดด รองเท้าเดินป่าสบายๆ เพราะเดินทั้งวัน</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 4 | Val Gardena → Cortina + Passo Giau</span>
+                <div class="route">🚗🚡 Passo Gardena → Passo Sella (แวะถ่ายรูป) → กระเช้า Sass Pordoi 2,950m → Passo Falzarego → Cortina</div>
+                <div class="detail">
+                    ขับเส้น Sella Ronda เหมือนแพลน 5 วัน แต่แวะจริงจังกว่า หยุดถ่ายรูปที่ <strong>Passo Sella</strong> และนั่งกระเช้าขึ้น <strong>Sass Pordoi</strong> ชมวิว 360° ก่อนลงไป Cortina เย็นขึ้น Passo Giau ชมพระอาทิตย์ตก
+                    <a href="https://www.google.com/search?q=Sass+Pordoi+cable+car+view&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_pordoi.jpg?width=800" alt="Passo Pordoi">
+                    <figcaption>Passo Pordoi / จุดขึ้นกระเช้า Sass Pordoi</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Passo_di_Giau.jpg?width=800" alt="Passo Giau">
+                    <figcaption>Passo Giau ยามเย็น</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">9°C - 18°C</span><strong>อากาศ:</strong> บนกระเช้า/พาสหนาวและลมแรงมาก โดยเฉพาะ Sass Pordoi ที่สูงเกือบ 3,000m</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาวชั้นนอกหนาๆ ต้องมีติดตัวขึ้นกระเช้า</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 5 | Lago di Braies &amp; Tre Cime di Lavaredo</span>
+                <div class="route">🚗 Cortina → Lago di Braies (~45 นาที) → Tre Cime/Auronzo (~45 นาที)</div>
+                <div class="detail">เหมือนแพลน 5 วัน เช้ามืด Lago di Braies ก่อนคนแน่น แล้วไปเดินลูป Tre Cime di Lavaredo เต็มๆ</div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pragser_wildsee.JPG?width=800" alt="Lago di Braies">
+                    <figcaption>Lago di Braies ยามเช้า</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tre_cime_di_Lavaredo.jpg?width=800" alt="Tre Cime di Lavaredo">
+                    <figcaption>Tre Cime di Lavaredo</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">8°C - 19°C</span><strong>อากาศ:</strong> เช้ามืดหนาวจัดริมทะเลสาบ กลางวันแดดแรงตอนเดินเทรล</div>
+                    <div>👗 <strong>OOTD:</strong> ใส่เป็นชั้นๆ (layer) รองเท้าเทรลกันลื่นจำเป็นมาก</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 6 | Lago di Sorapis + Cinque Torri → Milan ✈️ <span class="new-tag">NEW</span></span>
+                <div class="route">🥾 Passo Tre Croci → Lago di Sorapis (เทรล ~4 ชม.) → 🚗 Cinque Torri/Passo Falzarego → Milan (~5.5-6 ชม.)</div>
+                <div class="detail">
+                    เช้าเดินเทรลไปกลับ <strong>Lago di Sorapis</strong> ทะเลสาบสีฟ้าน้ำนมจากธารน้ำแข็ง (เทรลปานกลาง-ยาก มีช่วงเกาะเชือก/สะพานไม้แคบนิดหน่อย) บ่ายแวะ <strong>Cinque Torri</strong> ถ่ายรูปหินยอดแหลม และเดินชมพิพิธภัณฑ์กลางแจ้งสนามเพลาะสงครามโลกครั้งที่ 1 บน Passo Falzarego ก่อนขับยาวกลับมิลาน คืนรถที่สนามบิน (แพลน 5 วันตัดวันนี้ทิ้งทั้งหมด)
+                    <a href="https://www.google.com/search?q=Lago+di+Sorapis+trail&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lago_di_Sorapis_1.jpg?width=800" alt="Lago di Sorapis">
+                    <figcaption>Lago di Sorapis</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cinque_Torri_seggiovia_02.jpg?width=800" alt="Cinque Torri">
+                    <figcaption>Cinque Torri</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">8°C - 20°C</span><strong>อากาศ:</strong> เช้าบนเทรลหนาว มีลมแรงช่วงข้ามสะพาน/เกาะเชือก บ่ายแดดแรงเปิดโล่ง</div>
+                    <div>👗 <strong>OOTD:</strong> รองเท้าเทรลเกาะพื้นดี ถุงมือบางๆ เผื่อช่วงจับเชือก เสื้อกันลมจำเป็น</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        function showPlan(planId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.plan-container').forEach(plan => plan.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(planId).classList.add('active');
+        }
+    </script>
+
+    <div class="photo-credit">
+        📷 ภาพประกอบจาก <a href="https://commons.wikimedia.org/" target="_blank">Wikimedia Commons</a> (Creative Commons license)
+    </div>
+
+    <a href="index.html" class="back-link">← กลับหน้า Travel Hub</a>
+
+</body>
+</html>
