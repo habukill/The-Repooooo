@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okinawa Trip 2026: Self-Drive Nature Escape</title>
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #00b894;
+            --accent: #0984e3;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .header p {
+            color: #636e72;
+            margin-top: 5px;
+        }
+        .info-box {
+            width: 100%;
+            max-width: 640px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .vibe-box {
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+        .vibe-box strong { display: block; margin-bottom: 5px; }
+        .car-box {
+            border-left: 4px solid var(--accent);
+        }
+        .car-box strong { color: var(--accent); }
+        .car-box ul { margin: 8px 0 0 0; padding-left: 20px; line-height: 1.6; }
+        .plan-container {
+            width: 100%;
+            max-width: 640px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .timeline { list-style: none; padding: 0; margin: 0; }
+        .timeline li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 26px;
+        }
+        .timeline li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 6px;
+            width: 8px; height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+        }
+        .timeline li::after {
+            content: '';
+            position: absolute;
+            left: 3px; top: 18px;
+            width: 2px; height: calc(100% + 7px);
+            background: #dfe6e9;
+        }
+        .timeline li:last-child::after { display: none; }
+        .date {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 0.95rem;
+            display: block;
+        }
+        .detail { margin-top: 5px; font-size: 0.95rem; line-height: 1.6; }
+        .route {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #00695c;
+            background: #e0f2f1;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+        }
+        .link-btn {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            background: #e3f2fd;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .link-btn:hover { background: #bbdefb; }
+        .weather-info {
+            background: #fafafa;
+            border: 1px solid #eeeeee;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-top: 12px;
+            border-left: 4px solid #00cec9;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .weather-info strong { color: #2d3436; }
+        .temp-badge {
+            background: #2d3436;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 6px;
+        }
+        .warning {
+            color: #d63031;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: block;
+        }
+        .back-link {
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: #636e72;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Okinawa Trip 2026 🚗🌺</h1>
+        <p>เช่ารถขับลุยเอง สายธรรมชาติ ทะเลใส ป่าเขียว 2 คน</p>
+    </div>
+
+    <div class="info-box vibe-box">
+        <strong>Vibe Check:</strong>
+        ขับรถเองรอบเกาะโอกินาว่าฮอนโต (Okinawa Main Island) วนเก็บวิวทะเลสีฟ้าเทอร์ควอยซ์ ป่า Yanbaru เขียวชอุ่มระดับ UNESCO น้ำตกกลางป่า สะพานข้ามทะเล และปิดท้ายด้วยเกาะ Kerama น้ำใสจนเรียกว่า "Kerama Blue" ต้นเดือนตุลาคมอากาศยังร้อนแบบซัมเมอร์ แดดแรง ลงทะเลได้สบายๆ
+        <span class="warning">*Note: ต้นเดือน ต.ค. ยังอยู่ในช่วงฤดูไต้ฝุ่นของโอกินาว่า เช็คพยากรณ์อากาศใกล้วันเดินทาง และเผื่อแพลนสำรองวันฝนแรงไว้ด้วยนะ</span>
+    </div>
+
+    <div class="info-box car-box">
+        <strong>🚗 Car Rental Checklist</strong>
+        <ul>
+            <li><strong>ใบขับขี่:</strong> คนไทยต้องใช้ "ใบอนุญาตขับขี่สากล (International Driving Permit)" ไม่ใช่ IDP แบบเวียนนา (Vienna Convention) เพราะญี่ปุ่นรับเฉพาะอนุสัญญาเจนีวา — ทำที่กรมขนส่งไทยก่อนบินได้เลย พกใบขับขี่ไทยตัวจริงไปคู่กันด้วย</li>
+            <li><strong>จองรถ:</strong> จองล่วงหน้าอย่างน้อย 1-2 เดือน (OTS, Toyota Rent a Car, Times Car) รับรถที่สนามบินนาฮะสะดวกสุด แนะนำรถ Kei car หรือ compact เพราะถนนบางช่วงแคบ</li>
+            <li><strong>ขับซ้าย:</strong> ญี่ปุ่นขับเลนซ้ายเหมือนไทย ปรับตัวไม่ยาก แต่พวงมาลัยขวา ที่ปัดน้ำฝน/ไฟเลี้ยวสลับข้างกับรถบ้านเรา</li>
+            <li><strong>ETC Card:</strong> ขอเช่าติดรถไปด้วยถ้าจะขึ้นทางด่วน Okinawa Expressway ช่วงขึ้นเหนือ ประหยัดเวลาได้เยอะ</li>
+            <li><strong>น้ำมัน:</strong> คืนรถแบบเติมเต็มถัง (Full-to-Full) เช็คปั๊มใกล้จุดคืนรถไว้ล่วงหน้า</li>
+        </ul>
+    </div>
+
+    <div class="plan-container">
+        <ul class="timeline">
+            <li>
+                <span class="date">เสาร์ 10 ต.ค. | Bangkok ✈️ Naha</span>
+                <div class="route">🚗 Airport → Chatan/Naha</div>
+                <div class="detail">
+                    บินตรงหรือต่อเครื่องมาลง <strong>สนามบินนาฮะ (OKA)</strong> ช่วงบ่าย/เย็น รับรถเช่าที่เคาน์เตอร์สนามบิน เช็คอินโรงแรมย่าน <strong>Chatan / American Village</strong> เดินเล่นชิลๆ ชมพระอาทิตย์ตกริมทะเล ปรับตัวคืนแรก
+                    <a href="https://www.google.com/search?q=American+Village+Chatan+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว American Village</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">27°C - 31°C</span><strong>อากาศ:</strong> ร้อนชื้นแบบซัมเมอร์ แดดแรงตอนกลางวัน ลมทะเลเย็นลงตอนค่ำ</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อยืด/เดรสบางเบาระบายอากาศ รองเท้าสวมสบาย พกร่ม/เสื้อกันฝนบางๆ ติดตัวเผื่อฝนหลง</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">อาทิตย์ 11 ต.ค. | South Okinawa Culture & Coast</span>
+                <div class="route">🚗 Naha → Nanjo → Chinen</div>
+                <div class="detail">
+                    ลุยโซนใต้: ถ้ำหินงอกหินย้อย <strong>Gyokusendo Cave</strong> ในสวน Okinawa World เดินลอดถ้ำเย็นฉ่ำ บ่ายแวะ <strong>Cape Chinen</strong> ชมทะเลจากหน้าผา ปิดท้ายวันด้วยพระอาทิตย์ตกที่สะพาน <strong>Nirai Kanai Bridge</strong> วิวโค้งสะพานลงทะเลสวยมาก
+                    <a href="https://www.google.com/search?q=Nirai+Kanai+Bridge+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Nirai Kanai Bridge</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> ในถ้ำเย็นและชื้น ข้างนอกแดดจัด ลมแรงบริเวณหน้าผา</div>
+                    <div>👗 <strong>OOTD:</strong> รองเท้าเดินสบายกันลื่น (ในถ้ำพื้นเปียก) พกเสื้อคลุมบางไว้ใส่ตอนเข้าถ้ำเย็นๆ</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">จันทร์ 12 ต.ค. | Kouri Island & Churaumi</span>
+                <div class="route">🚗 Naha → Yomitan → Nago → Kouri Island</div>
+                <div class="detail">
+                    ขับขึ้นเหนือ แวะ <strong>Zakimi Castle Ruins</strong> ปราสาทริวกิวโบราณ ก่อนไปเช็คอิน <strong>Churaumi Aquarium</strong> ดูฉลามวาฬตัวเป็นๆ จากนั้นข้ามสะพาน <strong>Kouri Bridge</strong> ไปเกาะ Kouri Island ถ่ายรูปกับ <strong>Heart Rock</strong> และกินไอศกรีมเบนิอิโมะริมทะเล
+                    <a href="https://www.google.com/search?q=Kouri+Island+Heart+Rock+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Heart Rock & Kouri Bridge</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> แดดจัดเต็มวัน ทะเลใสมองเห็นพื้นทราย ลมทะเลแรงบนสะพาน</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดว่ายน้ำใส่ในเสื้อผ้าปกติได้เลยเผื่อลงเล่นน้ำ หมวก/แว่นกันแดดจำเป็นมาก ทาครีมกันแดดหนาๆ</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">อังคาร 13 ต.ค. | Yanbaru Forest & Cape Hedo</span>
+                <div class="route">🚗 Nago → Ogimi → Kunigami → Cape Hedo</div>
+                <div class="detail">
+                    วันธรรมชาติเต็มๆ! ขับลึกขึ้นเหนือสุดเข้าเขต <strong>Yanbaru National Park</strong> ป่าฝนกึ่งร้อนมรดกโลก แวะเดินเทรลสั้นๆ ชม <strong>Hiji Falls</strong> น้ำตกกลางป่า (เดินเทรลประมาณ 40-50 นาที) ต่อด้วยไปสุดถนนที่ <strong>Cape Hedo</strong> จุดเหนือสุดของเกาะโอกินาว่า วิวทะเลสองสีบรรจบกัน
+                    <a href="https://www.google.com/search?q=Cape+Hedo+Okinawa+view&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Cape Hedo</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">26°C - 29°C</span><strong>อากาศ:</strong> ในป่าอากาศเย็นกว่าชายฝั่ง ชื้นและอาจมีทากช่วงหน้าฝน ที่แหลมลมแรงมาก</div>
+                    <div>👗 <strong>OOTD:</strong> รองเท้าเดินป่า/รองเท้าผ้าใบเกาะพื้นดี เสื้อแขนยาวบางกันแมลง สเปรย์กันยุง และเสื้อกันลมสำหรับตอนอยู่ริมแหลม</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">พุธ 14 ต.ค. | Kerama Blue Day Trip</span>
+                <div class="route">⛴️ Tomari Port → Zamami/Tokashiki</div>
+                <div class="detail">
+                    จอดรถไว้แล้วนั่งเรือเฟอร์รี่จากท่า <strong>Tomari Port</strong> ในนาฮะไปหมู่เกาะ <strong>Kerama</strong> (เลือก Zamami หรือ Tokashiki) น้ำทะเลใสจนติดอันดับโลก เล่นน้ำ/ดำน้ำตื้นดูปะการัง เดือนตุลาคมยังว่ายน้ำได้สบาย เย็นนั่งเรือกลับเข้าฝั่ง
+                    <a href="https://www.google.com/search?q=Kerama+Islands+blue+sea+snorkeling&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Kerama Blue</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">28°C - 31°C</span><strong>อากาศ:</strong> ร้อนแดดจัดกลางทะเล เรือโคลงได้ถ้าลมแรง เช็คตารางเรือ/สภาพอากาศก่อนวันเดินทาง</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดว่ายน้ำ + ผ้าคลุม เสื้อแขนยาวกันแดด (rash guard) กันแดดกันน้ำ รองเท้ารัดส้นใส่เดินหาด</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">พฤหัส 15 ต.ค. | Nakijin Castle & West Coast Chill</span>
+                <div class="route">🚗 Naha → Nakijin → Yomitan → Zanpa</div>
+                <div class="detail">
+                    รับรถกลับมาขับต่อ แวะ <strong>Nakijin Castle Ruins</strong> ปราสาทริวกิวมรดกโลกอีกแห่ง วิวทะเลจากกำแพงปราสาทสวยมาก บ่ายแวะประภาคาร <strong>Cape Zanpa</strong> หน้าผาหินปูนสีขาวสุดอลังการ เย็นชิลริมหาด <strong>Sunset Beach</strong>
+                    <a href="https://www.google.com/search?q=Cape+Zanpa+Okinawa+cliff&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Cape Zanpa</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> แดดแรงตอนบ่าย ลมแรงบริเวณหน้าผาประภาคาร เย็นลมทะเลเย็นสบาย</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดสบายๆ เดินได้ทั้งวัน พกหมวก/แว่นกันแดด เสื้อคลุมบางไว้ใส่ตอนลมแรง</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">ศุกร์ 16 ต.ค. | Naha Free Day & Kokusai Street</span>
+                <div class="route">🚗 Free & easy รอบนาฮะ</div>
+                <div class="detail">
+                    วันชิลก่อนกลับ เดินเล่น <strong>Kokusai Street</strong> ช้อปของฝาก ลองตลาด <strong>Makishi Public Market</strong> กินอาหารริวกิวมื้อสุดท้าย หรือถ้าอยากธรรมชาติเพิ่มเลือกแวะ <strong>Nakagusuku Castle Ruins</strong> ปราสาทริมหน้าผาใกล้เมืองแทนได้
+                    <a href="https://www.google.com/search?q=Kokusai+Street+Naha+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Kokusai Street</a>
+                </div>
+                <div class="weather-info">
+                    <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> อากาศเมืองทั่วไป แดดแรงตอนกลางวัน</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดเดินช้อปสบายๆ รองเท้าผ้าใบ</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">เสาร์ 17 ต.ค. | คืนรถ ✈️ กลับกรุงเทพฯ</span>
+                <div class="detail">เติมน้ำมันเต็มถัง คืนรถที่สนามบินนาฮะ เผื่อเวลาอย่างน้อย 3 ชม.ก่อนเช็คอิน เดินทางกลับกรุงเทพฯ</div>
+            </li>
+        </ul>
+    </div>
+
+    <a href="index.html" class="back-link">← กลับหน้า Travel Hub</a>
+
+</body>
+</html>
