@@ -151,6 +151,46 @@
             text-decoration: none;
         }
         .back-link:hover { text-decoration: underline; }
+        .hero-img {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        .hero-img img {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+            max-height: 340px;
+            object-fit: cover;
+        }
+        .day-photo {
+            margin-top: 10px;
+        }
+        .day-photo img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+            max-height: 300px;
+            object-fit: cover;
+        }
+        .day-photo figcaption {
+            font-size: 0.78rem;
+            color: #b2bec3;
+            margin-top: 4px;
+            text-align: right;
+        }
+        .photo-credit {
+            width: 100%;
+            max-width: 640px;
+            font-size: 0.78rem;
+            color: #b2bec3;
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+        .photo-credit a { color: #b2bec3; }
     </style>
 </head>
 <body>
@@ -158,6 +198,10 @@
     <div class="header">
         <h1>Okinawa Trip 2026 🚗🌺</h1>
         <p>เช่ารถขับลุยเอง สายธรรมชาติ ทะเลใส ป่าเขียว 2 คน</p>
+    </div>
+
+    <div class="hero-img">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Okinawa_Emerald_Beach.JPG?width=1200" alt="Emerald Beach, Okinawa">
     </div>
 
     <div class="info-box vibe-box">
@@ -184,8 +228,12 @@
                 <div class="route">🚗 Airport → Chatan/Naha</div>
                 <div class="detail">
                     บินตรงหรือต่อเครื่องมาลง <strong>สนามบินนาฮะ (OKA)</strong> ช่วงบ่าย/เย็น รับรถเช่าที่เคาน์เตอร์สนามบิน เช็คอินโรงแรมย่าน <strong>Chatan / American Village</strong> เดินเล่นชิลๆ ชมพระอาทิตย์ตกริมทะเล ปรับตัวคืนแรก
-                    <a href="https://www.google.com/search?q=American+Village+Chatan+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว American Village</a>
+                    <a href="https://www.google.com/search?q=American+Village+Chatan+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mihama_Town_Resort_American_Village_1.JPG?width=800" alt="American Village, Chatan, Okinawa">
+                    <figcaption>American Village, Chatan</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">27°C - 31°C</span><strong>อากาศ:</strong> ร้อนชื้นแบบซัมเมอร์ แดดแรงตอนกลางวัน ลมทะเลเย็นลงตอนค่ำ</div>
                     <div>👗 <strong>OOTD:</strong> เสื้อยืด/เดรสบางเบาระบายอากาศ รองเท้าสวมสบาย พกร่ม/เสื้อกันฝนบางๆ ติดตัวเผื่อฝนหลง</div>
@@ -196,8 +244,16 @@
                 <div class="route">🚗 Naha → Nanjo → Chinen</div>
                 <div class="detail">
                     ลุยโซนใต้: ถ้ำหินงอกหินย้อย <strong>Gyokusendo Cave</strong> ในสวน Okinawa World เดินลอดถ้ำเย็นฉ่ำ บ่ายแวะ <strong>Cape Chinen</strong> ชมทะเลจากหน้าผา ปิดท้ายวันด้วยพระอาทิตย์ตกที่สะพาน <strong>Nirai Kanai Bridge</strong> วิวโค้งสะพานลงทะเลสวยมาก
-                    <a href="https://www.google.com/search?q=Nirai+Kanai+Bridge+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Nirai Kanai Bridge</a>
+                    <a href="https://www.google.com/search?q=Nirai+Kanai+Bridge+Okinawa+sunset&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Gyokusendo_Nanjo_Okinawa_Japan03s3104.jpg?width=800" alt="Gyokusendo Cave, Okinawa">
+                    <figcaption>Gyokusendo Cave</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nirai_Kanai_Bridge_202208.jpg?width=800" alt="Nirai Kanai Bridge, Okinawa">
+                    <figcaption>Nirai Kanai Bridge</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> ในถ้ำเย็นและชื้น ข้างนอกแดดจัด ลมแรงบริเวณหน้าผา</div>
                     <div>👗 <strong>OOTD:</strong> รองเท้าเดินสบายกันลื่น (ในถ้ำพื้นเปียก) พกเสื้อคลุมบางไว้ใส่ตอนเข้าถ้ำเย็นๆ</div>
@@ -208,8 +264,16 @@
                 <div class="route">🚗 Naha → Yomitan → Nago → Kouri Island</div>
                 <div class="detail">
                     ขับขึ้นเหนือ แวะ <strong>Zakimi Castle Ruins</strong> ปราสาทริวกิวโบราณ ก่อนไปเช็คอิน <strong>Churaumi Aquarium</strong> ดูฉลามวาฬตัวเป็นๆ จากนั้นข้ามสะพาน <strong>Kouri Bridge</strong> ไปเกาะ Kouri Island ถ่ายรูปกับ <strong>Heart Rock</strong> และกินไอศกรีมเบนิอิโมะริมทะเล
-                    <a href="https://www.google.com/search?q=Kouri+Island+Heart+Rock+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Heart Rock & Kouri Bridge</a>
+                    <a href="https://www.google.com/search?q=Kouri+Island+Heart+Rock+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Okinawa_Churaumi_Aquarium_from_west.JPG?width=800" alt="Churaumi Aquarium, Okinawa">
+                    <figcaption>Churaumi Aquarium</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kouri_Bridge_202006.jpg?width=800" alt="Kouri Bridge, Okinawa">
+                    <figcaption>Kouri Bridge สู่เกาะ Kouri Island</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> แดดจัดเต็มวัน ทะเลใสมองเห็นพื้นทราย ลมทะเลแรงบนสะพาน</div>
                     <div>👗 <strong>OOTD:</strong> ชุดว่ายน้ำใส่ในเสื้อผ้าปกติได้เลยเผื่อลงเล่นน้ำ หมวก/แว่นกันแดดจำเป็นมาก ทาครีมกันแดดหนาๆ</div>
@@ -220,8 +284,20 @@
                 <div class="route">🚗 Nago → Ogimi → Kunigami → Cape Hedo</div>
                 <div class="detail">
                     วันธรรมชาติเต็มๆ! ขับลึกขึ้นเหนือสุดเข้าเขต <strong>Yanbaru National Park</strong> ป่าฝนกึ่งร้อนมรดกโลก แวะเดินเทรลสั้นๆ ชม <strong>Hiji Falls</strong> น้ำตกกลางป่า (เดินเทรลประมาณ 40-50 นาที) ต่อด้วยไปสุดถนนที่ <strong>Cape Hedo</strong> จุดเหนือสุดของเกาะโอกินาว่า วิวทะเลสองสีบรรจบกัน
-                    <a href="https://www.google.com/search?q=Cape+Hedo+Okinawa+view&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Cape Hedo</a>
+                    <a href="https://www.google.com/search?q=Cape+Hedo+Okinawa+view&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Subtropical_Forest_of_Yanbaru_National_Park_Okinawa_2018.jpg?width=800" alt="Yanbaru National Park forest, Okinawa">
+                    <figcaption>ป่า Yanbaru National Park</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hiji_Waterfall_202105.jpg?width=800" alt="Hiji Falls, Okinawa">
+                    <figcaption>Hiji Falls</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hedo_Point,_Okinawa.jpg?width=800" alt="Cape Hedo, Okinawa">
+                    <figcaption>Cape Hedo จุดเหนือสุดของเกาะ</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">26°C - 29°C</span><strong>อากาศ:</strong> ในป่าอากาศเย็นกว่าชายฝั่ง ชื้นและอาจมีทากช่วงหน้าฝน ที่แหลมลมแรงมาก</div>
                     <div>👗 <strong>OOTD:</strong> รองเท้าเดินป่า/รองเท้าผ้าใบเกาะพื้นดี เสื้อแขนยาวบางกันแมลง สเปรย์กันยุง และเสื้อกันลมสำหรับตอนอยู่ริมแหลม</div>
@@ -232,8 +308,12 @@
                 <div class="route">⛴️ Tomari Port → Zamami/Tokashiki</div>
                 <div class="detail">
                     จอดรถไว้แล้วนั่งเรือเฟอร์รี่จากท่า <strong>Tomari Port</strong> ในนาฮะไปหมู่เกาะ <strong>Kerama</strong> (เลือก Zamami หรือ Tokashiki) น้ำทะเลใสจนติดอันดับโลก เล่นน้ำ/ดำน้ำตื้นดูปะการัง เดือนตุลาคมยังว่ายน้ำได้สบาย เย็นนั่งเรือกลับเข้าฝั่ง
-                    <a href="https://www.google.com/search?q=Kerama+Islands+blue+sea+snorkeling&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Kerama Blue</a>
+                    <a href="https://www.google.com/search?q=Kerama+Islands+blue+sea+snorkeling&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ama_beach_in_Zamami_Island_Wikivoyage_banner.jpg?width=800" alt="Ama Beach, Zamami Island, Kerama">
+                    <figcaption>Ama Beach, Zamami Island (Kerama)</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">28°C - 31°C</span><strong>อากาศ:</strong> ร้อนแดดจัดกลางทะเล เรือโคลงได้ถ้าลมแรง เช็คตารางเรือ/สภาพอากาศก่อนวันเดินทาง</div>
                     <div>👗 <strong>OOTD:</strong> ชุดว่ายน้ำ + ผ้าคลุม เสื้อแขนยาวกันแดด (rash guard) กันแดดกันน้ำ รองเท้ารัดส้นใส่เดินหาด</div>
@@ -244,8 +324,16 @@
                 <div class="route">🚗 Naha → Nakijin → Yomitan → Zanpa</div>
                 <div class="detail">
                     รับรถกลับมาขับต่อ แวะ <strong>Nakijin Castle Ruins</strong> ปราสาทริวกิวมรดกโลกอีกแห่ง วิวทะเลจากกำแพงปราสาทสวยมาก บ่ายแวะประภาคาร <strong>Cape Zanpa</strong> หน้าผาหินปูนสีขาวสุดอลังการ เย็นชิลริมหาด <strong>Sunset Beach</strong>
-                    <a href="https://www.google.com/search?q=Cape+Zanpa+Okinawa+cliff&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Cape Zanpa</a>
+                    <a href="https://www.google.com/search?q=Cape+Zanpa+Okinawa+cliff&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nakijin_Okinawa_Japan_Nakikjin-Castle-11.jpg?width=800" alt="Nakijin Castle Ruins, Okinawa">
+                    <figcaption>Nakijin Castle Ruins</figcaption>
+                </figure>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/An_awesome_sunset_at_Cape_Zanpa.jpg?width=800" alt="Cape Zanpa, Okinawa">
+                    <figcaption>Cape Zanpa Lighthouse</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> แดดแรงตอนบ่าย ลมแรงบริเวณหน้าผาประภาคาร เย็นลมทะเลเย็นสบาย</div>
                     <div>👗 <strong>OOTD:</strong> ชุดสบายๆ เดินได้ทั้งวัน พกหมวก/แว่นกันแดด เสื้อคลุมบางไว้ใส่ตอนลมแรง</div>
@@ -256,8 +344,12 @@
                 <div class="route">🚗 Free & easy รอบนาฮะ</div>
                 <div class="detail">
                     วันชิลก่อนกลับ เดินเล่น <strong>Kokusai Street</strong> ช้อปของฝาก ลองตลาด <strong>Makishi Public Market</strong> กินอาหารริวกิวมื้อสุดท้าย หรือถ้าอยากธรรมชาติเพิ่มเลือกแวะ <strong>Nakagusuku Castle Ruins</strong> ปราสาทริมหน้าผาใกล้เมืองแทนได้
-                    <a href="https://www.google.com/search?q=Kokusai+Street+Naha+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูวิว Kokusai Street</a>
+                    <a href="https://www.google.com/search?q=Kokusai+Street+Naha+Okinawa&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/JP-47_Naha_Kokusai-dori_street.jpg?width=800" alt="Kokusai Street, Naha, Okinawa">
+                    <figcaption>Kokusai Street, Naha</figcaption>
+                </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">27°C - 30°C</span><strong>อากาศ:</strong> อากาศเมืองทั่วไป แดดแรงตอนกลางวัน</div>
                     <div>👗 <strong>OOTD:</strong> ชุดเดินช้อปสบายๆ รองเท้าผ้าใบ</div>
@@ -268,6 +360,10 @@
                 <div class="detail">เติมน้ำมันเต็มถัง คืนรถที่สนามบินนาฮะ เผื่อเวลาอย่างน้อย 3 ชม.ก่อนเช็คอิน เดินทางกลับกรุงเทพฯ</div>
             </li>
         </ul>
+    </div>
+
+    <div class="photo-credit">
+        📷 ภาพประกอบจาก <a href="https://commons.wikimedia.org/" target="_blank">Wikimedia Commons</a> (Creative Commons license)
     </div>
 
     <a href="index.html" class="back-link">← กลับหน้า Travel Hub</a>
