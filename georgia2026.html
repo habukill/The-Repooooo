@@ -41,6 +41,7 @@
         .car-box strong { color: var(--accent); }
         .car-box ul { margin: 8px 0 0 0; padding-left: 20px; line-height: 1.7; }
         .warning { color: #d63031; font-size: 0.85rem; margin-top: 8px; display: block; }
+        .season-box .season-label { display: block; margin-bottom: 5px; font-weight: 800; color: #0e6655; }
 
         section.block { width: 100%; max-width: 720px; margin-bottom: 24px; }
         .section-title { font-size: 1.3rem; font-weight: 800; margin: 0 0 4px 0; }
@@ -82,6 +83,8 @@
         .date { font-weight: 700; color: var(--secondary); font-size: 0.95rem; display: block; }
         .detail { margin-top: 5px; font-size: 0.95rem; line-height: 1.6; }
         .route { display: inline-block; font-size: 0.8rem; font-weight: 700; color: #8a3b12; background: #fdf0e4; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
+        .transfer-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #8a3b12; background: #fdf0e4; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+        .new-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #00875a; background: #d3f9e9; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
         .link-btn { display: inline-block; margin-top: 8px; font-size: 0.85rem; color: var(--secondary); text-decoration: none; font-weight: 600; background: #fdecea; padding: 4px 10px; border-radius: 20px; }
         .link-btn:hover { background: #fad9d5; }
         .day-photo { margin-top: 10px; }
@@ -102,23 +105,25 @@
         .night-row .night-date { color: #636e72; }
         .night-row .night-city { font-weight: 700; }
         .city-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #0e6655; background: #d1f2eb; padding: 2px 9px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+        .cut-box { width: 100%; max-width: 720px; background: #f1f2f6; border-left: 4px solid #b2bec3; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.7; color: #636e72; }
+        .cut-box strong { display: block; margin-bottom: 4px; color: #2d3436; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Georgia 2026 🚗🏔️</h1>
-        <p>5 คน 1 คัน โร้ดทริปคอเคซัส สายธรรมชาติ</p>
+        <p>5 คน 1 คัน โร้ดทริปคอเคซัส สาย Svaneti + Kazbegi</p>
     </div>
 
     <div class="hero-img">
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kazbegi,_Gergeti_Trinity_Church_and_Mt_Kazbek_%2835959311351%29.jpg?width=1200" alt="Gergeti Trinity Church and Mt Kazbek, Georgia">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ushguli_Svaneti_Georgia.JPG?width=1200" alt="Ushguli, Svaneti, Georgia">
     </div>
 
     <div class="stat-row">
         <div class="stat-chip"><div class="num">8</div><div class="lbl">วันทั้งทริป</div></div>
         <div class="stat-chip"><div class="num">7</div><div class="lbl">คืนทั้งทริป</div></div>
-        <div class="stat-chip"><div class="num">4</div><div class="lbl">เมือง/ฐานที่พัก</div></div>
+        <div class="stat-chip"><div class="num">4</div><div class="lbl">เมือง (Kutaisi ผ่าน 2 รอบ)</div></div>
         <div class="stat-chip"><div class="num">5</div><div class="lbl">คน / 1 คัน</div></div>
     </div>
     <div style="height:14px"></div>
@@ -126,52 +131,69 @@
     <div class="night-table">
         <div class="night-row"><span class="night-date">🌙 คืน 1 — 9 ต.ค. (ศุกร์)</span><span class="night-city">🏨 Tbilisi</span></div>
         <div class="night-row"><span class="night-date">🌙 คืน 2 — 10 ต.ค. (เสาร์)</span><span class="night-city">🏨 Kazbegi (Stepantsminda)</span></div>
-        <div class="night-row"><span class="night-date">🌙 คืน 3 — 11 ต.ค. (อาทิตย์)</span><span class="night-city">🏨 Sighnaghi (Kakheti)</span></div>
-        <div class="night-row"><span class="night-date">🌙 คืน 4 — 12 ต.ค. (จันทร์)</span><span class="night-city">🏨 Sighnaghi (Kakheti)</span></div>
-        <div class="night-row"><span class="night-date">🌙 คืน 5 — 13 ต.ค. (อังคาร)</span><span class="night-city">🏨 Kutaisi</span></div>
-        <div class="night-row"><span class="night-date">🌙 คืน 6 — 14 ต.ค. (พุธ)</span><span class="night-city">🏨 Kutaisi</span></div>
-        <div class="night-row"><span class="night-date">🌙 คืน 7 — 15 ต.ค. (พฤหัส)</span><span class="night-city">🏨 Tbilisi</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 3 — 11 ต.ค. (อาทิตย์)</span><span class="night-city">🏨 Kazbegi (Stepantsminda)</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 4 — 12 ต.ค. (จันทร์)</span><span class="night-city">🏨 Kutaisi</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 5 — 13 ต.ค. (อังคาร)</span><span class="night-city">🏨 Mestia</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 6 — 14 ต.ค. (พุธ)</span><span class="night-city">🏨 Mestia</span></div>
+        <div class="night-row"><span class="night-date">🌙 คืน 7 — 15 ต.ค. (พฤหัส)</span><span class="night-city">🏨 Kutaisi</span></div>
         <div class="night-row"><span class="night-date">✈️ 16 ต.ค. (ศุกร์)</span><span class="night-city" style="font-weight:400; color:#636e72;">บินกลับไทย 21:00 น. — ไม่มีที่พัก</span></div>
     </div>
 
     <div class="info-box vibe-box">
         <span class="vibe-label">Vibe Check:</span>
-        บินลง Tbilisi เช่ารถ 7 ที่นั่งคันเดียว ขับวนโร้ดทริปเก็บไฮไลท์ธรรมชาติเด็ดๆ ของจอร์เจีย ตั้งแต่ภูเขาหิมะคอเคซัสที่ Kazbegi หุบเขาไวน์ Kakheti ไปจนถึงแคนยอนสีเขียวมรกตที่ Kutaisi วนกลับมาปิดทริปที่เมืองเก่า Tbilisi ก่อนบินกลับ ราคาโดยรวมถูกกว่ายุโรปมาก อาหารอร่อย คนน่ารัก และคนไทยเข้าประเทศได้แบบ<strong>ไม่ต้องขอวีซ่า</strong>
-        <span class="warning">*Note: ถนนขึ้น Gergeti Trinity Church ชันและเป็นหินลูกรัง รถทั่วไปขึ้นไม่ไหว ต้องเปลี่ยนไปนั่งรถ 4x4 ท้องถิ่นแทนช่วงนั้น</span>
+        เวอร์ชันอัปเดต: จัดเต็มสาย Svaneti! บินลง Tbilisi เช่ารถ 7 ที่นั่งคันเดียว แวะเมืองหลวงเก่า <strong>Mtskheta</strong> ระหว่างทางไป <strong>Kazbegi</strong> เพิ่มวันเต็มที่ <strong>Juta</strong> หุบเขาใต้ยอด Chaukhi ก่อนขับข้ามประเทศไป <strong>Mestia</strong> เมืองหอคอยหินกลาง Svaneti แล้วต่อไป <strong>Ushguli</strong> หมู่บ้านสูงสุดแห่งหนึ่งของยุโรป ก่อนวนกลับ Tbilisi บินกลับไทย แลกมาด้วยวันเดินทางไกลๆ 2 วัน (ดูหมายเหตุ) และตัดหุบเขาไวน์ Kakheti ออกจากทริปนี้
+        <span class="warning">*Note: ถนนขึ้น Gergeti Trinity Church ชันและเป็นหินลูกรัง ต้องเปลี่ยนไปนั่งรถ 4x4 ท้องถิ่น / ถนน Mestia-Ushguli ก็ขรุขระบางช่วงเช่นกัน ควรมีรถ AWD/4x4 หรือเผื่อเวลาขับช้าลง</span>
     </div>
 
-    <div class="info-box season-box" style="border-left:4px solid #16a085;">
-        <strong style="color:#0e6655;">🍂 บรรยากาศช่วง 9-16 ตุลาคม 2026</strong>
+    <div class="cut-box">
+        <strong>✂️ ตัดออกจากทริปนี้ (เอาเวลาไปลง Svaneti แทน)</strong>
+        Sighnaghi & หุบเขาไวน์ Kakheti, Okatse Canyon, Sataplia Nature Reserve, Uplistsikhe Cave City, Borjomi — ทั้งหมดนี้ยังเป็นที่เที่ยวดีของจอร์เจีย เก็บไว้เป็นทริปแยกได้ถ้าอยากลง Kakheti แบบเต็มๆ ในอนาคต
+    </div>
+
+    <div class="info-box season-box">
+        <span class="season-label">🍂 บรรยากาศช่วง 9-16 ตุลาคม 2026</span>
         <ul style="margin:8px 0 0 0; padding-left:20px; line-height:1.7;">
-            <li><strong>อากาศ:</strong> Tbilisi และ Kakheti กลางวันอุ่นสบาย ~12-22°C ส่วน Kazbegi (สูง ~1,740m) เย็นกว่ามาก ~2-12°C เช้ามืดอาจใกล้ 0°C</li>
-            <li><strong>ใบไม้เปลี่ยนสี:</strong> ต.ค. เป็นช่วง "golden autumn" ของจอร์เจีย ต้นองุ่นในหุบเขา Kakheti และป่าเขาเปลี่ยนเป็นสีทอง/แดง สวยไม่แพ้ยุโรป</li>
-            <li><strong>ฤดูเก็บองุ่น:</strong> ต้นเดือน ต.ค. คาบเกี่ยวช่วงปลายฤดู Rtveli (เทศกาลเก็บองุ่นทำไวน์) ในเขต Kakheti มีโอกาสได้ร่วมกิจกรรมกับชาวไร่ไวน์ท้องถิ่น</li>
-            <li><strong>คนเที่ยว:</strong> Golden week ของนักท่องเที่ยวยุโรปเริ่มซาลง เดินทางสบายกว่าหน้าร้อน (มิ.ย.-ส.ค.) มาก</li>
-            <li><strong>ถนนภูเขา:</strong> ถนน Georgian Military Highway (Tbilisi-Kazbegi) บางครั้งปิดชั่วคราวถ้าหิมะตกหนักบนช่องเขา Jvari Pass (2,379m) เช็คข่าวก่อนออกเดินทางเสมอ</li>
+            <li><strong>อากาศ:</strong> Tbilisi กลางวันอุ่นสบาย ~12-22°C ส่วน Kazbegi (สูง ~1,740m) และ Mestia/Ushguli (สูง ~1,500-2,100m) เย็นกว่ามาก ~0-12°C เช้ามืดอาจติดลบ</li>
+            <li><strong>⚠️ หน้าต่างเวลาสำคัญสำหรับ Svaneti:</strong> หิมะแรกของฤดูมักเริ่มตกที่ Svaneti ได้ตั้งแต่กลาง-ปลาย ต.ค. ถนน Mestia-Ushguli เสี่ยงปิดกะทันหันถ้าหิมะตกหนัก ช่วง 9-16 ต.ค. ยังอยู่ในช่วงปลอดภัยแต่ควรเช็คพยากรณ์อากาศใกล้วันเดินทางเสมอ</li>
+            <li><strong>ใบไม้เปลี่ยนสี:</strong> ต.ค. เป็นช่วง "golden autumn" ของจอร์เจีย ป่าเขาแถบ Svaneti และ Kazbegi เปลี่ยนเป็นสีทอง/แดงสวยมาก</li>
+            <li><strong>คนเที่ยว:</strong> ต่ำกว่าหน้าร้อน (มิ.ย.-ส.ค.) มาก ทั้ง Kazbegi และ Svaneti เดินทางสบายกว่าเยอะ</li>
+            <li><strong>ถนนภูเขา:</strong> Georgian Military Highway (Tbilisi-Kazbegi) และช่วง Zugdidi-Mestia บางครั้งปิดชั่วคราวถ้าหิมะ/ดินถล่ม เช็คข่าวก่อนออกเดินทางเสมอ</li>
         </ul>
     </div>
 
     <div class="info-box car-box">
         <strong>🚗 Car Rental Checklist (5 คน 1 คัน)</strong>
         <ul>
-            <li><strong>เลือกรถ:</strong> รถ 7 ที่นั่ง (minivan) เช่น Mercedes Vito, VW Transporter เหมาะสุดสำหรับ 5 คน + กระเป๋า ถนนบางช่วงเป็นหินลูกรัง แนะนำรถขับเคลื่อน 4 ล้อ (AWD/4x4) ถ้างบถึง</li>
+            <li><strong>เลือกรถ:</strong> รถ 7 ที่นั่ง (minivan) เช่น Mercedes Vito, VW Transporter เหมาะสุดสำหรับ 5 คน + กระเป๋า แนะนำรถขับเคลื่อน 4 ล้อ (AWD/4x4) เพราะทริปนี้มีทั้งถนนลูกรัง Gergeti และถนนขรุขระ Mestia-Ushguli</li>
             <li><strong>ใบขับขี่:</strong> จอร์เจียยอมรับใบขับขี่ต่างชาติที่เป็นอักษรละตินได้โดยตรงไม่ต้องมี IDP แต่แนะนำพกใบอนุญาตขับขี่สากล (IDP) ติดตัวไปด้วยเผื่อกรณีตำรวจขอดู</li>
             <li><strong>วีซ่า:</strong> คนไทยเข้าจอร์เจียได้แบบไม่ต้องขอวีซ่า (visa-free) พำนักได้นานสูงสุด 1 ปี</li>
             <li><strong>จองรถ:</strong> รับ-คืนรถได้ที่สนามบิน Tbilisi International (TBS) สะดวกสุด บริษัทท้องถิ่นราคาถูกกว่าเชนใหญ่พอสมควร แต่เชนใหญ่ (Sixt, Europcar, Local Rent) เชื่อถือได้กว่าเรื่องประกัน</li>
             <li><strong>ขับขวา:</strong> จอร์เจียขับเลนขวาเหมือนยุโรปส่วนใหญ่ สลับข้างกับไทย ถนนในเมือง Tbilisi ค่อนข้างโกลาหล ขับระมัดระวัง</li>
             <li><strong>Gergeti Church:</strong> ถนนขึ้นโบสถ์เป็นทางลูกรังชันมาก รถ minivan ทั่วไปขึ้นไม่ได้ ต้องจอดรถที่ Stepantsminda แล้วเหมารถ 4x4 ท้องถิ่นขึ้นแทน (แชร์กันได้ทั้งกลุ่ม)</li>
-            <li><strong>น้ำมัน:</strong> ราคาน้ำมันถูกกว่ายุโรปตะวันตกมาก ปั๊มมีทั่วไปตามเส้นทางหลัก แต่เส้นทางเขาให้เติมเต็มถังก่อนออกจากเมืองใหญ่เสมอ</li>
-            <li><strong>เงินสด:</strong> ร้านเล็กๆ/ปั๊มน้ำมันชนบทบางที่รับเฉพาะเงินสด (Lari/GEL) พกติดตัวไว้บ้าง</li>
+            <li><strong>เส้นทาง Zugdidi-Mestia-Ushguli:</strong> ถนน Zugdidi-Mestia ลาดยางทั้งเส้นแต่คดโค้งเลียบเขา ขับช้า ส่วน Mestia-Ushguli ขรุขระกว่า บางช่วงยังไม่ลาดยาง มีจุดข้ามลำธารตื้นๆ รถสูงขับสบายกว่ารถเตี้ย</li>
+            <li><strong>วันเดินทางไกล:</strong> ทริปนี้มี 2 วันขับยาว (Kazbegi→Kutaisi ~6.5-7 ชม., Kutaisi↔Mestia ~4-4.5 ชม. x2) ควรสลับคนขับ พักบ่อยๆ และออกเดินทางแต่เช้า</li>
+            <li><strong>น้ำมัน:</strong> ราคาน้ำมันถูกกว่ายุโรปตะวันตกมาก แต่เติมเต็มถังทุกครั้งก่อนออกจากเมืองใหญ่ เพราะปั๊มในเขต Svaneti มีน้อย</li>
+            <li><strong>เงินสด:</strong> ร้านเล็กๆ/ปั๊มน้ำมันชนบทบางที่รับเฉพาะเงินสด (Lari/GEL) พกติดตัวไว้บ้าง โดยเฉพาะในเขต Svaneti</li>
         </ul>
     </div>
 
     <section class="block">
         <h2 class="section-title">🏆 จัดแรงค์ไฮไลท์ธรรมชาติจอร์เจีย</h2>
-        <p class="section-sub">คัดเฉพาะที่เที่ยวยอดฮิตสายธรรมชาติ เรียงจากห้ามพลาดที่สุดไปจนถึงตัวเลือกเสริม</p>
+        <p class="section-sub">คัดเฉพาะที่เที่ยวในแพลนใหม่นี้ เรียงจากห้ามพลาดที่สุดไปจนถึงตัวเลือกเสริม</p>
         <div class="rank-grid">
 
             <div class="rank-card">
                 <div class="rank-num">1</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ushguli_Svaneti_Georgia.JPG?width=300" alt="Ushguli">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Ushguli</span><span class="tier tier-Splus">S+</span></div>
+                    <div class="rank-desc">หนึ่งในถิ่นฐานที่มีคนอาศัยต่อเนื่องสูงที่สุดในยุโรป (~2,100m) มรดกโลก UNESCO หอคอยหิน Svan โบราณเรียงรายกับฉากหลังยอดเขา Shkhara (5,193m) ยอดเขาสูงสุดของจอร์เจีย</div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 14 ต.ค.</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">2</div>
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Gergeti_Trinity_Church_W_side.jpg?width=300" alt="Gergeti Trinity Church">
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Gergeti Trinity Church &amp; Mt Kazbek</span><span class="tier tier-Splus">S+</span></div>
@@ -181,27 +203,27 @@
             </div>
 
             <div class="rank-card">
-                <div class="rank-num">2</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Martvili_canyon_1.jpg?width=300" alt="Martvili Canyon">
-                <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Martvili Canyon</span><span class="tier tier-S">S</span></div>
-                    <div class="rank-desc">แคนยอนหินปูนสีมรกต นั่งเรือพายล่องชมน้ำตกเล็กๆ และผนังหินสูงชัน บรรยากาศเหมือนป่าเขตร้อนซ่อนตัวกลางจอร์เจีย</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 14 ต.ค.</span></div>
-                </div>
-            </div>
-
-            <div class="rank-card">
                 <div class="rank-num">3</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Okatse_Canyon.jpg?width=300" alt="Okatse Canyon">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Juta_-_Mountain_Chaukhebi_Rd,_Juta,_Georgia_-_panoramio.jpg?width=300" alt="Juta Valley">
                 <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Okatse Canyon</span><span class="tier tier-S">S</span></div>
-                    <div class="rank-desc">ทางเดินเหล็กแขวนเลียบผนังแคนยอนยาว ~800m ชมวิวหุบเขาลึกและน้ำตกจากมุมสูง ตื่นเต้นกว่า Martvili แต่ไม่ได้นั่งเรือ</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 14 ต.ค.</span></div>
+                    <div class="rank-title-row"><span class="rank-name">Juta</span><span class="tier tier-S">S</span></div>
+                    <div class="rank-desc">หมู่บ้านเล็กกลางหุบเขาใต้ยอดเขา Chaukhi (2,200m) นักท่องเที่ยวน้อยกว่า Kazbegi มาก บรรยากาศป่าเขาดิบ จุดเริ่มเทรลไปทะเลสาบ Abudelauri สามสี</div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 11 ต.ค.</span></div>
                 </div>
             </div>
 
             <div class="rank-card">
                 <div class="rank-num">4</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mestia.jpg?width=300" alt="Mestia">
+                <div class="rank-content">
+                    <div class="rank-title-row"><span class="rank-name">Mestia</span><span class="tier tier-S">S</span></div>
+                    <div class="rank-desc">เมืองหลักของ Svaneti เต็มไปด้วยหอคอยหิน Svan โบราณ ฉากหลังยอดเขาหิมะรอบด้าน ฐานทัพหลักก่อนไป Ushguli</div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 13 ต.ค.</span></div>
+                </div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-num">5</div>
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ananuri_castle_01.jpg?width=300" alt="Ananuri Fortress">
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Ananuri Fortress</span><span class="tier tier-A">A</span></div>
@@ -211,17 +233,17 @@
             </div>
 
             <div class="rank-card">
-                <div class="rank-num">5</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alazani_valley_seen_from_Sighnaghi.jpg?width=300" alt="Sighnaghi and Alazani Valley">
+                <div class="rank-num">6</div>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jvari_Monastery_Mtskheta.jpg?width=300" alt="Jvari Monastery, Mtskheta">
                 <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Sighnaghi &amp; หุบเขาไวน์ Kakheti</span><span class="tier tier-A">A</span></div>
-                    <div class="rank-desc">เมืองกำแพงโบราณบนเนินเขา มองเห็นหุบเขา Alazani สุดลูกหูลูกตา ล้อมรอบด้วยไร่องุ่น แหล่งผลิตไวน์เก่าแก่ที่สุดในโลก</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 11-12 ต.ค.</span></div>
+                    <div class="rank-title-row"><span class="rank-name">Mtskheta (Jvari Monastery)</span><span class="tier tier-A">A</span></div>
+                    <div class="rank-desc">เมืองหลวงเก่าแก่ที่สุดของจอร์เจีย มรดกโลก UNESCO วัด Jvari ตั้งบนเนินเขามองเห็นจุดบรรจบแม่น้ำ Mtkvari-Aragvi และ Svetitskhoveli Cathedral กลางเมือง</div>
+                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 10 ต.ค.</span></div>
                 </div>
             </div>
 
             <div class="rank-card">
-                <div class="rank-num">6</div>
+                <div class="rank-num">7</div>
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Russia-Georgia_friendship_monument_inside.JPG?width=300" alt="Russia-Georgia Friendship Monument">
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Russia-Georgia Friendship Monument</span><span class="tier tier-A">A</span></div>
@@ -231,22 +253,12 @@
             </div>
 
             <div class="rank-card">
-                <div class="rank-num">7</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Uplistsikhe_Cave_City_near_Gori,_Georgia_%284%29.jpg?width=300" alt="Uplistsikhe Cave City">
-                <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Uplistsikhe Cave City</span><span class="tier tier-B">B+</span></div>
-                    <div class="rank-desc">เมืองโบราณแกะสลักจากหินตั้งแต่ยุคเหล็ก อายุกว่า 3,000 ปี เดินสำรวจถ้ำ/ห้องโถง/อุโมงค์หนีภัยกลางแจ้ง</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 13 ต.ค.</span></div>
-                </div>
-            </div>
-
-            <div class="rank-card">
                 <div class="rank-num">8</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sataplia.jpg?width=300" alt="Sataplia Nature Reserve">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Martvili_canyon_1.jpg?width=300" alt="Martvili Canyon">
                 <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Sataplia Nature Reserve</span><span class="tier tier-B">B</span></div>
-                    <div class="rank-desc">เขตอนุรักษ์ป่าใกล้ Kutaisi ชมรอยเท้าไดโนเสาร์จริงและถ้ำหินงอกหินย้อยขนาดย่อม เดินเทรลสั้นๆ ในป่าเขียวชอุ่ม</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 14 ต.ค.</span></div>
+                    <div class="rank-title-row"><span class="rank-name">Martvili Canyon</span><span class="tier tier-B">B+</span></div>
+                    <div class="rank-desc">แคนยอนหินปูนสีมรกต นั่งเรือพายล่องชมน้ำตกเล็กๆ และผนังหินสูงชัน แวะได้ถ้าออกจาก Mestia แต่เช้าและมีเวลาเหลือระหว่างขับกลับ Kutaisi</div>
+                    <div class="plan-pills"><span class="pill pill-opt">🕐 แวะได้ถ้าเวลาเหลือ (วันที่ 15 ต.ค.)</span></div>
                 </div>
             </div>
 
@@ -255,18 +267,8 @@
                 <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tbilisi_Panorama_2012.jpg?width=300" alt="Tbilisi Old Town">
                 <div class="rank-content">
                     <div class="rank-title-row"><span class="rank-name">Tbilisi Old Town &amp; Narikala Fortress</span><span class="tier tier-B">B</span></div>
-                    <div class="rank-desc">เมืองเก่าสถาปัตยกรรมผสมเปอร์เซีย-ยุโรป นั่งกระเช้าขึ้นป้อม Narikala ชมวิวเมือง ปิดท้ายด้วยการแช่โรงอาบน้ำแร่กำมะถัน</div>
-                    <div class="plan-pills"><span class="pill pill-yes">✅ วันที่ 15-16 ต.ค.</span></div>
-                </div>
-            </div>
-
-            <div class="rank-card">
-                <div class="rank-num">10</div>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Okatse_Canyon.jpg?width=300" alt="Borjomi-Kharagauli National Park">
-                <div class="rank-content">
-                    <div class="rank-title-row"><span class="rank-name">Borjomi-Kharagauli National Park</span><span class="tier tier-B">B</span></div>
-                    <div class="rank-desc">อุทยานแห่งชาติป่าใหญ่ที่สุดแห่งหนึ่งของจอร์เจีย ต้นกำเนิดน้ำแร่ Borjomi ชื่อดัง แวะสั้นๆ ระหว่างทางได้ถ้าเวลาเหลือ</div>
-                    <div class="plan-pills"><span class="pill pill-opt">🕐 แวะได้ถ้าเวลาเหลือ (วันที่ 13 ต.ค.)</span></div>
+                    <div class="rank-desc">เมืองเก่าสถาปัตยกรรมผสมเปอร์เซีย-ยุโรป ⚠️ เวอร์ชันนี้เททั้งเวลาให้ Svaneti เลยเหลือแค่ค่ำวันแรกกับเช้าวันสุดท้ายสั้นๆ ไม่มีวันเต็มให้เที่ยวเมืองแบบก่อนหน้านี้แล้ว</div>
+                    <div class="plan-pills"><span class="pill pill-opt">🕐 เวลาจำกัดมาก — วันที่ 9, 16 ต.ค.</span></div>
                 </div>
             </div>
 
@@ -278,19 +280,23 @@
             <li>
                 <span class="date">Day 1 (9 ต.ค., ศุกร์) | Bangkok ✈️ Tbilisi <span class="city-tag">🏨 นอน Tbilisi</span></span>
                 <div class="route">✈️ ถึงสนามบิน Tbilisi (TBS) ~20:00 น.</div>
-                <div class="detail">ถึง Tbilisi ตอนค่ำ เช็คอินโรงแรมในเมืองเก่า พักผ่อน เตรียมรับรถเช่าเช้าวันถัดไป</div>
+                <div class="detail">ถึง Tbilisi ตอนค่ำ เช็คอินโรงแรมในเมืองเก่า เดินเล่นแถวที่พักสั้นๆ พักผ่อน เตรียมรับรถเช่าเช้าวันถัดไป (ทริปนี้เททั้งเวลาให้ Svaneti จึงไม่มีวันเต็มให้เที่ยวเมือง Tbilisi แล้ว)</div>
                 <div class="weather-info">
                     <div><span class="temp-badge">12°C - 20°C</span><strong>อากาศ:</strong> เย็นสบาย ลมเบาๆ</div>
                     <div>👗 <strong>OOTD:</strong> เสื้อแขนยาวบางๆ เพียงพอสำหรับเดินตอนค่ำ</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 2 (10 ต.ค., เสาร์) | Tbilisi → Kazbegi (Stepantsminda) <span class="city-tag">🏨 นอน Kazbegi</span></span>
-                <div class="route">🚗 Tbilisi → Ananuri → Gudauri → Kazbegi (~3 ชม.) → 🚙 4x4 ขึ้น Gergeti Trinity Church</div>
+                <span class="date">Day 2 (10 ต.ค., เสาร์) | Tbilisi → Mtskheta → Kazbegi <span class="city-tag">🏨 นอน Kazbegi</span></span>
+                <div class="route">🚗 Tbilisi → Mtskheta (~30-45 นาที) → Ananuri → Gudauri → Kazbegi (~3 ชม.รวม) → 🚙 4x4 ขึ้น Gergeti Trinity Church</div>
                 <div class="detail">
-                    เช้ารับรถเช่า 7 ที่นั่ง ขับเส้นทาง Georgian Military Highway แวะถ่ายรูป <strong>Ananuri Fortress</strong> ริมอ่างเก็บน้ำสีฟ้า ต่อไปแวะ <strong>Russia-Georgia Friendship Monument</strong> ที่ Gudauri ชมวิว Devil's Valley ถึง Kazbegi/Stepantsminda เปลี่ยนไปนั่งรถ 4x4 ท้องถิ่นขึ้นไป <strong>Gergeti Trinity Church</strong> ชมวิวยอดเขา Kazbek แบบใกล้ชิด
+                    เช้ารับรถเช่า 7 ที่นั่ง ขับออกจาก Tbilisi แวะ <strong>Mtskheta</strong> เมืองหลวงเก่าแก่ที่สุดของจอร์เจีย ชม <strong>Jvari Monastery</strong> บนเนินเขามองเห็นจุดบรรจบแม่น้ำ และ Svetitskhoveli Cathedral กลางเมือง ต่อเส้นทาง Georgian Military Highway แวะ <strong>Ananuri Fortress</strong> ริมอ่างเก็บน้ำสีฟ้า แวะ <strong>Russia-Georgia Friendship Monument</strong> ที่ Gudauri ถึง Kazbegi/Stepantsminda เปลี่ยนไปนั่งรถ 4x4 ท้องถิ่นขึ้นไป <strong>Gergeti Trinity Church</strong>
                     <a href="https://www.google.com/search?q=Gergeti+Trinity+Church+Kazbek&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jvari_Monastery_Mtskheta.jpg?width=800" alt="Jvari Monastery, Mtskheta">
+                    <figcaption>Jvari Monastery, Mtskheta</figcaption>
+                </figure>
                 <figure class="day-photo">
                     <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ananuri_castle_01.jpg?width=800" alt="Ananuri Fortress">
                     <figcaption>Ananuri Fortress ริมอ่างเก็บน้ำ Zhinvali</figcaption>
@@ -305,91 +311,83 @@
                 </figure>
                 <div class="weather-info">
                     <div><span class="temp-badge">2°C - 14°C</span><strong>อากาศ:</strong> Kazbegi อยู่สูง ~1,740m อากาศเย็นกว่า Tbilisi มาก ลมแรงบนเนินโบสถ์</div>
-                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาว/กันลมชั้นนอก หมวกไหมพรม รองเท้าเดินสบาย (ทางเดินจากจุดจอด 4x4 ถึงโบสถ์มีบันไดสั้นๆ)</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาว/กันลมชั้นนอก หมวกไหมพรม รองเท้าเดินสบาย</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 3 (11 ต.ค., อาทิตย์) | Kazbegi → Sighnaghi (Kakheti) <span class="city-tag">🏨 นอน Sighnaghi</span></span>
-                <div class="route">🚗 Kazbegi → Tbilisi → Sighnaghi (~5 ชม. รวมพัก)</div>
-                <div class="detail">เช้าเดินเล่นชิลๆ ในหมู่บ้าน Stepantsminda หรือเดินเทรลสั้นไปน้ำตก Gveleti ก่อนขับยาวย้อนผ่าน Tbilisi ไปยังเขตไวน์ <strong>Kakheti</strong> เช็คอินเมืองกำแพงโบราณ <strong>Sighnaghi</strong> เย็นเดินชมวิวหุบเขา Alazani จากกำแพงเมือง</div>
+                <span class="date">Day 3 (11 ต.ค., อาทิตย์) | Juta Valley Day <span class="new-tag">NEW</span> <span class="city-tag">🏨 นอน Kazbegi</span></span>
+                <div class="route">🚗 Kazbegi → Juta (~30-40 นาที ถนนลูกรังบางช่วง) → กลับ Kazbegi</div>
+                <div class="detail">
+                    วันเต็มที่ <strong>Juta</strong> หมู่บ้านเล็กกลางหุบเขาใต้ยอดเขา Chaukhi (2,200m) เดินเทรลชมวิวยอดเขาแหลมจากหมู่บ้าน หรือถ้าอยากไปไกลขึ้นเดินต่อไปทะเลสาบ <strong>Abudelauri</strong> สามสี (เทรลยาวขึ้น ใช้เวลาทั้งวัน) บรรยากาศป่าเขาดิบกว่า Kazbegi เพราะนักท่องเที่ยวน้อยกว่ามาก เย็นกลับมานอน Kazbegi อีกคืน
+                    <a href="https://www.google.com/search?q=Juta+valley+Chaukhi+Georgia&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
                 <figure class="day-photo">
-                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alazani_valley_seen_from_Sighnaghi.jpg?width=800" alt="Sighnaghi and Alazani Valley">
-                    <figcaption>วิวหุบเขา Alazani จาก Sighnaghi</figcaption>
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Juta_-_Mountain_Chaukhebi_Rd,_Juta,_Georgia_-_panoramio.jpg?width=800" alt="Juta Valley">
+                    <figcaption>Juta Valley ใต้ยอดเขา Chaukhi</figcaption>
                 </figure>
                 <div class="weather-info">
-                    <div><span class="temp-badge">10°C - 21°C</span><strong>อากาศ:</strong> Kakheti อากาศอุ่นสบายกว่า Kazbegi มาก บรรยากาศแบบหุบเขาไวน์</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดสบายๆ เสื้อคลุมบางไว้ใส่ตอนเย็น</div>
+                    <div><span class="temp-badge">0°C - 12°C</span><strong>อากาศ:</strong> Juta สูงกว่า Kazbegi อีกนิด เช้ามืดอาจติดลบ ลมแรงตามหุบเขา</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาวชั้นนอก ถุงมือ หมวกไหมพรม รองเท้าเดินป่า</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 4 (12 ต.ค., จันทร์) | Kakheti Wine Day <span class="city-tag">🏨 นอน Sighnaghi</span></span>
-                <div class="route">🚗 Sighnaghi → Bodbe Monastery → Telavi/Tsinandali → กลับ Sighnaghi</div>
-                <div class="detail">
-                    วันเต็มในหุบเขาไวน์ที่เก่าแก่ที่สุดในโลก (8,000 ปี) แวะ <strong>Bodbe Monastery</strong> ชมวิวหุบเขา ต่อไป <strong>Telavi</strong> หรือ <strong>Tsinandali Estate</strong> ชิมไวน์จากไร่ท้องถิ่น แวะโบสถ์ <strong>Alaverdi Monastery</strong> กลางไร่องุ่น (ต.ค.: คาบเกี่ยวเทศกาลเก็บองุ่น Rtveli มีโอกาสเห็น/ร่วมกิจกรรมกับชาวไร่)
-                    <a href="https://www.google.com/search?q=Kakheti+wine+tasting+vineyard&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
-                </div>
+                <span class="date">Day 4 (12 ต.ค., จันทร์) | Kazbegi → Kutaisi <span class="transfer-tag">วันเดินทางไกล</span> <span class="city-tag">🏨 นอน Kutaisi</span></span>
+                <div class="route">🚗 Kazbegi → Tbilisi (~2.5-3 ชม.) → Kutaisi (~4 ชม.) รวม ~6.5-7 ชม.</div>
+                <div class="detail">วันเดินทางยาวข้ามประเทศจากตะวันออกเฉียงเหนือไปตะวันตก ไม่มีจุดเที่ยวหลักวันนี้ เน้นขับให้ถึง Kutaisi แวะพักกินข้าว/เข้าห้องน้ำระหว่างทางที่ Gori หรือ Tbilisi สลับคนขับได้เพราะระยะทางไกล ถึง Kutaisi ช่วงเย็น เช็คอินพักผ่อน</div>
                 <div class="weather-info">
-                    <div><span class="temp-badge">10°C - 22°C</span><strong>อากาศ:</strong> แดดดี อุ่นสบายตลอดวัน เหมาะเดินไร่องุ่น</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดสบายๆ หมวกกันแดด รองเท้าเดินเหยียบดินได้</div>
+                    <div><span class="temp-badge">10°C - 21°C</span><strong>อากาศ:</strong> อุณหภูมิค่อยๆ อุ่นขึ้นเมื่อลงจากที่สูง Kazbegi มาที่ราบต่ำ</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดสบายๆ สำหรับนั่งรถทั้งวัน</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 5 (13 ต.ค., อังคาร) | Kakheti → Uplistsikhe → Kutaisi <span class="city-tag">🏨 นอน Kutaisi</span></span>
-                <div class="route">🚗 Sighnaghi → Tbilisi → Uplistsikhe/Gori → (แวะ Borjomi ได้ถ้าเวลาเหลือ) → Kutaisi (~6 ชม. รวมแวะ)</div>
-                <div class="detail">ขับข้ามประเทศจากตะวันออกไปตะวันตก แวะเมืองถ้ำโบราณ <strong>Uplistsikhe</strong> ใกล้ Gori เดินสำรวจห้องหินแกะสลักอายุ 3,000 ปี ถ้าเวลาเหลือแวะ <strong>Borjomi</strong> เดินเล่นสวนน้ำแร่สั้นๆ ก่อนเข้าที่พัก Kutaisi ช่วงค่ำ</div>
+                <span class="date">Day 5 (13 ต.ค., อังคาร) | Kutaisi → Mestia <span class="new-tag">NEW</span> <span class="city-tag">🏨 นอน Mestia</span></span>
+                <div class="route">🚗 Kutaisi → Zugdidi → Mestia (~4-4.5 ชม.)</div>
+                <div class="detail">
+                    ขับเข้าเขต Svaneti ผ่าน Zugdidi ถนนช่วงสุดท้ายคดโค้งเลียบเขาแต่ลาดยางตลอดเส้น ถึง <strong>Mestia</strong> ช่วงบ่าย เดินเล่นในเมืองชมหอคอยหิน <strong>Svan Towers</strong> เอกลักษณ์ของภูมิภาคนี้ แวะพิพิธภัณฑ์ Svaneti History and Ethnography ถ้ามีเวลาเหลือ เย็นพักผ่อนเตรียมตัวไป Ushguli วันถัดไป
+                    <a href="https://www.google.com/search?q=Mestia+Svan+towers&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                </div>
                 <figure class="day-photo">
-                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Uplistsikhe_Cave_City_near_Gori,_Georgia_%284%29.jpg?width=800" alt="Uplistsikhe Cave City">
-                    <figcaption>Uplistsikhe Cave City</figcaption>
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mestia.jpg?width=800" alt="Mestia">
+                    <figcaption>Mestia และหอคอยหิน Svan Towers</figcaption>
                 </figure>
                 <div class="weather-info">
-                    <div><span class="temp-badge">9°C - 20°C</span><strong>อากาศ:</strong> อากาศทั่วไป เย็นลงเมื่อเข้าเขตภูเขาใกล้ Borjomi</div>
-                    <div>👗 <strong>OOTD:</strong> ใส่เป็นชั้นๆ เพราะขับผ่านหลายพื้นที่อากาศต่างกัน</div>
+                    <div><span class="temp-badge">3°C - 15°C</span><strong>อากาศ:</strong> Mestia สูง ~1,500m อากาศเย็นสบาย เช้า/เย็นหนาว</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาวชั้นนอก รองเท้าเดินสบาย</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 6 (14 ต.ค., พุธ) | Kutaisi Canyon Day <span class="city-tag">🏨 นอน Kutaisi</span></span>
-                <div class="route">🚗 Kutaisi → Martvili Canyon (~1 ชม.) → Okatse Canyon (~1 ชม.) → Sataplia (~40 นาที) → Kutaisi</div>
+                <span class="date">Day 6 (14 ต.ค., พุธ) | Ushguli Day Trip <span class="new-tag">NEW</span> <span class="city-tag">🏨 นอน Mestia</span></span>
+                <div class="route">🚗 Mestia → Ushguli (~2.5-3 ชม.ต่อเที่ยว ถนนขรุขระบางช่วง) → กลับ Mestia</div>
                 <div class="detail">
-                    วันเต็มลุยแคนยอนสีเขียวมรกตของ Imereti นั่งเรือพายชม <strong>Martvili Canyon</strong> ตอนเช้า บ่ายเดินทางเดินเหล็กแขวนชม <strong>Okatse Canyon</strong> ปิดท้ายด้วย <strong>Sataplia Nature Reserve</strong> ดูรอยเท้าไดโนเสาร์และถ้ำเล็กๆ ก่อนกลับเข้าเมือง Kutaisi พักผ่อน
-                    <a href="https://www.google.com/search?q=Martvili+Canyon+boat+ride&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
+                    วันเต็มไปหมู่บ้าน <strong>Ushguli</strong> หนึ่งในถิ่นฐานที่มีคนอาศัยต่อเนื่องสูงที่สุดในยุโรป (~2,100m) มรดกโลก UNESCO ชมหอคอยหิน Svan โบราณเรียงรายกับฉากหลังยอดเขา Shkhara (5,193m) ยอดเขาสูงสุดของจอร์เจีย เดินเล่นหมู่บ้าน กินข้าวเที่ยงร้านท้องถิ่น ก่อนขับกลับ Mestia เย็น ⚠️ ควรออกเดินทางแต่เช้าเพราะถนนใช้เวลานาน
+                    <a href="https://www.google.com/search?q=Ushguli+Svaneti+towers&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
                 </div>
+                <figure class="day-photo">
+                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ushguli_Svaneti_Georgia.JPG?width=800" alt="Ushguli">
+                    <figcaption>Ushguli กับฉากหลังยอดเขา Shkhara</figcaption>
+                </figure>
+                <div class="weather-info">
+                    <div><span class="temp-badge">0°C - 12°C</span><strong>อากาศ:</strong> Ushguli สูง ~2,100m หนาวกว่า Mestia ชัดเจน เช้ามืดอาจติดลบ</div>
+                    <div>👗 <strong>OOTD:</strong> เสื้อกันหนาวหนาๆ ถุงมือ หมวกไหมพรม จำเป็นมากวันนี้</div>
+                </div>
+            </li>
+            <li>
+                <span class="date">Day 7 (15 ต.ค., พฤหัส) | Mestia → Kutaisi <span class="transfer-tag">วันเดินทางไกล</span> <span class="city-tag">🏨 นอน Kutaisi</span></span>
+                <div class="route">🚗 Mestia → Kutaisi (~4-4.5 ชม.) แวะ Martvili Canyon ได้ถ้าออกเช้าและเวลาเหลือ (+1-1.5 ชม.)</div>
+                <div class="detail">ขับกลับออกจาก Svaneti เส้นทางเดิมผ่าน Zugdidi ถ้าออกเดินทางแต่เช้าและอยากแวะ <strong>Martvili Canyon</strong> นั่งเรือชมแคนยอนสีมรกตสั้นๆ ก็ทำได้ระหว่างทาง ก่อนเข้าเมือง Kutaisi ช่วงเย็น พักผ่อนคืนสุดท้ายก่อนกลับ Tbilisi</div>
                 <figure class="day-photo">
                     <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Martvili_canyon_1.jpg?width=800" alt="Martvili Canyon">
-                    <figcaption>Martvili Canyon</figcaption>
-                </figure>
-                <figure class="day-photo">
-                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Okatse_Canyon.jpg?width=800" alt="Okatse Canyon">
-                    <figcaption>Okatse Canyon</figcaption>
-                </figure>
-                <figure class="day-photo">
-                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sataplia.jpg?width=800" alt="Sataplia Nature Reserve">
-                    <figcaption>Sataplia Nature Reserve</figcaption>
+                    <figcaption>Martvili Canyon (แวะได้ถ้าเวลาเหลือ)</figcaption>
                 </figure>
                 <div class="weather-info">
-                    <div><span class="temp-badge">10°C - 21°C</span><strong>อากาศ:</strong> ในแคนยอนชื้นและร่มรื่น อากาศทั่วไปสบาย</div>
-                    <div>👗 <strong>OOTD:</strong> รองเท้ากันลื่น (ทางเดินเรือ/สะพานเหล็กอาจเปียก) เสื้อกันฝนบางๆ พกไว้</div>
+                    <div><span class="temp-badge">10°C - 21°C</span><strong>อากาศ:</strong> อุ่นขึ้นเมื่อลงจาก Svaneti กลับสู่ที่ราบ Imereti</div>
+                    <div>👗 <strong>OOTD:</strong> ชุดสบายๆ สำหรับนั่งรถ</div>
                 </div>
             </li>
             <li>
-                <span class="date">Day 7 (15 ต.ค., พฤหัส) | Kutaisi → Tbilisi (Old Town) <span class="city-tag">🏨 นอน Tbilisi</span></span>
-                <div class="route">🚗 Kutaisi → Tbilisi (~4 ชม.)</div>
-                <div class="detail">
-                    เช้าขับยาวกลับ Tbilisi เย็นเดินเล่นเมืองเก่า <strong>Old Tbilisi</strong> ตึกไม้แกะสลักสไตล์เปอร์เซีย นั่งกระเช้าขึ้น <strong>Narikala Fortress</strong> ชมวิวเมืองยามเย็น ปิดท้ายด้วยการแช่โรงอาบน้ำแร่กำมะถันสไตล์ดั้งเดิม
-                    <a href="https://www.google.com/search?q=Old+Tbilisi+Narikala+sulfur+baths&tbm=isch" target="_blank" class="link-btn">📷 ดูรูปเพิ่มเติม</a>
-                </div>
-                <figure class="day-photo">
-                    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tbilisi_Panorama_2012.jpg?width=800" alt="Tbilisi Old Town">
-                    <figcaption>Old Tbilisi &amp; Narikala Fortress</figcaption>
-                </figure>
-                <div class="weather-info">
-                    <div><span class="temp-badge">12°C - 22°C</span><strong>อากาศ:</strong> เมืองหลวงอากาศสบาย เดินเที่ยวได้ทั้งวัน</div>
-                    <div>👗 <strong>OOTD:</strong> ชุดเดินเที่ยวเมืองสบายๆ พกชุดว่ายน้ำ/ผ้าเช็ดตัวไว้แช่โรงอาบน้ำแร่</div>
-                </div>
-            </li>
-            <li>
-                <span class="date">Day 8 (16 ต.ค., ศุกร์) | Tbilisi Free Day ✈️ กลับไทย</span>
-                <div class="route">🚗 คืนรถที่สนามบิน Tbilisi (TBS) ก่อนไฟลท์ 21:00 น.</div>
-                <div class="detail">วันสุดท้ายอิสระ เดินตลาดของฝาก <strong>Dry Bridge Market</strong> หรือช้อปปิ้งย่าน Rustaveli Avenue กินข้าวมื้อสุดท้าย เย็นคืนรถที่สนามบิน เผื่อเวลาอย่างน้อย 3 ชม.ก่อนไฟลท์กลับกรุงเทพฯ เวลา 21:00 น. (เวลาท้องถิ่น)</div>
+                <span class="date">Day 8 (16 ต.ค., ศุกร์) | Kutaisi → Tbilisi ✈️ กลับไทย</span>
+                <div class="route">🚗 Kutaisi → Tbilisi (~4 ชม.) → สนามบิน Tbilisi (TBS) ก่อนไฟลท์ 21:00 น.</div>
+                <div class="detail">เช้าขับกลับ Tbilisi ถ้าเวลาเหลือแวะช้อปปิ้ง/กินข้าวเที่ยงในเมืองเก่าสั้นๆ ก่อนคืนรถและเข้าสนามบิน เผื่อเวลาอย่างน้อย 3 ชม.ก่อนไฟลท์กลับกรุงเทพฯ เวลา 21:00 น. (เวลาท้องถิ่น)</div>
                 <div class="weather-info">
                     <div><span class="temp-badge">12°C - 22°C</span><strong>อากาศ:</strong> อากาศเมืองทั่วไป</div>
                 </div>
