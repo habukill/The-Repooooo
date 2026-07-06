@@ -1,35 +1,33 @@
+import json
 import os
-from datetime import datetime, timezone, timedelta, date as date_type
-
-ICT = timezone(timedelta(hours=7))
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 import requests
 
-HEALTH_SCOPES = [
+SCOPES = [
     "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
     "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
     "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
 ]
-DRIVE_SCOPES = ["https://www.googleapis.com/auth/drive.file"]
-BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
+BASE_URL = "https://health.googleapis.com/v4/users/-/dataTypes"
+ICT = ZoneInfo("Asia/Bangkok")
+DIR = os.path.dirname(__file__)
 
 
 def get_credentials():
     creds = None
-    token_path = os.path.join(os.path.dirname(__file__), "token.json")
-    creds_path = os.path.join(os.path.dirname(__file__), "credentials.json")
-
+    token_path = os.path.join(DIR, "token.json")
+    creds_path = os.path.join(DIR, "credentials.json")
     if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, HEALTH_SCOPES)
+        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, HEALTH_SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
             creds = flow.run_local_server(port=0)
         with open(token_path, "w") as f:
             f.write(creds.to_json())
@@ -37,350 +35,368 @@ def get_credentials():
 
 
 def get_drive_credentials():
+    from google.oauth2.credentials import Credentials as GCreds
+    drive_scopes = ["https://www.googleapis.com/auth/drive.file"]
+    token_path = os.path.join(DIR, "drive_token.json")
+    creds_path = os.path.join(DIR, "credentials.json")
     creds = None
-    token_path = os.path.join(os.path.dirname(__file__), "drive_token.json")
-    creds_path = os.path.join(os.path.dirname(__file__), "credentials.json")
-
     if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, DRIVE_SCOPES)
+        creds = GCreds.from_authorized_user_file(token_path, drive_scopes)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, DRIVE_SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(creds_path, drive_scopes)
             creds = flow.run_local_server(port=0)
         with open(token_path, "w") as f:
             f.write(creds.to_json())
     return creds
 
 
-def fetch_daily_rollup(creds, data_type, max_range_days=90):
+def fetch(creds, data_type, params=None):
+    if params is None:
+        params = {}
     headers = {"Authorization": f"Bearer {creds.token}"}
-    results = []
-    end_dt = datetime.now(ICT).date()
-    # fetch from 2 years ago to cover all history
-    start_dt = end_dt.replace(year=end_dt.year - 2)
-    chunk = timedelta(days=max_range_days)
-    current_start = start_dt
-    while current_start < end_dt:
-        current_end = min(current_start + chunk, end_dt)
-        body = {
-            "range": {
-                "start": {"date": {"year": current_start.year, "month": current_start.month, "day": current_start.day}},
-                "end":   {"date": {"year": current_end.year,   "month": current_end.month,   "day": current_end.day}},
-            }
+    today = datetime.now(ICT).strftime("%Y-%m-%d")
+    start = (datetime.now(ICT) - timedelta(days=90)).strftime("%Y-%m-%d")
+    default_params = {"startDate": start, "endDate": today}
+    r = requests.get(
+        f"{BASE_URL}/{data_type}/dataPoints",
+        headers=headers,
+        params={**default_params, **params},
+    )
+    if not r.ok:
+        print(f"ERROR {r.status_code} for {data_type}: {r.text}")
+        r.raise_for_status()
+    return r.json().get("dataPoints", [])
+
+
+def to_ict(dt_str):
+    if not dt_str:
+        return None
+    try:
+        dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+        return dt.astimezone(ICT)
+    except Exception:
+        return None
+
+
+def load_json(path):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def save_json(path, data):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def fetch_and_merge(creds):
+    json_path = os.path.join(DIR, "health_data.json")
+    db = load_json(json_path)
+
+    # --- Sleep ---
+    if "sleep" not in db:
+        db["sleep"] = {}
+    for p in fetch(creds, "sleep"):
+        v = p.get("value", {})
+        start_dt = to_ict(p.get("startTime"))
+        end_dt = to_ict(p.get("endTime"))
+        if not start_dt:
+            continue
+        key = f"{start_dt.strftime('%Y-%m-%d')}_{start_dt.strftime('%H%M')}"
+        duration_ms = v.get("durationMilliseconds", 0)
+        stages = v.get("sleepStageData", {})
+        db["sleep"][key] = {
+            "date": start_dt.strftime("%Y-%m-%d"),
+            "start": start_dt.strftime("%H:%M"),
+            "end": end_dt.strftime("%H:%M") if end_dt else "-",
+            "duration_h": round(duration_ms / 3600000, 1),
+            "bed_h": round((end_dt - start_dt).total_seconds() / 3600, 1) if end_dt else None,
+            "efficiency": round(duration_ms / ((end_dt - start_dt).total_seconds() * 1000) * 100) if end_dt else None,
+            "light_m": round(stages.get("lightSleepDurationMilliseconds", 0) / 60000),
+            "deep_m": round(stages.get("deepSleepDurationMilliseconds", 0) / 60000),
+            "rem_m": round(stages.get("remSleepDurationMilliseconds", 0) / 60000),
+            "awake_m": round(stages.get("awakeDurationMilliseconds", 0) / 60000),
+            "restless_m": round(stages.get("restlessDurationMilliseconds", 0) / 60000),
         }
-        page_token = None
-        while True:
-            if page_token:
-                body["pageToken"] = page_token
-            r = requests.post(f"{BASE_URL}/{data_type}/dataPoints:dailyRollUp", headers=headers, json=body)
-            if not r.ok:
-                print(f"ERROR {r.status_code} for {data_type} dailyRollUp: {r.text}")
-                break
-            data = r.json()
-            results.extend(data.get("rollupDataPoints", []))
-            page_token = data.get("nextPageToken")
-            if not page_token:
-                break
-        current_start = current_end
-    return results
+
+    # --- Heart Rate ---
+    if "resting_hr" not in db:
+        db["resting_hr"] = {}
+    for p in fetch(creds, "daily-resting-heart-rate"):
+        date = p["startTime"][:10]
+        db["resting_hr"][date] = p["value"].get("beatsPerMinute")
+
+    # --- HRV ---
+    if "hrv" not in db:
+        db["hrv"] = {}
+    for p in fetch(creds, "daily-heart-rate-variability"):
+        date = p["startTime"][:10]
+        val = p["value"].get("rmssd")
+        if val:
+            db["hrv"][date] = round(val, 1)
+
+    # --- Steps ---
+    if "steps" not in db:
+        db["steps"] = {}
+    for p in fetch(creds, "steps", {"rollup": "daily"}):
+        date = p["startTime"][:10]
+        db["steps"][date] = p["value"].get("steps")
+
+    # --- Active Zone Minutes ---
+    if "azm" not in db:
+        db["azm"] = {}
+    for p in fetch(creds, "active-zone-minutes", {"rollup": "daily"}):
+        date = p["startTime"][:10]
+        db["azm"][date] = p["value"].get("totalMinutes")
+
+    # --- Calories ---
+    if "calories" not in db:
+        db["calories"] = {}
+    for p in fetch(creds, "active-calories-burned", {"rollup": "daily"}):
+        date = p["startTime"][:10]
+        db["calories"].setdefault(date, {})["active"] = round(p["value"].get("kilocalories", 0))
+    for p in fetch(creds, "total-calories-burned", {"rollup": "daily"}):
+        date = p["startTime"][:10]
+        db["calories"].setdefault(date, {})["total"] = round(p["value"].get("kilocalories", 0))
+
+    # --- Body Composition ---
+    if "body" not in db:
+        db["body"] = {}
+    for p in fetch(creds, "weight"):
+        st = p.get("sampleTime", {})
+        date = st.get("civilTime", {}).get("date", "")
+        if not date:
+            continue
+        date_str = f"{date.get('year', '')}-{str(date.get('month', '')).zfill(2)}-{str(date.get('day', '')).zfill(2)}"
+        db["body"].setdefault(date_str, {})["weight_kg"] = round(p["value"].get("weightGrams", 0) / 1000, 1)
+    for p in fetch(creds, "body-fat"):
+        st = p.get("sampleTime", {})
+        date = st.get("civilTime", {}).get("date", "")
+        if not date:
+            continue
+        date_str = f"{date.get('year', '')}-{str(date.get('month', '')).zfill(2)}-{str(date.get('day', '')).zfill(2)}"
+        fat = p["value"].get("percentage")
+        if fat:
+            db["body"].setdefault(date_str, {})["fat_pct"] = round(fat, 1)
+
+    # --- Wellness ---
+    if "wellness" not in db:
+        db["wellness"] = {}
+    for p in fetch(creds, "daily-respiratory-rate"):
+        date = p.get("date") or p.get("startTime", "")[:10]
+        val = p["value"].get("breathsPerMinute")
+        if val:
+            db["wellness"].setdefault(date, {})["breathing_rate"] = round(val, 1)
+    for p in fetch(creds, "daily-oxygen-saturation"):
+        date = p.get("date") or p.get("startTime", "")[:10]
+        val = p["value"].get("averagePercentage")
+        if val:
+            db["wellness"].setdefault(date, {})["spo2"] = round(val, 1)
+    for p in fetch(creds, "daily-sleep-temperature-derivations"):
+        date = p.get("date") or p.get("startTime", "")[:10]
+        nightly = p["value"].get("nightlyTemperatureCelsius")
+        baseline = p["value"].get("baselineTemperatureCelsius")
+        if nightly:
+            entry = db["wellness"].setdefault(date, {})
+            entry["skin_temp"] = round(float(nightly), 1)
+            if baseline:
+                entry["skin_temp_base"] = round(float(baseline), 1)
+                entry["skin_temp_var"] = round(float(nightly) - float(baseline), 2)
+
+    save_json(json_path, db)
+    print(f"health_data.json updated ({len(db.get('sleep', {}))} sleep records)")
+    return db
 
 
-def fetch(creds, data_type, paginate=False):
-    headers = {"Authorization": f"Bearer {creds.token}"}
-    results = []
-    params = {}
-    while True:
-        r = requests.get(f"{BASE_URL}/{data_type}/dataPoints", headers=headers, params=params)
-        if not r.ok:
-            print(f"ERROR {r.status_code} for {data_type}: {r.text}")
-            break
-        data = r.json()
-        results.extend(data.get("dataPoints", []))
-        next_token = data.get("nextPageToken")
-        if not paginate or not next_token:
-            break
-        params = {"pageToken": next_token}
-    return results
+def render_markdown(db):
+    now_str = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
+    lines = [f"# Health Data — อัพเดท {now_str}\n"]
 
-
-def fmt_date(d):
-    return f"{d['year']}-{d['month']:02d}-{d['day']:02d}"
-
-
-def write_health_md(creds):
-    updated = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
-    lines = [f"# Health Data — อัพเดท {updated}\n"]
-
-    # Sleep
+    # --- Sleep ---
     lines.append("## Sleep")
     lines.append("| วันที่ | เข้านอน | ตื่น | นอนหลับ | อยู่บนเตียง | Efficiency | Light | Deep | REM | Awake | Restless |")
     lines.append("|--------|---------|------|---------|------------|------------|-------|------|-----|-------|----------|")
-    for p in fetch(creds, "sleep"):
-        s = p.get("sleep", {})
-        interval = s.get("interval", {})
-        summary = s.get("summary", {})
-        raw_start = interval.get("startTime", "")
-        raw_end = interval.get("endTime", "")
-        if raw_start:
-            dt_start = datetime.fromisoformat(raw_start.replace("Z", "+00:00")).astimezone(ICT)
-            date = dt_start.strftime("%Y-%m-%d")
-            start = dt_start.strftime("%H:%M")
-        else:
-            date, start = "", "-"
-        if raw_end:
-            end = datetime.fromisoformat(raw_end.replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M")
-        else:
-            end = "-"
-        minutes_asleep = int(summary.get("minutesAsleep", 0))
-        minutes_in_bed = int(summary.get("minutesInSleepPeriod", 0))
-        total = round(minutes_asleep / 60, 1)
-        in_bed = round(minutes_in_bed / 60, 1)
-        efficiency = f"{int(minutes_asleep / minutes_in_bed * 100)}%" if minutes_in_bed > 0 else "-"
-        stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
-        light = stages.get("LIGHT", "-")
-        deep = stages.get("DEEP", "-")
-        rem = stages.get("REM", "-")
-        awake = stages.get("AWAKE", "-")
-        restless = stages.get("RESTLESS", 0)
+    for key in sorted(db.get("sleep", {}).keys(), reverse=True):
+        s = db["sleep"][key]
+        eff = f"{s['efficiency']}%" if s.get("efficiency") else "-"
+        bed = f"{s['bed_h']}h" if s.get("bed_h") else "-"
         lines.append(
-            f"| {date} | {start} | {end} | {total}h | {in_bed}h | {efficiency} | {light}m | {deep}m | {rem}m | {awake}m | {restless}m |"
+            f"| {s['date']} | {s['start']} | {s['end']} | {s['duration_h']}h | {bed} | {eff} | "
+            f"{s['light_m']}m | {s['deep_m']}m | {s['rem_m']}m | {s['awake_m']}m | {s['restless_m']}m |"
         )
 
     lines.append("")
 
-    # Resting HR + HRV
+    # --- Heart ---
     lines.append("## Heart Metrics (Daily)")
     lines.append("| วันที่ | Resting HR | HRV |")
     lines.append("|--------|-----------|-----|")
-    hr_data = {}
-    for p in fetch(creds, "daily-resting-heart-rate"):
-        d = p.get("dailyRestingHeartRate", {})
-        if "date" in d:
-            date = fmt_date(d["date"])
-            hr_data[date] = d.get("beatsPerMinute", "-")
-    hrv_data = {}
-    for p in fetch(creds, "daily-heart-rate-variability"):
-        d = p.get("dailyHeartRateVariability", {})
-        if "date" in d:
-            date = fmt_date(d["date"])
-            hrv_data[date] = round(d.get("averageHeartRateVariabilityMilliseconds", 0), 1)
-    for date in sorted(set(list(hr_data.keys()) + list(hrv_data.keys())), reverse=True):
-        hr = hr_data.get(date, "-")
-        hrv = hrv_data.get(date, "-")
-        lines.append(f"| {date} | {hr} bpm | {hrv} ms |")
+    all_heart_dates = sorted(set(list(db.get("resting_hr", {}).keys()) + list(db.get("hrv", {}).keys())), reverse=True)
+    for date in all_heart_dates:
+        hr = db.get("resting_hr", {}).get(date, "-")
+        hrv = db.get("hrv", {}).get(date, "-")
+        hr_str = f"{hr} bpm" if hr != "-" else "-"
+        hrv_str = f"{hrv} ms" if hrv != "-" else "-"
+        lines.append(f"| {date} | {hr_str} | {hrv_str} |")
 
     lines.append("")
 
-    # Steps + Active Zone Minutes + Calories
+    # --- Activity ---
     lines.append("## Activity (Daily)")
     lines.append("| วันที่ | Steps | Active Zone Min | Active Cal | Total Cal |")
     lines.append("|--------|-------|----------------|------------|-----------|")
-    steps_data = {}
-    for p in fetch(creds, "steps", paginate=True):
-        d = p.get("steps", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            steps_data[date] = steps_data.get(date, 0) + int(d.get("count", 0))
-    azm_data = {}
-    for p in fetch(creds, "active-zone-minutes", paginate=True):
-        d = p.get("activeZoneMinutes", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            azm_data[date] = azm_data.get(date, 0) + int(d.get("activeZoneMinutes", 0))
-    active_cal_data = {}
-    for p in fetch(creds, "active-energy-burned", paginate=True):
-        d = p.get("activeEnergyBurned", {})
-        civil = d.get("interval", {}).get("civilStartTime", {})
-        date_obj = civil.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            active_cal_data[date] = active_cal_data.get(date, 0) + round(d.get("kcal", 0), 1)
-    total_cal_data = {}
-    for p in fetch_daily_rollup(creds, "total-calories", max_range_days=14):
-        date_obj = p.get("civilStartTime", {}).get("date")
-        d = p.get("totalCalories", {})
-        if date_obj and d:
-            date = fmt_date(date_obj)
-            kcal = d.get("kcal_sum") or d.get("kcalSum") or d.get("kcal") or 0
-            total_cal_data[date] = int(kcal)
-    all_dates = set(list(steps_data) + list(azm_data) + list(active_cal_data) + list(total_cal_data))
-    for date in sorted(all_dates, reverse=True):
-        steps = steps_data.get(date, "-")
-        azm = azm_data.get(date, "-")
-        active_cal = f"{int(active_cal_data[date])} kcal" if date in active_cal_data else "-"
-        total_cal = f"{int(total_cal_data[date])} kcal" if date in total_cal_data else "-"
-        lines.append(f"| {date} | {steps} | {azm} min | {active_cal} | {total_cal} |")
+    all_act_dates = sorted(set(
+        list(db.get("steps", {}).keys()) +
+        list(db.get("azm", {}).keys()) +
+        list(db.get("calories", {}).keys())
+    ), reverse=True)
+    for date in all_act_dates:
+        steps = db.get("steps", {}).get(date, "-")
+        azm = db.get("azm", {}).get(date, "-")
+        cal = db.get("calories", {}).get(date, {})
+        active_cal = cal.get("active", "-")
+        total_cal = cal.get("total", "-")
+        azm_str = f"{azm} min" if azm != "-" else "- min"
+        active_str = f"{active_cal} kcal" if active_cal != "-" else "-"
+        total_str = f"{total_cal} kcal" if total_cal != "-" else "-"
+        lines.append(f"| {date} | {steps} | {azm_str} | {active_str} | {total_str} |")
 
     lines.append("")
 
-    # Body Composition
+    # --- Body Composition ---
     lines.append("## Body Composition")
     lines.append("| วันที่ | น้ำหนัก | Fat% | Fat Mass | Lean Mass |")
     lines.append("|--------|---------|------|----------|-----------|")
-    weight_data = {}
-    for p in fetch(creds, "weight", paginate=True):
-        d = p.get("weight", {})
-        date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            grams = d.get("weightGrams")
-            if grams:
-                weight_data[date] = round(float(grams) / 1000, 1)
-    fat_data = {}
-    for p in fetch(creds, "body-fat", paginate=True):
-        d = p.get("bodyFat", {})
-        date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            pct = d.get("percentage")
-            if pct is not None:
-                fat_data[date] = round(float(pct), 1)
-    for date in sorted(set(list(weight_data) + list(fat_data)), reverse=True):
-        w = weight_data.get(date)
-        f = fat_data.get(date)
-        if w and f:
-            fat_mass = round(w * f / 100, 1)
-            lean_mass = round(w - fat_mass, 1)
-            lines.append(f"| {date} | {w} kg | {f}% | {fat_mass} kg | {lean_mass} kg |")
-        elif w:
-            lines.append(f"| {date} | {w} kg | - | - | - |")
-        else:
-            lines.append(f"| {date} | - | {f}% | - | - |")
+    for date in sorted(db.get("body", {}).keys(), reverse=True):
+        b = db["body"][date]
+        w = b.get("weight_kg", "-")
+        fat = b.get("fat_pct")
+        fat_mass = round(w * fat / 100, 1) if isinstance(w, float) and fat else "-"
+        lean_mass = round(w - fat_mass, 1) if isinstance(fat_mass, float) else "-"
+        fat_str = f"{fat}%" if fat else "-"
+        lines.append(f"| {date} | {w} kg | {fat_str} | {fat_mass if fat_mass != '-' else '-'} kg | {lean_mass if lean_mass != '-' else '-'} kg |")
 
     lines.append("")
 
-    # Wellness Metrics
+    # --- Wellness ---
     lines.append("## Wellness (Daily)")
     lines.append("| วันที่ | Breathing Rate | SpO2 | Skin Temp Var |")
     lines.append("|--------|---------------|------|--------------|")
-    br_data = {}
-    for p in fetch(creds, "daily-respiratory-rate"):
-        d = p.get("dailyRespiratoryRate", {})
-        date_obj = d.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            bpm = d.get("breathsPerMinute") or d.get("value")
-            if bpm:
-                br_data[date] = round(float(bpm), 1)
-    spo2_data = {}
-    for p in fetch(creds, "daily-oxygen-saturation"):
-        d = p.get("dailyOxygenSaturation", {})
-        date_obj = d.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            pct = d.get("averagePercentage")
-            if pct is not None:
-                spo2_data[date] = round(float(pct), 1)
-    skintemp_data = {}
-    for p in fetch(creds, "daily-sleep-temperature-derivations"):
-        d = p.get("dailySleepTemperatureDerivations", {})
-        date_obj = d.get("date", {})
-        if date_obj:
-            date = fmt_date(date_obj)
-            nightly = d.get("nightlyTemperatureCelsius")
-            baseline = d.get("baselineTemperatureCelsius")
-            if nightly is not None:
-                nightly = float(nightly)
-                baseline = float(baseline) if baseline is not None else None
-                deviation = round(nightly - baseline, 2) if baseline is not None else None
-                skintemp_data[date] = (round(nightly, 1), round(baseline, 1) if baseline is not None else "-", f"{deviation:+.2f}" if deviation is not None else "-")
-    all_wellness = set(list(br_data) + list(spo2_data) + list(skintemp_data))
-    for date in sorted(all_wellness, reverse=True):
-        br = f"{br_data[date]} brpm" if date in br_data else "-"
-        spo2 = f"{spo2_data[date]}%" if date in spo2_data else "-"
-        if date in skintemp_data:
-            nightly, baseline, dev = skintemp_data[date]
-            skintemp = f"{nightly}°C (base {baseline}°C, {dev})"
+    for date in sorted(db.get("wellness", {}).keys(), reverse=True):
+        w = db["wellness"][date]
+        br = f"{w['breathing_rate']} brpm" if w.get("breathing_rate") else "-"
+        spo2 = f"{w['spo2']}%" if w.get("spo2") else "-"
+        if w.get("skin_temp") and w.get("skin_temp_base"):
+            var = w.get("skin_temp_var", 0)
+            sign = "+" if var >= 0 else ""
+            skin = f"{w['skin_temp']}°C (base {w['skin_temp_base']}°C, {sign}{var})"
+        elif w.get("skin_temp"):
+            skin = f"{w['skin_temp']}°C"
         else:
-            skintemp = "-"
-        lines.append(f"| {date} | {br} | {spo2} | {skintemp} |")
+            skin = "-"
+        lines.append(f"| {date} | {br} | {spo2} | {skin} |")
 
-    out_path = os.path.join(os.path.dirname(__file__), "health_data.md")
+    out_path = os.path.join(DIR, "health_data.md")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
-    print("health_data.md updated")
+    print("health_data.md rendered")
 
 
-def write_sleep_stages_md(creds):
-    updated = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
-    lines = [f"# Sleep Stages Timeline — อัพเดท {updated}\n"]
-    lines.append("ข้อมูล timeline การนอนรายคืน แต่ละบรรทัดคือ segment ของ sleep stage\n")
+def fetch_sleep_stages(creds):
+    json_path = os.path.join(DIR, "health_data.json")
+    db = load_json(json_path)
+
+    if "sleep_stages" not in db:
+        db["sleep_stages"] = {}
 
     for p in fetch(creds, "sleep"):
-        s = p.get("sleep", {})
-        interval = s.get("interval", {})
-        stages = s.get("stages", [])
-        if not stages:
+        v = p.get("value", {})
+        start_dt = to_ict(p.get("startTime"))
+        end_dt = to_ict(p.get("endTime"))
+        if not start_dt:
             continue
-        raw_start = interval.get("startTime", "")
-        if raw_start:
-            dt_start = datetime.fromisoformat(raw_start.replace("Z", "+00:00")).astimezone(ICT)
-            date = dt_start.strftime("%Y-%m-%d")
-            start = dt_start.strftime("%H:%M")
-        else:
-            continue
-        raw_end = interval.get("endTime", "")
-        end = datetime.fromisoformat(raw_end.replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M") if raw_end else "-"
+        key = f"{start_dt.strftime('%Y-%m-%d')}_{start_dt.strftime('%H%M')}"
+        stages_raw = v.get("sleepStageData", {}).get("sleepStages", [])
+        segments = []
+        for seg in stages_raw:
+            seg_start = to_ict(seg.get("startTime"))
+            seg_end = to_ict(seg.get("endTime"))
+            stage_type = seg.get("stage", "UNKNOWN")
+            if seg_start and seg_end:
+                dur_m = round((seg_end - seg_start).total_seconds() / 60)
+                segments.append({
+                    "start": seg_start.strftime("%H:%M"),
+                    "end": seg_end.strftime("%H:%M"),
+                    "stage": stage_type,
+                    "minutes": dur_m,
+                })
+        if segments:
+            duration_ms = v.get("durationMilliseconds", 0)
+            db["sleep_stages"][key] = {
+                "date": start_dt.strftime("%Y-%m-%d"),
+                "start": start_dt.strftime("%H:%M"),
+                "end": end_dt.strftime("%H:%M") if end_dt else "-",
+                "duration_h": round(duration_ms / 3600000, 1),
+                "segments": segments,
+            }
 
-        summary = s.get("summary", {})
-        minutes_asleep = int(summary.get("minutesAsleep", 0))
-        total = round(minutes_asleep / 60, 1)
+    save_json(json_path, db)
 
-        lines.append(f"## {date} ({start} – {end}, นอนหลับ {total}h)")
+    # render sleep_stages.md
+    now_str = datetime.now(ICT).strftime("%Y-%m-%d %H:%M")
+    lines = [f"# Sleep Stages Timeline — อัพเดท {now_str}\n"]
+    lines.append("ข้อมูล timeline การนอนรายคืน แต่ละบรรทัดคือ segment ของ sleep stage\n")
+
+    for key in sorted(db.get("sleep_stages", {}).keys(), reverse=True):
+        s = db["sleep_stages"][key]
+        lines.append(f"## {s['date']} ({s['start']} – {s['end']}, นอนหลับ {s['duration_h']}h)")
         lines.append("| เวลา | Stage | นาที |")
         lines.append("|------|-------|------|")
-        for stage in stages:
-            st_raw = stage.get("startTime", "")
-            et_raw = stage.get("endTime", "")
-            stype = stage.get("type", "")
-            if not st_raw or not et_raw:
-                continue
-            st = datetime.fromisoformat(st_raw.replace("Z", "+00:00")).astimezone(ICT)
-            et = datetime.fromisoformat(et_raw.replace("Z", "+00:00")).astimezone(ICT)
-            duration = int((et - st).total_seconds() / 60)
-            lines.append(f"| {st.strftime('%H:%M')}–{et.strftime('%H:%M')} | {stype} | {duration}m |")
+        for seg in s["segments"]:
+            lines.append(f"| {seg['start']}–{seg['end']} | {seg['stage']} | {seg['minutes']}m |")
         lines.append("")
 
-    out_path = os.path.join(os.path.dirname(__file__), "sleep_stages.md")
+    out_path = os.path.join(DIR, "sleep_stages.md")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
-    print("sleep_stages.md updated")
+    print(f"sleep_stages.md rendered ({len(db.get('sleep_stages', {}))} sessions)")
 
 
-def upload_to_drive(file_path, file_name=None):
-    folder_id = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
-    if file_name is None:
-        file_name = os.path.basename(file_path)
-    creds = get_drive_credentials()
-    service = build("drive", "v3", credentials=creds)
+def upload_to_drive(creds_drive):
+    from googleapiclient.discovery import build
+    from googleapiclient.http import MediaFileUpload
 
-    results = service.files().list(
-        q=f"name='{file_name}' and '{folder_id}' in parents and trashed=false",
-        fields="files(id)"
-    ).execute()
-    files = results.get("files", [])
+    FOLDER_ID = "1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR"
+    service = build("drive", "v3", credentials=creds_drive)
 
-    media = MediaFileUpload(file_path, mimetype="text/markdown")
-    if files:
-        service.files().update(fileId=files[0]["id"], media_body=media).execute()
-        print(f"{file_name} updated in Google Drive")
-    else:
-        service.files().create(
-            body={"name": file_name, "parents": [folder_id]},
-            media_body=media
+    for name in ["health_data.md", "sleep_stages.md"]:
+        path = os.path.join(DIR, name)
+        if not os.path.exists(path):
+            continue
+        results = service.files().list(
+            q=f"name='{name}' and '{FOLDER_ID}' in parents and trashed=false",
+            fields="files(id, name)"
         ).execute()
-        print(f"{file_name} uploaded to Google Drive")
+        files = results.get("files", [])
+        media = MediaFileUpload(path, mimetype="text/markdown")
+        if files:
+            service.files().update(fileId=files[0]["id"], media_body=media).execute()
+        else:
+            service.files().create(
+                body={"name": name, "parents": [FOLDER_ID]},
+                media_body=media
+            ).execute()
+        print(f"[✓] uploaded {name} to Drive")
 
 
 if __name__ == "__main__":
     creds = get_credentials()
-    write_health_md(creds)
-    write_sleep_stages_md(creds)
-    upload_to_drive(os.path.join(os.path.dirname(__file__), "health_data.md"))
-    upload_to_drive(os.path.join(os.path.dirname(__file__), "sleep_stages.md"))
+    db = fetch_and_merge(creds)
+    render_markdown(db)
+    fetch_sleep_stages(creds)
+    creds_drive = get_drive_credentials()
+    upload_to_drive(creds_drive)

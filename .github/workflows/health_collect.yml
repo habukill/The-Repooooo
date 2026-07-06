@@ -2,7 +2,7 @@ name: Fetch Health Data
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 12:00 ICT (UTC+7) daily
+    - cron: '0 2 * * *'  # 09:00 ICT (UTC+7) daily
   workflow_dispatch:
 
 jobs:
@@ -27,8 +27,72 @@ jobs:
           echo '${{ secrets.GOOGLE_HEALTH_TOKEN }}' > health/token.json
           echo '${{ secrets.GOOGLE_DRIVE_TOKEN }}' > health/drive_token.json
 
+      - name: Restore health_data.json from Drive
+        env:
+          GOOGLE_DRIVE_TOKEN: ${{ secrets.GOOGLE_DRIVE_TOKEN }}
+        run: |
+          cd health && python -c "
+          import json, os
+          from google.oauth2.credentials import Credentials
+          from google.auth.transport.requests import Request
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaIoBaseDownload
+          import io
+
+          FOLDER_ID = '1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR'
+          creds = Credentials.from_authorized_user_file('drive_token.json')
+          if creds.expired and creds.refresh_token:
+              creds.refresh(Request())
+          service = build('drive', 'v3', credentials=creds)
+          results = service.files().list(
+              q=f\"name='health_data.json' and '{FOLDER_ID}' in parents and trashed=false\",
+              fields='files(id, name)'
+          ).execute()
+          files = results.get('files', [])
+          if files:
+              fid = files[0]['id']
+              request = service.files().get_media(fileId=fid)
+              buf = io.BytesIO()
+              dl = MediaIoBaseDownload(buf, request)
+              done = False
+              while not done:
+                  _, done = dl.next_chunk()
+              with open('health_data.json', 'wb') as f:
+                  f.write(buf.getvalue())
+              print('[✓] restored health_data.json from Drive')
+          else:
+              print('[!] health_data.json not found in Drive, starting fresh')
+          "
+
       - name: Fetch health data
         run: cd health && python fetch_health.py
+
+      - name: Upload health_data.json to Drive
+        run: |
+          cd health && python -c "
+          from google.oauth2.credentials import Credentials
+          from google.auth.transport.requests import Request
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaFileUpload
+
+          FOLDER_ID = '1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR'
+          creds = Credentials.from_authorized_user_file('drive_token.json')
+          if creds.expired and creds.refresh_token:
+              creds.refresh(Request())
+          service = build('drive', 'v3', credentials=creds)
+          name = 'health_data.json'
+          results = service.files().list(
+              q=f\"name='{name}' and '{FOLDER_ID}' in parents and trashed=false\",
+              fields='files(id)'
+          ).execute()
+          files = results.get('files', [])
+          media = MediaFileUpload(name, mimetype='application/json')
+          if files:
+              service.files().update(fileId=files[0]['id'], media_body=media).execute()
+          else:
+              service.files().create(body={'name': name, 'parents': [FOLDER_ID]}, media_body=media).execute()
+          print('[✓] uploaded health_data.json to Drive')
+          "
 
       - name: Encrypt and commit health data
         env:
@@ -53,4 +117,3 @@ jobs:
           git add health_data.md.enc sleep_stages.md.enc
           git diff --cached --quiet || git commit -m "chore: update encrypted health data"
           git push
-
