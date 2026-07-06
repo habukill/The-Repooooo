@@ -57,9 +57,12 @@ def fetch(creds, data_type, params=None):
     if params is None:
         params = {}
     headers = {"Authorization": f"Bearer {creds.token}"}
-    today = datetime.now(ICT).strftime("%Y-%m-%d")
-    start = (datetime.now(ICT) - timedelta(days=90)).strftime("%Y-%m-%d")
-    default_params = {"startDate": start, "endDate": today}
+    now = datetime.now(timezone.utc)
+    start_dt = now - timedelta(days=90)
+    default_params = {
+        "startTime": start_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "endTime": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
     r = requests.get(
         f"{BASE_URL}/{data_type}/dataPoints",
         headers=headers,
