@@ -141,6 +141,20 @@ def fetch_and_merge(creds):
         minutes_asleep = int(summary.get("minutesAsleep", 0))
         minutes_in_bed = int(summary.get("minutesInSleepPeriod", 0))
         stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
+        new_stages = [
+            {
+                "start": datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
+                "end": datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
+                "type": st.get("type", ""),
+                "minutes": int((
+                    datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")) -
+                    datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00"))
+                ).total_seconds() / 60),
+            }
+            for st in s.get("stages", [])
+            if st.get("startTime") and st.get("endTime")
+        ]
+        existing = db["sleep"].get(key, {})
         db["sleep"][key] = {
             "date": dt_start.strftime("%Y-%m-%d"),
             "start": dt_start.strftime("%H:%M"),
@@ -153,19 +167,7 @@ def fetch_and_merge(creds):
             "rem_m": stages.get("REM", 0),
             "awake_m": stages.get("AWAKE", 0),
             "restless_m": stages.get("RESTLESS", 0),
-            "stages": [
-                {
-                    "start": datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
-                    "end": datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
-                    "type": st.get("type", ""),
-                    "minutes": int((
-                        datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")) -
-                        datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00"))
-                    ).total_seconds() / 60),
-                }
-                for st in s.get("stages", [])
-                if st.get("startTime") and st.get("endTime")
-            ],
+            "stages": new_stages if new_stages else existing.get("stages", []),
         }
 
     # --- Resting HR ---
