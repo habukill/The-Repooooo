@@ -67,8 +67,12 @@ def fetch(creds, data_type, extra_params=None):
             print(f"ERROR {r.status_code} for {data_type}: {r.text}")
             break
         data = r.json()
-        results.extend(data.get("dataPoints", []))
+        batch = data.get("dataPoints", [])
+        results.extend(batch)
         next_token = data.get("nextPageToken")
+        print(f"  [{data_type}] batch={len(batch)} total={len(results)} keys={list(data.keys())} nextPage={'yes' if next_token else 'no'}")
+        if not batch and not next_token:
+            print(f"  [{data_type}] raw sample: {str(data)[:300]}")
         if not next_token:
             break
         params = {**(extra_params or {}), "pageToken": next_token}
