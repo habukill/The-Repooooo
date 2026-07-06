@@ -79,6 +79,25 @@ def fetch(creds, data_type, extra_params=None):
     return results
 
 
+def _date(p):
+    """Extract date string from a dataPoint, trying multiple field names."""
+    for key in ("startTime", "date", "endTime"):
+        v = p.get(key)
+        if v:
+            d = str(v)[:10]
+            if len(d) == 10:
+                return d
+    # civilTime structure (weight/body-fat)
+    ct = p.get("sampleTime", {}).get("civilTime", {}).get("date", {})
+    if ct:
+        y, m, day = ct.get("year"), ct.get("month"), ct.get("day")
+        if y and m and day:
+            return f"{y}-{str(m).zfill(2)}-{str(day).zfill(2)}"
+    if not p.get("startTime") and not p.get("date"):
+        print(f"  [_date] unknown structure: {list(p.keys())} sample={str(p)[:200]}")
+    return None
+
+
 def to_ict(dt_str):
     if not dt_str:
         return None
@@ -135,79 +154,74 @@ def fetch_and_merge(creds):
     if "resting_hr" not in db:
         db["resting_hr"] = {}
     for p in fetch(creds, "daily-resting-heart-rate"):
-        date = p["startTime"][:10]
-        db["resting_hr"][date] = p["value"].get("beatsPerMinute")
+        date = _date(p)
+        if date:
+            db["resting_hr"][date] = p["value"].get("beatsPerMinute")
 
     # --- HRV ---
     if "hrv" not in db:
         db["hrv"] = {}
     for p in fetch(creds, "daily-heart-rate-variability"):
-        date = p["startTime"][:10]
+        date = _date(p)
         val = p["value"].get("rmssd")
-        if val:
+        if date and val:
             db["hrv"][date] = round(val, 1)
 
     # --- Steps ---
     if "steps" not in db:
         db["steps"] = {}
     for p in fetch(creds, "steps"):
-        date = p["startTime"][:10]
-        db["steps"][date] = p["value"].get("steps")
+        date = _date(p)
+        if date:
+            db["steps"][date] = p["value"].get("steps")
 
     # --- Active Zone Minutes ---
     if "azm" not in db:
         db["azm"] = {}
     for p in fetch(creds, "active-zone-minutes"):
-        date = p["startTime"][:10]
-        db["azm"][date] = p["value"].get("totalMinutes")
+        date = _date(p)
+        if date:
+            db["azm"][date] = p["value"].get("totalMinutes")
 
     # --- Calories ---
     if "calories" not in db:
         db["calories"] = {}
     for p in fetch(creds, "active-energy-burned"):
-        date = p["startTime"][:10]
-        db["calories"].setdefault(date, {})["active"] = round(p["value"].get("kilocalories", 0))
-        date = p["startTime"][:10]
-        db["calories"].setdefault(date, {})["total"] = round(p["value"].get("kilocalories", 0))
+        date = _date(p)
+        if date:
+            db["calories"].setdefault(date, {})["active"] = round(p["value"].get("kilocalories", 0))
 
     # --- Body Composition ---
     if "body" not in db:
         db["body"] = {}
     for p in fetch(creds, "weight"):
-        st = p.get("sampleTime", {})
-        date = st.get("civilTime", {}).get("date", "")
-        if not date:
-            continue
-        date_str = f"{date.get('year', '')}-{str(date.get('month', '')).zfill(2)}-{str(date.get('day', '')).zfill(2)}"
-        db["body"].setdefault(date_str, {})["weight_kg"] = round(p["value"].get("weightGrams", 0) / 1000, 1)
+        date = _date(p)
+        if date:
+            db["body"].setdefault(date, {})["weight_kg"] = round(p["value"].get("weightGrams", 0) / 1000, 1)
     for p in fetch(creds, "body-fat"):
-        st = p.get("sampleTime", {})
-        date = st.get("civilTime", {}).get("date", "")
-        if not date:
-            continue
-        date_str = f"{date.get('year', '')}-{str(date.get('month', '')).zfill(2)}-{str(date.get('day', '')).zfill(2)}"
+        date = _date(p)
         fat = p["value"].get("percentage")
-        if fat:
-            db["body"].setdefault(date_str, {})["fat_pct"] = round(fat, 1)
+        if date and fat:
+            db["body"].setdefault(date, {})["fat_pct"] = round(fat, 1)
 
     # --- Wellness ---
     if "wellness" not in db:
         db["wellness"] = {}
     for p in fetch(creds, "daily-respiratory-rate"):
-        date = p.get("date") or p.get("startTime", "")[:10]
+        date = _date(p)
         val = p["value"].get("breathsPerMinute")
-        if val:
+        if date and val:
             db["wellness"].setdefault(date, {})["breathing_rate"] = round(val, 1)
     for p in fetch(creds, "daily-oxygen-saturation"):
-        date = p.get("date") or p.get("startTime", "")[:10]
+        date = _date(p)
         val = p["value"].get("averagePercentage")
-        if val:
+        if date and val:
             db["wellness"].setdefault(date, {})["spo2"] = round(val, 1)
     for p in fetch(creds, "daily-sleep-temperature-derivations"):
-        date = p.get("date") or p.get("startTime", "")[:10]
+        date = _date(p)
         nightly = p["value"].get("nightlyTemperatureCelsius")
         baseline = p["value"].get("baselineTemperatureCelsius")
-        if nightly:
+        if date and nightly:
             entry = db["wellness"].setdefault(date, {})
             entry["skin_temp"] = round(float(nightly), 1)
             if baseline:
