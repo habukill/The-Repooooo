@@ -53,10 +53,10 @@ def get_drive_credentials():
     return creds
 
 
-def fetch(creds, data_type):
+def fetch(creds, data_type, extra_params=None):
     headers = {"Authorization": f"Bearer {creds.token}"}
     results = []
-    params = {}
+    params = dict(extra_params or {})
     while True:
         r = requests.get(
             f"{BASE_URL}/{data_type}/dataPoints",
@@ -71,7 +71,7 @@ def fetch(creds, data_type):
         next_token = data.get("nextPageToken")
         if not next_token:
             break
-        params = {"pageToken": next_token}
+        params = {**(extra_params or {}), "pageToken": next_token}
     return results
 
 
@@ -146,24 +146,24 @@ def fetch_and_merge(creds):
     # --- Steps ---
     if "steps" not in db:
         db["steps"] = {}
-    for p in fetch(creds, "steps", {"rollup": "daily"}):
+    for p in fetch(creds, "steps"):
         date = p["startTime"][:10]
         db["steps"][date] = p["value"].get("steps")
 
     # --- Active Zone Minutes ---
     if "azm" not in db:
         db["azm"] = {}
-    for p in fetch(creds, "active-zone-minutes", {"rollup": "daily"}):
+    for p in fetch(creds, "active-zone-minutes"):
         date = p["startTime"][:10]
         db["azm"][date] = p["value"].get("totalMinutes")
 
     # --- Calories ---
     if "calories" not in db:
         db["calories"] = {}
-    for p in fetch(creds, "active-calories-burned", {"rollup": "daily"}):
+    for p in fetch(creds, "active-calories-burned"):
         date = p["startTime"][:10]
         db["calories"].setdefault(date, {})["active"] = round(p["value"].get("kilocalories", 0))
-    for p in fetch(creds, "total-calories-burned", {"rollup": "daily"}):
+    for p in fetch(creds, "total-calories-burned"):
         date = p["startTime"][:10]
         db["calories"].setdefault(date, {})["total"] = round(p["value"].get("kilocalories", 0))
 
