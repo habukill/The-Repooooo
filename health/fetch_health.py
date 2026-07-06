@@ -53,25 +53,26 @@ def get_drive_credentials():
     return creds
 
 
-def fetch(creds, data_type, params=None):
-    if params is None:
-        params = {}
+def fetch(creds, data_type):
     headers = {"Authorization": f"Bearer {creds.token}"}
-    now = datetime.now(timezone.utc)
-    start_dt = now - timedelta(days=90)
-    default_params = {
-        "startTime": start_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "endTime": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    }
-    r = requests.get(
-        f"{BASE_URL}/{data_type}/dataPoints",
-        headers=headers,
-        params={**default_params, **params},
-    )
-    if not r.ok:
-        print(f"ERROR {r.status_code} for {data_type}: {r.text}")
-        r.raise_for_status()
-    return r.json().get("dataPoints", [])
+    results = []
+    params = {}
+    while True:
+        r = requests.get(
+            f"{BASE_URL}/{data_type}/dataPoints",
+            headers=headers,
+            params=params,
+        )
+        if not r.ok:
+            print(f"ERROR {r.status_code} for {data_type}: {r.text}")
+            break
+        data = r.json()
+        results.extend(data.get("dataPoints", []))
+        next_token = data.get("nextPageToken")
+        if not next_token:
+            break
+        params = {"pageToken": next_token}
+    return results
 
 
 def to_ict(dt_str):
