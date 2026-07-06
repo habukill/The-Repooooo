@@ -12,7 +12,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
     "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
 ]
-BASE_URL = "https://health.googleapis.com/v4/users/-/dataTypes"
+BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
 ICT = ZoneInfo("Asia/Bangkok")
 DIR = os.path.dirname(__file__)
 
@@ -164,10 +164,9 @@ def fetch_and_merge(creds):
     # --- Calories ---
     if "calories" not in db:
         db["calories"] = {}
-    for p in fetch(creds, "active-calories-burned"):
+    for p in fetch(creds, "active-energy-burned"):
         date = p["startTime"][:10]
         db["calories"].setdefault(date, {})["active"] = round(p["value"].get("kilocalories", 0))
-    for p in fetch(creds, "total-calories-burned"):
         date = p["startTime"][:10]
         db["calories"].setdefault(date, {})["total"] = round(p["value"].get("kilocalories", 0))
 
