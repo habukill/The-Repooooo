@@ -202,13 +202,85 @@
         <button class="tab-btn" data-tab="tab-lodging" onclick="showTab('tab-lodging')">🏨 ที่พัก</button>
         <button class="tab-btn" data-tab="tab-highlights" onclick="showTab('tab-highlights')">🏆 ไฮไลท์</button>
         <button class="tab-btn" data-tab="tab-days" onclick="showTab('tab-days')">📅 แผนรายวัน</button>
-        <button class="tab-btn" data-tab="tab-summary" onclick="showTab('tab-summary')">🗺️ สรุปเดินทาง</button>
         <button class="tab-btn" data-tab="tab-checklist" onclick="showTab('tab-checklist')">✅ เตรียมตัว/จอง</button>
         <button class="tab-btn" data-tab="tab-extra" onclick="showTab('tab-extra')">📋 เก็บตก/ตัดออก</button>
     </div>
 
     <!-- ===================== TAB: OVERVIEW ===================== -->
     <div id="tab-overview" class="tab-panel active">
+        <section class="block" style="margin-bottom:0;">
+            <h2 class="section-title">🗺️ สรุปการเดินทางรายวัน</h2>
+            <p class="section-sub">วันไหนขับรถไปจอดที่ไหน ไปเที่ยวที่ไหน ใช้เวลาเดินทางประมาณเท่าไหร่ และคืนนั้นนอนที่ไหน</p>
+            <div class="table-wrap">
+                <table class="summary-table">
+                    <tr>
+                        <th>วัน</th>
+                        <th>ขับ/จอดรถที่</th>
+                        <th>ไปเที่ยวที่</th>
+                        <th>เวลาเดินทางโดยประมาณ</th>
+                        <th>นอนที่ไหน</th>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 1<br>9 ต.ค.</td>
+                        <td>Malpensa → Sirmione/Verona → Bolzano → West zone</td>
+                        <td>เดินเล่น+กินข้าวเที่ยง Sirmione/Verona, เดินเล่น Bolzano</td>
+                        <td>Malpensa→จุดแวะแรก ~1.7-2 ชม. / →Bolzano ~1.4-1.6 ชม. / →West zone ~1-1.5 ชม.</td>
+                        <td>โซนตะวันตก (San Pietro/Gudon)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 2<br>10 ต.ค.</td>
+                        <td>จอดรถ Putzen (Val di Funes)</td>
+                        <td>St. Johann Church, เดินเล่นหุบเขา, เย็น Santa Maddalena viewpoint (sunset)</td>
+                        <td>ในหุบเขา ~5-15 นาที/จุด, เดินจาก Putzen ~20-30 นาที</td>
+                        <td>โซนตะวันตก (คืนเดิม)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 3<br>11 ต.ค.</td>
+                        <td>กระเช้าที่ Ortisei (สลับ 2 สถานี)</td>
+                        <td>Seceda (เช้า), Alpe di Siusi แบบย่อ (บ่าย)</td>
+                        <td>เปลี่ยนกระเช้าในเมือง Ortisei ~10-15 นาที</td>
+                        <td>โซนตะวันตก (คืนสุดท้ายฝั่งนี้)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 4<br>12 ต.ค.</td>
+                        <td>Passo Sella/Sass Pordoi, Passo Falzarego/Lagazuoi, Passo Giau</td>
+                        <td>Sass Pordoi cable car, Lagazuoi cable car, Passo Giau (sunset)</td>
+                        <td>รวมขับ+กระเช้า+เที่ยง ~7-7.5 ชม.</td>
+                        <td>โซนตะวันออก (Dobbiaco/Villabassa) — เช็คอินคืนแรก</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 5<br>13 ต.ค.</td>
+                        <td>Rifugio Auronzo (⚠️ ต้องจองที่จอดล่วงหน้า)</td>
+                        <td>Tre Cime di Lavaredo loop เต็มวัน (ผ่าน Misurina)</td>
+                        <td>ที่พัก→Auronzo ~40 นาที, เดินลูป ~4 ชม.</td>
+                        <td>โซนตะวันออก (คืนเดิม)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 6<br>14 ต.ค.</td>
+                        <td>Lago di Braies</td>
+                        <td>เดินเล่น+พายเรือ (10:00-16:00) วันชิล</td>
+                        <td>ที่พัก→Braies ~20 นาที</td>
+                        <td>โซนตะวันออก (คืนสุดท้ายฝั่งนี้)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 7<br>15 ต.ค.</td>
+                        <td>Cinque Torri (Bai de Dones) → คืนรถในมิลาน</td>
+                        <td>Cinque Torri (เดินขึ้น), ขับยาวกลับมิลาน, เย็น Navigli</td>
+                        <td>East→Cortina ~30 น. / →Cinque Torri ~25 น. / เดิน ~2-2.5 ชม. / กลับ Cortina ~25 น. / →Milan ~4.5-5 ชม.</td>
+                        <td>Milan (คืนเดียว)</td>
+                    </tr>
+                    <tr>
+                        <td class="day-cell">Day 8<br>16 ต.ค.</td>
+                        <td>ไม่ขับแล้ว (คืนรถไปแล้ว) เดิน/รถราง/เมโทร</td>
+                        <td>Duomo, Galleria, Castello Sforzesco/Brera</td>
+                        <td>เดินในเมือง, เข้าสนามบินก่อนไฟลท์ 22:00 น.</td>
+                        <td>✈️ บินกลับไทย</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <div style="height:20px"></div>
+
         <div class="info-box vibe-box">
             <span class="vibe-label">Vibe Check:</span>
             2 ฐานที่พักสาย budget คุมงบให้เหลือประมาณ <strong>คืนละ 10,000 บาท</strong>: บินถึงมิลานเช้าวันที่ 9 ต.ค. เช่ารถ 7 ที่นั่ง แวะพักครึ่งทาง (Sirmione/Verona + Bolzano) ก่อนเข้า<strong>โซนตะวันตก</strong> (ใกล้ Seceda/Alpe di Siusi/Val di Funes) พัก 3 คืน วันที่ 10 เป็นวัน Val di Funes เต็มวัน+ดูพระอาทิตย์ตก วันที่ 11 Seceda เช้า+Alpe di Siusi บ่าย วันที่ 12 ย้ายข้ามเขาไป<strong>โซนตะวันออก</strong> (ใกล้ Tre Cime/Lago di Braies/Passo Giau/Lagazuoi) พัก 3 คืน วันที่ 13 Tre Cime เต็มวัน วันที่ 14 Lago di Braies เต็มวันแบบชิลๆ (พายเรือ) วันที่ 15 แวะ Cinque Torri เช้าก่อนขับยาวกลับมิลาน พักคืนเดียว วันที่ 16 เที่ยวมิลานเต็มวันแล้วบินกลับไทย 22:00 น.
@@ -671,81 +743,6 @@
         </div>
     </div>
 
-    <!-- ===================== TAB: TRAVEL SUMMARY TABLE ===================== -->
-    <div id="tab-summary" class="tab-panel">
-        <section class="block" style="margin-bottom:0;">
-            <h2 class="section-title">🗺️ สรุปการเดินทางรายวัน</h2>
-            <p class="section-sub">วันไหนขับรถไปจอดที่ไหน ไปเที่ยวที่ไหน ใช้เวลาเดินทางประมาณเท่าไหร่ และคืนนั้นนอนที่ไหน</p>
-            <div class="table-wrap">
-                <table class="summary-table">
-                    <tr>
-                        <th>วัน</th>
-                        <th>ขับ/จอดรถที่</th>
-                        <th>ไปเที่ยวที่</th>
-                        <th>เวลาเดินทางโดยประมาณ</th>
-                        <th>นอนที่ไหน</th>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 1<br>9 ต.ค.</td>
-                        <td>Malpensa → Sirmione/Verona → Bolzano → West zone</td>
-                        <td>เดินเล่น+กินข้าวเที่ยง Sirmione/Verona, เดินเล่น Bolzano</td>
-                        <td>Malpensa→จุดแวะแรก ~1.7-2 ชม. / →Bolzano ~1.4-1.6 ชม. / →West zone ~1-1.5 ชม.</td>
-                        <td>โซนตะวันตก (San Pietro/Gudon)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 2<br>10 ต.ค.</td>
-                        <td>จอดรถ Putzen (Val di Funes)</td>
-                        <td>St. Johann Church, เดินเล่นหุบเขา, เย็น Santa Maddalena viewpoint (sunset)</td>
-                        <td>ในหุบเขา ~5-15 นาที/จุด, เดินจาก Putzen ~20-30 นาที</td>
-                        <td>โซนตะวันตก (คืนเดิม)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 3<br>11 ต.ค.</td>
-                        <td>กระเช้าที่ Ortisei (สลับ 2 สถานี)</td>
-                        <td>Seceda (เช้า), Alpe di Siusi แบบย่อ (บ่าย)</td>
-                        <td>เปลี่ยนกระเช้าในเมือง Ortisei ~10-15 นาที</td>
-                        <td>โซนตะวันตก (คืนสุดท้ายฝั่งนี้)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 4<br>12 ต.ค.</td>
-                        <td>Passo Sella/Sass Pordoi, Passo Falzarego/Lagazuoi, Passo Giau</td>
-                        <td>Sass Pordoi cable car, Lagazuoi cable car, Passo Giau (sunset)</td>
-                        <td>รวมขับ+กระเช้า+เที่ยง ~7-7.5 ชม.</td>
-                        <td>โซนตะวันออก (Dobbiaco/Villabassa) — เช็คอินคืนแรก</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 5<br>13 ต.ค.</td>
-                        <td>Rifugio Auronzo (⚠️ ต้องจองที่จอดล่วงหน้า)</td>
-                        <td>Tre Cime di Lavaredo loop เต็มวัน (ผ่าน Misurina)</td>
-                        <td>ที่พัก→Auronzo ~40 นาที, เดินลูป ~4 ชม.</td>
-                        <td>โซนตะวันออก (คืนเดิม)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 6<br>14 ต.ค.</td>
-                        <td>Lago di Braies</td>
-                        <td>เดินเล่น+พายเรือ (10:00-16:00) วันชิล</td>
-                        <td>ที่พัก→Braies ~20 นาที</td>
-                        <td>โซนตะวันออก (คืนสุดท้ายฝั่งนี้)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 7<br>15 ต.ค.</td>
-                        <td>Cinque Torri (Bai de Dones) → คืนรถในมิลาน</td>
-                        <td>Cinque Torri (เดินขึ้น), ขับยาวกลับมิลาน, เย็น Navigli</td>
-                        <td>East→Cortina ~30 น. / →Cinque Torri ~25 น. / เดิน ~2-2.5 ชม. / กลับ Cortina ~25 น. / →Milan ~4.5-5 ชม.</td>
-                        <td>Milan (คืนเดียว)</td>
-                    </tr>
-                    <tr>
-                        <td class="day-cell">Day 8<br>16 ต.ค.</td>
-                        <td>ไม่ขับแล้ว (คืนรถไปแล้ว) เดิน/รถราง/เมโทร</td>
-                        <td>Duomo, Galleria, Castello Sforzesco/Brera</td>
-                        <td>เดินในเมือง, เข้าสนามบินก่อนไฟลท์ 22:00 น.</td>
-                        <td>✈️ บินกลับไทย</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-    </div>
-
     <!-- ===================== TAB: BOOKING CHECKLIST ===================== -->
     <div id="tab-checklist" class="tab-panel">
         <section class="block" style="margin-bottom:0;">
@@ -896,7 +893,6 @@
             document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
             document.getElementById(id).classList.add('active');
             document.querySelector('.tab-btn[data-tab="' + id + '"]').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function showDay(id) {
             document.querySelectorAll('.day-panel').forEach(function(p) { p.classList.remove('active'); });
