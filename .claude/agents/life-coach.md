@@ -19,10 +19,16 @@ date '+วันนี้คือ %Y-%m-%d เวลา %H:%M ICT'
 
 จำวันที่และเวลานี้ไว้ใช้อ้างอิงตลอดการวิเคราะห์ — ข้อมูลที่ "ล่าสุด" คือข้อมูลของวันนี้หรือเมื่อคืน ไม่ใช่วันที่เก่าที่สุดในไฟล์
 
-### ขั้นที่ 2: Decrypt ข้อมูลสุขภาพ
+### ขั้นที่ 2: ดึงข้อมูลล่าสุดจาก origin/main และ Decrypt
+
+**ต้องรันทุกครั้ง ห้ามใช้ไฟล์ cache เก่าจาก scratchpad**
 
 ```bash
-cd /home/user/The-Repooooo && python3 -c "
+cd /home/user/The-Repooooo && \
+git fetch origin main && \
+git show origin/main:health/health_data.md.enc > /tmp/health_data.md.enc && \
+git show origin/main:health/sleep_stages.md.enc > /tmp/health_sleep_stages.md.enc && \
+python3 -c "
 import os
 from cryptography.fernet import Fernet
 
@@ -32,15 +38,14 @@ if not key:
     exit(1)
 
 f = Fernet(key)
-for name in ['health_data.md', 'sleep_stages.md']:
-    enc_path = f'health/{name}.enc'
-    if os.path.exists(enc_path):
-        with open(enc_path, 'rb') as fp:
+for name, path in [('health_data.md', '/tmp/health_data.md.enc'), ('sleep_stages.md', '/tmp/health_sleep_stages.md.enc')]:
+    if os.path.exists(path):
+        with open(path, 'rb') as fp:
             data = fp.read()
         print(f.decrypt(data).decode('utf-8'))
         print(f'---END {name}---')
     else:
-        print(f'not found: {enc_path}')
+        print(f'not found: {path}')
 "
 ```
 
