@@ -45,6 +45,13 @@ GET {BASE_URL}/{data_type}/dataPoints
 - FOLDER_ID: `1Wnuivjjo0EclgTNmZcM6Sg6PYwpWhMmR`
 - `health_data.json` is stored here as source of truth (not in git)
 
+## เวลาและวันที่ (เคยพลาดซ้ำหลายรอบ)
+
+- **เครื่องรันเป็น UTC** ผู้ใช้อยู่ไทย (ICT = UTC+7)
+- เช็คเวลาไทยด้วย `TZ=Asia/Bangkok date '+%Y-%m-%d %H:%M %A'` เสมอ
+- **ห้าม** รัน `date '+%H:%M ICT'` แล้วอ่านค่าว่าเป็นเวลาไทย — format string ไม่แปลงโซนเวลา จะได้เวลา UTC ที่ติดป้าย ICT ผิดๆ คลาดเคลื่อน 7 ชั่วโมง
+- ห้ามเดาวันที่จากบทสนทนา ให้เช็คจริงทุกครั้งก่อนวิเคราะห์ข้อมูลสุขภาพ
+
 ## Git workflow
 - Feature branch: `claude/handoff-continuation-kolrx6`
 - After each fix, rebase onto `origin/main` before creating PR (conflicts are common since main gets commits from workflow runs)
