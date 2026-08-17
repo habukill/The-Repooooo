@@ -19,6 +19,12 @@ DRIVE_SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 BASE_URL = "https://health.googleapis.com/v4/users/me/dataTypes"
 DIR = os.path.dirname(__file__)
 
+# Apps whose body-composition readings come from the smart scale, best first.
+# Anything absent here is treated as a lower-trust source: com.touchberry.powersync
+# reported a static 74.0 kg on every date from Apr to Jul 2026 and masked the
+# real weigh-ins on the days it overlapped them.
+SCALE_PACKAGES = ["HM.wristband"]
+
 
 def get_credentials():
     creds = None
@@ -235,21 +241,52 @@ def fetch_and_merge(creds):
             db["calories"].setdefault(date, {})["total"] = int(kcal)
 
     # --- Body Composition ---
+    # Several apps write body measurements into Health, and a date can carry a
+    # reading from more than one of them. Prefer the smart scale; a plain last
+    # write wins would let another app's value mask the real weigh-in.
     db.setdefault("body", {})
+
+    def source_rank(point, key):
+        app = point.get(key, {}).get("dataSource", {}).get("application", {})
+        return SCALE_PACKAGES.index(app.get("packageName")) if app.get("packageName") in SCALE_PACKAGES else len(SCALE_PACKAGES)
+
+    best_weight = {}
     for p in fetch(creds, "weight", paginate=True):
         d = p.get("weight", {})
         date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
-        if date_obj:
-            grams = d.get("weightGrams")
-            if grams:
-                db["body"].setdefault(fmt_date(date_obj), {})["weight_kg"] = round(float(grams) / 1000, 1)
+        grams = d.get("weightGrams")
+        if date_obj and grams:
+            date = fmt_date(date_obj)
+            rank = source_rank(p, "weight")
+            if rank < best_weight.get(date, (len(SCALE_PACKAGES) + 1,))[0]:
+                best_weight[date] = (rank, round(float(grams) / 1000, 1))
+    for date, (rank, kg) in best_weight.items():
+        # Drop dates where only a non-scale app reported, so a stale static
+        # value cannot pose as a weigh-in that never happened.
+        if rank < len(SCALE_PACKAGES):
+            db["body"].setdefault(date, {})["weight_kg"] = kg
+        elif "weight_kg" in db["body"].get(date, {}):
+            del db["body"][date]["weight_kg"]
+
+    best_fat = {}
     for p in fetch(creds, "body-fat", paginate=True):
         d = p.get("bodyFat", {})
         date_obj = d.get("sampleTime", {}).get("civilTime", {}).get("date", {})
-        if date_obj:
-            pct = d.get("percentage")
-            if pct is not None:
-                db["body"].setdefault(fmt_date(date_obj), {})["fat_pct"] = round(float(pct), 1)
+        pct = d.get("percentage")
+        if date_obj and pct is not None:
+            date = fmt_date(date_obj)
+            rank = source_rank(p, "bodyFat")
+            if rank < best_fat.get(date, (len(SCALE_PACKAGES) + 1,))[0]:
+                best_fat[date] = (rank, round(float(pct), 1))
+    for date, (rank, pct) in best_fat.items():
+        if rank < len(SCALE_PACKAGES):
+            db["body"].setdefault(date, {})["fat_pct"] = pct
+        elif "fat_pct" in db["body"].get(date, {}):
+            del db["body"][date]["fat_pct"]
+
+    # Clear out dates left with no measurement at all.
+    for date in [d for d, v in db["body"].items() if not v]:
+        del db["body"][date]
 
     # --- Wellness ---
     db.setdefault("wellness", {})
