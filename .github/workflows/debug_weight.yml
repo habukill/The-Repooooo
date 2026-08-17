@@ -1,0 +1,28 @@
+name: Debug Weight Data
+
+# Manual only. Dumps the raw weight dataPoints from the Health API so we can
+# see why every date before 2026-07-20 came back as exactly 74.0 kg.
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r health/requirements.txt
+
+      - name: Write credentials
+        run: |
+          echo '${{ secrets.GOOGLE_HEALTH_CREDENTIALS }}' > health/credentials.json
+          echo '${{ secrets.GOOGLE_HEALTH_TOKEN }}' > health/token.json
+
+      - name: Dump raw weight data points
+        run: cd health && python debug_weight.py
