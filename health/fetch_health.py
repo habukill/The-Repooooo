@@ -141,6 +141,20 @@ def fetch_and_merge(creds):
         minutes_asleep = int(summary.get("minutesAsleep", 0))
         minutes_in_bed = int(summary.get("minutesInSleepPeriod", 0))
         stages = {st["type"]: int(st["minutes"]) for st in summary.get("stagesSummary", [])}
+        new_stages = [
+            {
+                "start": datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
+                "end": datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
+                "type": st.get("type", ""),
+                "minutes": int((
+                    datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")) -
+                    datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00"))
+                ).total_seconds() / 60),
+            }
+            for st in s.get("stages", [])
+            if st.get("startTime") and st.get("endTime")
+        ]
+        existing = db["sleep"].get(key, {})
         db["sleep"][key] = {
             "date": dt_start.strftime("%Y-%m-%d"),
             "start": dt_start.strftime("%H:%M"),
@@ -153,19 +167,7 @@ def fetch_and_merge(creds):
             "rem_m": stages.get("REM", 0),
             "awake_m": stages.get("AWAKE", 0),
             "restless_m": stages.get("RESTLESS", 0),
-            "stages": [
-                {
-                    "start": datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
-                    "end": datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")).astimezone(ICT).strftime("%H:%M"),
-                    "type": st.get("type", ""),
-                    "minutes": int((
-                        datetime.fromisoformat(st.get("endTime", "").replace("Z", "+00:00")) -
-                        datetime.fromisoformat(st.get("startTime", "").replace("Z", "+00:00"))
-                    ).total_seconds() / 60),
-                }
-                for st in s.get("stages", [])
-                if st.get("startTime") and st.get("endTime")
-            ],
+            "stages": new_stages if new_stages else existing.get("stages", []),
         }
 
     # --- Resting HR ---
@@ -184,32 +186,46 @@ def fetch_and_merge(creds):
             db["hrv"][fmt_date(d["date"])] = round(val, 1)
 
     # --- Steps ---
+    # The API returns every intraday segment on each call, so sum this run's
+    # segments in a fresh dict and overwrite. Adding into db would re-add the
+    # same segments on every workflow run and inflate the totals without bound.
     db.setdefault("steps", {})
+    run_steps = {}
     for p in fetch(creds, "steps", paginate=True):
         d = p.get("steps", {})
         date_obj = d.get("interval", {}).get("civilStartTime", {}).get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            db["steps"][date] = db["steps"].get(date, 0) + int(d.get("count", 0))
+            run_steps[date] = run_steps.get(date, 0) + int(d.get("count", 0))
+    # Replace wholesale so previously inflated totals get cleaned out, but only
+    # when the fetch actually returned something (it returns partial results on
+    # an API error, and an empty result must not wipe the stored history).
+    if run_steps:
+        db["steps"] = run_steps
 
     # --- Active Zone Minutes ---
     db.setdefault("azm", {})
+    run_azm = {}
     for p in fetch(creds, "active-zone-minutes", paginate=True):
         d = p.get("activeZoneMinutes", {})
         date_obj = d.get("interval", {}).get("civilStartTime", {}).get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            db["azm"][date] = db["azm"].get(date, 0) + int(d.get("activeZoneMinutes", 0))
+            run_azm[date] = run_azm.get(date, 0) + int(d.get("activeZoneMinutes", 0))
+    if run_azm:
+        db["azm"] = run_azm
 
     # --- Calories ---
     db.setdefault("calories", {})
+    run_active_cal = {}
     for p in fetch(creds, "active-energy-burned", paginate=True):
         d = p.get("activeEnergyBurned", {})
         date_obj = d.get("interval", {}).get("civilStartTime", {}).get("date", {})
         if date_obj:
             date = fmt_date(date_obj)
-            existing = db["calories"].setdefault(date, {})
-            existing["active"] = existing.get("active", 0) + round(d.get("kcal", 0), 1)
+            run_active_cal[date] = run_active_cal.get(date, 0) + round(d.get("kcal", 0), 1)
+    for date, kcal in run_active_cal.items():
+        db["calories"].setdefault(date, {})["active"] = round(kcal, 1)
     for p in fetch_daily_rollup(creds, "total-calories", max_range_days=14):
         date_obj = p.get("civilStartTime", {}).get("date")
         d = p.get("totalCalories", {})

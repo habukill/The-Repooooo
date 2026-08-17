@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+
 health/health_data.md
 health/sleep_stages.md
 health/health_data.json
