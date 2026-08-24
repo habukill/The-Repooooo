@@ -247,7 +247,10 @@ def fetch_and_merge(creds):
     db.setdefault("body", {})
 
     def source_rank(point, key):
-        app = point.get(key, {}).get("dataSource", {}).get("application", {})
+        # dataSource sits on the point itself, as a sibling of "weight"/"bodyFat" -
+        # not nested inside it. Reading it from the wrong level makes every point
+        # look sourceless and drops every reading, scale included.
+        app = point.get("dataSource", {}).get("application", {})
         return SCALE_PACKAGES.index(app.get("packageName")) if app.get("packageName") in SCALE_PACKAGES else len(SCALE_PACKAGES)
 
     best_weight = {}
