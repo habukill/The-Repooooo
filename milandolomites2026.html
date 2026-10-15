@@ -218,12 +218,77 @@
 
     <!-- ===================== TOP-LEVEL TABS ===================== -->
     <div class="tab-bar">
+        <button class="tab-btn" data-tab="tab-tax" onclick="showTab('tab-tax')">🧮 คิดภาษี</button>
         <button class="tab-btn active" data-tab="tab-overview" onclick="showTab('tab-overview')">🏠 ภาพรวม</button>
         <button class="tab-btn" data-tab="tab-lodging" onclick="showTab('tab-lodging')">🏨 ที่พัก</button>
         <button class="tab-btn" data-tab="tab-highlights" onclick="showTab('tab-highlights')">🏆 ไฮไลท์</button>
         <button class="tab-btn" data-tab="tab-days" onclick="showTab('tab-days')">📅 แผนรายวัน</button>
         <button class="tab-btn" data-tab="tab-checklist" onclick="showTab('tab-checklist')">✅ เตรียมตัว/จอง</button>
         <button class="tab-btn" data-tab="tab-extra" onclick="showTab('tab-extra')">📋 เก็บตก/ตัดออก</button>
+    </div>
+
+    <!-- ===================== TAB: TAX REFUND CALCULATOR ===================== -->
+    <div id="tab-tax" class="tab-panel">
+        <section class="block" style="margin-bottom:0;">
+            <h2 class="section-title">🛍️ เครื่องคิดเลขคืนภาษี (Tax Refund)</h2>
+            <p class="section-sub">กรอกราคาของเป็นยูโร (ราคาติดป้าย รวม VAT แล้ว) ดูราคาสุทธิหลังได้ภาษีคืน เป็นยูโรและบาท</p>
+            <div class="calc-grid">
+                <div class="calc-field">
+                    <label for="calc-price">ราคาของ (€)</label>
+                    <input id="calc-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="เช่น 42" oninput="calcTaxRefund()">
+                </div>
+                <div class="calc-field">
+                    <label for="calc-rate">เรต (บาทต่อ 1 €)</label>
+                    <input id="calc-rate" type="number" inputmode="decimal" min="0" step="0.01" value="38" oninput="calcTaxRefund()">
+                </div>
+                <div class="calc-field">
+                    <label for="calc-fee">ค่าธรรมเนียมบัตร (%)</label>
+                    <input id="calc-fee" type="number" inputmode="decimal" min="0" step="0.1" value="2.5" oninput="calcTaxRefund()">
+                </div>
+            </div>
+            <label class="calc-check"><input id="calc-qual" type="checkbox" checked onchange="calcTaxRefund()"> <span>ยอดใบกำกับของร้านนี้ (รวมทุกชิ้นที่ซื้อ) <strong>เกิน €70.01</strong> แล้ว ถึงจะขอคืนภาษีได้</span></label>
+            <div id="calc-warn" class="mini-alert" style="display:none; background:#fdecea; border-left-color:#c0392b; color:#7b241c;">
+                ⚠️ ยอดใบกำกับยังไม่ถึงเกณฑ์ ขอคืนภาษีไม่ได้ ต้องจ่ายเต็มราคา
+            </div>
+            <div class="table-wrap">
+                <table class="summary-table calc-table">
+                    <tr>
+                        <th>กรณี</th>
+                        <th>คืนภาษี</th>
+                        <th>สุทธิ €</th>
+                        <th>สุทธิ ฿</th>
+                    </tr>
+                    <tr>
+                        <td><strong>ไม่ขอคืนภาษี</strong></td>
+                        <td id="calc-r0-refund">–</td>
+                        <td id="calc-r0-eur">–</td>
+                        <td id="calc-r0-thb">–</td>
+                    </tr>
+                    <tr>
+                        <td>คืนน้อยสุด<br>(11.6%)</td>
+                        <td id="calc-r1-refund">–</td>
+                        <td id="calc-r1-eur">–</td>
+                        <td id="calc-r1-thb">–</td>
+                    </tr>
+                    <tr style="background:#e0f7ee;">
+                        <td><strong>คืนปานกลาง<br>(13.5%)</strong></td>
+                        <td id="calc-r2-refund">–</td>
+                        <td id="calc-r2-eur"><strong>–</strong></td>
+                        <td id="calc-r2-thb"><strong>–</strong></td>
+                    </tr>
+                    <tr>
+                        <td>คืนมากสุด<br>(15.5%)</td>
+                        <td id="calc-r3-refund">–</td>
+                        <td id="calc-r3-eur">–</td>
+                        <td id="calc-r3-thb">–</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="calc-vat" class="price-callout" style="display:none;"></div>
+            <div class="mini-alert">
+                📌 <strong>อ่านก่อนใช้:</strong> VAT อิตาลี 22% รวมอยู่ในราคาแล้ว (คิดเป็น ~18.03% ของราคา) แต่ตัวกลางคืนภาษี (Global Blue, Planet) หักค่าธรรมเนียม ได้คืนจริงราว <strong>11.6-15.5% ของราคา</strong> ตัวเลขนี้มาจากบทความทั่วไป ไม่ใช่ตัวเลขทางการ ดูอัตราจริงที่ใบ tax-free ของร้านหรือเคาน์เตอร์ · เงินคืนได้ <strong>หลังทำเรื่องที่สนามบิน</strong> ตอนจ่ายที่ร้านยังจ่ายเต็ม · เรต 38 และค่าธรรมเนียม 2.5% เป็นค่าตัวอย่าง ปรับเป็นของจริงของบัตรคุณ
+            </div>
+        </section>
     </div>
 
     <!-- ===================== TAB: OVERVIEW ===================== -->
@@ -1169,67 +1234,6 @@
             </div>
             <div class="price-callout">
                 🧠 <strong>คาดหวังได้แค่ไหน:</strong> ถ้าทำครบ นอนบนเครื่องได้คุณภาพประมาณ <strong>70-80% ของการนอนที่บ้าน</strong> ส่วนที่แก้ไม่ได้คือท่านั่ง (หลับลึกได้น้อยกว่าท่านอนราบ) และออกซิเจนในห้องโดยสารที่ต่ำกว่าปกติ ที่ขาดไปร่างกายจะชดเชยเองในคืนแรกที่อิตาลี
-            </div>
-        </section>
-
-        <section class="block" style="margin-top:24px; margin-bottom:0;">
-            <h2 class="section-title">🛍️ เครื่องคิดเลขคืนภาษี (Tax Refund)</h2>
-            <p class="section-sub">กรอกราคาของเป็นยูโร (ราคาติดป้าย รวม VAT แล้ว) ดูราคาสุทธิหลังได้ภาษีคืน เป็นยูโรและบาท</p>
-            <div class="calc-grid">
-                <div class="calc-field">
-                    <label for="calc-price">ราคาของ (€)</label>
-                    <input id="calc-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="เช่น 42" oninput="calcTaxRefund()">
-                </div>
-                <div class="calc-field">
-                    <label for="calc-rate">เรต (บาทต่อ 1 €)</label>
-                    <input id="calc-rate" type="number" inputmode="decimal" min="0" step="0.01" value="38" oninput="calcTaxRefund()">
-                </div>
-                <div class="calc-field">
-                    <label for="calc-fee">ค่าธรรมเนียมบัตร (%)</label>
-                    <input id="calc-fee" type="number" inputmode="decimal" min="0" step="0.1" value="2.5" oninput="calcTaxRefund()">
-                </div>
-            </div>
-            <label class="calc-check"><input id="calc-qual" type="checkbox" checked onchange="calcTaxRefund()"> <span>ยอดใบกำกับของร้านนี้ (รวมทุกชิ้นที่ซื้อ) <strong>เกิน €70.01</strong> แล้ว ถึงจะขอคืนภาษีได้</span></label>
-            <div id="calc-warn" class="mini-alert" style="display:none; background:#fdecea; border-left-color:#c0392b; color:#7b241c;">
-                ⚠️ ยอดใบกำกับยังไม่ถึงเกณฑ์ ขอคืนภาษีไม่ได้ ต้องจ่ายเต็มราคา
-            </div>
-            <div class="table-wrap">
-                <table class="summary-table calc-table">
-                    <tr>
-                        <th>กรณี</th>
-                        <th>คืนภาษี</th>
-                        <th>สุทธิ €</th>
-                        <th>สุทธิ ฿</th>
-                    </tr>
-                    <tr>
-                        <td><strong>ไม่ขอคืนภาษี</strong></td>
-                        <td id="calc-r0-refund">–</td>
-                        <td id="calc-r0-eur">–</td>
-                        <td id="calc-r0-thb">–</td>
-                    </tr>
-                    <tr>
-                        <td>คืนน้อยสุด<br>(11.6%)</td>
-                        <td id="calc-r1-refund">–</td>
-                        <td id="calc-r1-eur">–</td>
-                        <td id="calc-r1-thb">–</td>
-                    </tr>
-                    <tr style="background:#e0f7ee;">
-                        <td><strong>คืนปานกลาง<br>(13.5%)</strong></td>
-                        <td id="calc-r2-refund">–</td>
-                        <td id="calc-r2-eur"><strong>–</strong></td>
-                        <td id="calc-r2-thb"><strong>–</strong></td>
-                    </tr>
-                    <tr>
-                        <td>คืนมากสุด<br>(15.5%)</td>
-                        <td id="calc-r3-refund">–</td>
-                        <td id="calc-r3-eur">–</td>
-                        <td id="calc-r3-thb">–</td>
-                    </tr>
-                </table>
-            </div>
-            <div id="calc-vat" class="price-callout" style="display:none;"></div>
-            <div class="mini-alert">
-                📌 <strong>อ่านก่อนใช้:</strong> VAT อิตาลี 22% รวมอยู่ในราคาแล้ว (คิดเป็น ~18.03% ของราคา) แต่ตัวกลางคืนภาษี (Global Blue, Planet) หักค่าธรรมเนียม ได้คืนจริงราว <strong>11.6-15.5% ของราคา</strong> ตัวเลขนี้มาจากบทความทั่วไป ไม่ใช่ตัวเลขทางการ ดูอัตราจริงที่ใบ tax-free ของร้านหรือเคาน์เตอร์ · เงินคืนได้ <strong>หลังทำเรื่องที่สนามบิน</strong> ตอนจ่ายที่ร้านยังจ่ายเต็ม · เรต 38 และค่าธรรมเนียม 2.5% เป็นค่าตัวอย่าง ปรับเป็นของจริงของบัตรคุณ
             </div>
         </section>
     </div>
