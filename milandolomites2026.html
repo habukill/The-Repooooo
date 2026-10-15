@@ -117,6 +117,10 @@
         .calc-field input { width: 100%; padding: 10px 12px; border: 1px solid #cfd6dd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; background: #fff; }
         .calc-check { display: flex; gap: 8px; align-items: flex-start; font-size: 0.85rem; line-height: 1.5; margin: 6px 0 10px; }
         .calc-check input { margin-top: 3px; }
+        .split-row { background: #f8f9fb; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #e6e9ee; }
+        .split-inputs { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; }
+        .split-inputs input { width: 100%; padding: 9px 10px; border: 1px solid #cfd6dd; border-radius: 9px; font-size: 0.95rem; box-sizing: border-box; background: #fff; }
+        .split-out { font-size: 0.88rem; margin-top: 6px; line-height: 1.5; color: #2d3436; }
         table.summary-table.calc-table { min-width: 0; width: 100%; table-layout: fixed; font-size: 0.78rem; }
         table.summary-table.calc-table th { white-space: normal; font-size: 0.72rem; }
         table.summary-table.calc-table th:first-child, table.summary-table.calc-table td:first-child { width: 31%; }
@@ -230,20 +234,50 @@
     <!-- ===================== TAB: TAX REFUND CALCULATOR ===================== -->
     <div id="tab-tax" class="tab-panel">
         <section class="block" style="margin-bottom:0;">
-            <h2 class="section-title">🛍️ เครื่องคิดเลขคืนภาษี (Tax Refund)</h2>
-            <p class="section-sub">กรอกราคาของเป็นยูโร (ราคาติดป้าย รวม VAT แล้ว) ดูราคาสุทธิหลังได้ภาษีคืน เป็นยูโรและบาท</p>
+            <h2 class="section-title">🛍️ แบ่งค่าของกับเพื่อน (ตามใบ tax-free)</h2>
+            <p class="section-sub">ต่างคนต่างซื้อแต่รวมใบเดียวกัน ใช้ตัวเลข 2 ช่องบนใบ tax-free แล้วกรอกยอดของแต่ละคน ระบบหักภาษีคืนตามสัดส่วนให้</p>
+            <div class="calc-grid">
+                <div class="calc-field">
+                    <label for="calc-rate">เรต (บาทต่อ 1 €)</label>
+                    <input id="calc-rate" type="number" inputmode="decimal" min="0" step="0.01" value="38" oninput="calcAll()">
+                </div>
+                <div class="calc-field">
+                    <label for="calc-fee">ค่าธรรมเนียมบัตร (%)</label>
+                    <input id="calc-fee" type="number" inputmode="decimal" min="0" step="0.1" value="2.5" oninput="calcAll()">
+                </div>
+            </div>
+            <div class="price-callout">
+                🧾 <strong>ดูในใบ tax-free (บรรทัดท้ายของส่วน Purchase details):</strong><br>
+                • <strong>TOTAL PRICE INCL. VAT</strong> = ยอดรวมทั้งใบ (รวม VAT)<br>
+                • <strong>REFUND AMT</strong> = ยอดที่จะได้คืนตามใบ
+            </div>
+            <div class="calc-grid">
+                <div class="calc-field">
+                    <label for="split-total">TOTAL PRICE INCL. VAT (€)</label>
+                    <input id="split-total" type="number" inputmode="decimal" min="0" step="0.01" placeholder="เช่น 148" oninput="calcSplit()">
+                </div>
+                <div class="calc-field">
+                    <label for="split-refund">REFUND AMT (€)</label>
+                    <input id="split-refund" type="number" inputmode="decimal" min="0" step="0.01" placeholder="เช่น 17.26" oninput="calcSplit()">
+                </div>
+            </div>
+            <div id="split-rate" class="mini-alert" style="display:none; background:#e8f0fe; border-left-color:#4a69bd; color:#1e3a8a;"></div>
+            <div id="split-people"></div>
+            <div id="split-total-row" class="price-callout" style="display:none;"></div>
+            <div id="split-warn" class="mini-alert" style="display:none; background:#fdecea; border-left-color:#c0392b; color:#7b241c;"></div>
+            <div class="mini-alert">
+                📌 <strong>วิธีกรอกยอดแต่ละคน:</strong> พิมพ์ราคาของชิ้นที่คนนั้นซื้อ คั่นด้วย <strong>+</strong> หรือเว้นวรรค เช่น <strong>26+35+26</strong> (ใช้จุดหรือจุลภาคเป็นทศนิยมได้ เช่น 26,00) · ยอดรวมของทุกคนต้องเท่ากับ TOTAL ในใบ · เงินคืนเข้าบัตร/เงินสดของ<strong>คนเดียวที่ทำเรื่อง</strong>ที่สนามบิน ตัวเลขในนี้คือส่วนที่แต่ละคนควรโอนหักกันเอง · ได้คืนจริงต่อเมื่อ<strong>ทำเรื่องที่สนามบินสำเร็จ</strong> (ประทับตราศุลกากร) ไม่งั้นต้องจ่ายเต็ม
+            </div>
+        </section>
+        <div style="height:20px"></div>
+
+        <section class="block" style="margin-bottom:0;">
+            <h2 class="section-title">🧮 คิดราคาก่อนซื้อ (ชิ้นเดียว)</h2>
+            <p class="section-sub">กรอกราคาของเป็นยูโร (ราคาติดป้าย รวม VAT แล้ว) ดูราคาสุทธิหลังได้ภาษีคืนโดยประมาณ ใช้เรตและค่าธรรมเนียมจากช่องด้านบน</p>
             <div class="calc-grid">
                 <div class="calc-field">
                     <label for="calc-price">ราคาของ (€)</label>
                     <input id="calc-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="เช่น 42" oninput="calcTaxRefund()">
-                </div>
-                <div class="calc-field">
-                    <label for="calc-rate">เรต (บาทต่อ 1 €)</label>
-                    <input id="calc-rate" type="number" inputmode="decimal" min="0" step="0.01" value="38" oninput="calcTaxRefund()">
-                </div>
-                <div class="calc-field">
-                    <label for="calc-fee">ค่าธรรมเนียมบัตร (%)</label>
-                    <input id="calc-fee" type="number" inputmode="decimal" min="0" step="0.1" value="2.5" oninput="calcTaxRefund()">
                 </div>
             </div>
             <label class="calc-check"><input id="calc-qual" type="checkbox" checked onchange="calcTaxRefund()"> <span>ยอดใบกำกับของร้านนี้ (รวมทุกชิ้นที่ซื้อ) <strong>เกิน €70.01</strong> แล้ว ถึงจะขอคืนภาษีได้</span></label>
@@ -286,7 +320,7 @@
             </div>
             <div id="calc-vat" class="price-callout" style="display:none;"></div>
             <div class="mini-alert">
-                📌 <strong>อ่านก่อนใช้:</strong> VAT อิตาลี 22% รวมอยู่ในราคาแล้ว (คิดเป็น ~18.03% ของราคา) แต่ตัวกลางคืนภาษี (Global Blue, Planet) หักค่าธรรมเนียม ได้คืนจริงราว <strong>11.6-15.5% ของราคา</strong> ตัวเลขนี้มาจากบทความทั่วไป ไม่ใช่ตัวเลขทางการ ดูอัตราจริงที่ใบ tax-free ของร้านหรือเคาน์เตอร์ · เงินคืนได้ <strong>หลังทำเรื่องที่สนามบิน</strong> ตอนจ่ายที่ร้านยังจ่ายเต็ม · เรต 38 และค่าธรรมเนียม 2.5% เป็นค่าตัวอย่าง ปรับเป็นของจริงของบัตรคุณ
+                📌 <strong>อ่านก่อนใช้:</strong> VAT อิตาลี 22% รวมอยู่ในราคาแล้ว (คิดเป็น ~18.03% ของราคา) แต่ตัวกลางคืนภาษี (Global Blue, Planet) หักค่าธรรมเนียม ได้คืนจริงราว <strong>11.6-15.5% ของราคา</strong> ตัวเลขนี้มาจากบทความทั่วไป ไม่ใช่ตัวเลขทางการ ดูอัตราจริงที่ใบ tax-free ของร้านหรือเคาน์เตอร์ (ใบตัวอย่างของ Planet ที่ซื้อที่มิลาน ได้คืน 11.66% ของราคา) · เงินคืนได้ <strong>หลังทำเรื่องที่สนามบิน</strong> ตอนจ่ายที่ร้านยังจ่ายเต็ม · เรต 38 และค่าธรรมเนียม 2.5% เป็นค่าตัวอย่าง ปรับเป็นของจริงของบัตรคุณ
             </div>
         </section>
     </div>
@@ -1358,6 +1392,63 @@
                 if (s && s.fee >= 0) { document.getElementById('calc-fee').value = s.fee; }
             } catch (e) {}
         })();
+        var SPLIT_N = 5;
+        function sumAmounts(s) {
+            if (!s) return 0;
+            var parts = s.replace(/,/g, '.').split(/[+\s;]+/), t = 0;
+            for (var i = 0; i < parts.length; i++) { var v = parseFloat(parts[i]); if (!isNaN(v)) t += v; }
+            return t;
+        }
+        function buildSplit() {
+            var h = '';
+            for (var i = 1; i <= SPLIT_N; i++) {
+                h += '<div class="split-row"><div class="split-inputs">' +
+                    '<input type="text" id="split-name-' + i + '" value="คน ' + i + '" oninput="calcSplit()" aria-label="ชื่อ">' +
+                    '<input type="text" id="split-amt-' + i + '" inputmode="decimal" placeholder="ยอด € เช่น 26+35" oninput="calcSplit()" aria-label="ยอด">' +
+                    '</div><div class="split-out" id="split-out-' + i + '"></div></div>';
+            }
+            document.getElementById('split-people').innerHTML = h;
+        }
+        function calcSplit() {
+            var total = parseFloat(document.getElementById('split-total').value);
+            var refund = parseFloat(document.getElementById('split-refund').value);
+            var rate = parseFloat(document.getElementById('calc-rate').value) || 0;
+            var fee = parseFloat(document.getElementById('calc-fee').value) || 0;
+            var ok = !isNaN(total) && total > 0 && !isNaN(refund) && refund >= 0;
+            var pct = ok ? refund / total : 0;
+            var rateBox = document.getElementById('split-rate');
+            if (ok) {
+                var vat = total * 22 / 122;
+                rateBox.style.display = 'block';
+                rateBox.textContent = 'อัตราคืนจริงตามใบ = ' + (pct * 100).toFixed(2) + '% ของราคา (' + (refund / vat * 100).toFixed(1) + '% ของ VAT € ' + vat.toFixed(2) + ')';
+            } else {
+                rateBox.style.display = 'none';
+            }
+            var sumAmt = 0, sumNet = 0, sumThb = 0, sumRef = 0;
+            for (var i = 1; i <= SPLIT_N; i++) {
+                var amt = sumAmounts(document.getElementById('split-amt-' + i).value);
+                var out = document.getElementById('split-out-' + i);
+                if (!amt) { out.textContent = ''; continue; }
+                sumAmt += amt;
+                if (!ok) { out.textContent = 'ซื้อ € ' + amt.toFixed(2) + ' (ใส่ TOTAL และ REFUND ของใบก่อน)'; continue; }
+                var r = amt * pct, net = amt - r, thb = net * rate * (1 + fee / 100);
+                sumRef += r; sumNet += net; sumThb += thb;
+                out.innerHTML = 'ซื้อ € ' + amt.toFixed(2) + ' → คืน € ' + r.toFixed(2) + ' → <strong>สุทธิ € ' + net.toFixed(2) + ' = ' + Math.round(thb).toLocaleString('en-US') + ' บาท</strong>';
+            }
+            var tr = document.getElementById('split-total-row');
+            var warn = document.getElementById('split-warn');
+            if (ok && sumAmt > 0) {
+                tr.style.display = 'block';
+                tr.innerHTML = '<strong>รวมทุกคน:</strong> ซื้อ € ' + sumAmt.toFixed(2) + ' · คืน € ' + sumRef.toFixed(2) + ' · สุทธิ € ' + sumNet.toFixed(2) + ' = ' + Math.round(sumThb).toLocaleString('en-US') + ' บาท';
+                var diff = sumAmt - total;
+                if (Math.abs(diff) > 0.009) {
+                    warn.style.display = 'block';
+                    warn.textContent = '⚠️ ยอดที่กรอกรวม € ' + sumAmt.toFixed(2) + ' ไม่เท่ากับ TOTAL ในใบ € ' + total.toFixed(2) + ' (ต่าง ' + (diff > 0 ? '+' : '') + diff.toFixed(2) + ') ตรวจว่าลืมชิ้นไหนหรือกรอกซ้ำ';
+                } else { warn.style.display = 'none'; }
+            } else { tr.style.display = 'none'; warn.style.display = 'none'; }
+        }
+        function calcAll() { calcTaxRefund(); calcSplit(); }
+        buildSplit();
         function showDay(id) {
             document.querySelectorAll('.day-panel').forEach(function(p) { p.classList.remove('active'); });
             document.querySelectorAll('.day-tab-btn').forEach(function(b) { b.classList.remove('active'); });
