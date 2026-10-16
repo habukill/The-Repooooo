@@ -117,6 +117,20 @@
         .calc-field input { width: 100%; padding: 10px 12px; border: 1px solid #cfd6dd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; background: #fff; }
         .calc-check { display: flex; gap: 8px; align-items: flex-start; font-size: 0.85rem; line-height: 1.5; margin: 6px 0 10px; }
         .calc-check input { margin-top: 3px; }
+        .ag-ctrl { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 10px 0; font-size: 0.85rem; }
+        .ag-ctrl input[type=range] { width: 140px; vertical-align: middle; }
+        .ag-card { background: #f8f9fb; border: 1px solid #e6e9ee; border-left: 5px solid #6c5ce7; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+        .ag-card.gal { border-left-color: #f39c12; }
+        .ag-card.active { background: #eef0ff; border-color: #6c5ce7; box-shadow: 0 0 0 2px rgba(108,92,231,0.25); }
+        .ag-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .ag-title { font-weight: 800; font-size: 0.98rem; line-height: 1.35; }
+        .ag-area { font-size: 0.72rem; color: #636e72; margin-top: 2px; }
+        .ag-hint { font-size: 0.82rem; color: #4a4f55; margin: 8px 0; line-height: 1.55; }
+        .ag-btns { display: flex; gap: 8px; margin-top: 6px; }
+        .ag-btn { border: none; border-radius: 20px; padding: 9px 16px; font-weight: 700; font-size: 0.85rem; cursor: pointer; background: #6c5ce7; color: #fff; font-family: inherit; }
+        .ag-btn.sec { background: #e6e9ee; color: #2d3436; }
+        .ag-card details { margin-top: 8px; font-size: 0.85rem; line-height: 1.75; }
+        .ag-card summary { cursor: pointer; color: #6c5ce7; font-weight: 700; }
         .split-row { background: #f8f9fb; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #e6e9ee; }
         .split-inputs { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; }
         .split-inputs input { width: 100%; padding: 9px 10px; border: 1px solid #cfd6dd; border-radius: 9px; font-size: 0.95rem; box-sizing: border-box; background: #fff; }
@@ -223,6 +237,7 @@
     <!-- ===================== TOP-LEVEL TABS ===================== -->
     <div class="tab-bar">
         <button class="tab-btn" data-tab="tab-tax" onclick="showTab('tab-tax')">🧮 คิดภาษี</button>
+        <button class="tab-btn" data-tab="tab-audio" onclick="showTab('tab-audio')">🎧 ไกด์เสียง</button>
         <button class="tab-btn active" data-tab="tab-overview" onclick="showTab('tab-overview')">🏠 ภาพรวม</button>
         <button class="tab-btn" data-tab="tab-lodging" onclick="showTab('tab-lodging')">🏨 ที่พัก</button>
         <button class="tab-btn" data-tab="tab-highlights" onclick="showTab('tab-highlights')">🏆 ไฮไลท์</button>
@@ -321,6 +336,23 @@
             <div id="calc-vat" class="price-callout" style="display:none;"></div>
             <div class="mini-alert">
                 📌 <strong>อ่านก่อนใช้:</strong> VAT อิตาลี 22% รวมอยู่ในราคาแล้ว (คิดเป็น ~18.03% ของราคา) แต่ตัวกลางคืนภาษี (Global Blue, Planet) หักค่าธรรมเนียม ได้คืนจริงราว <strong>11.6-15.5% ของราคา</strong> ตัวเลขนี้มาจากบทความทั่วไป ไม่ใช่ตัวเลขทางการ ดูอัตราจริงที่ใบ tax-free ของร้านหรือเคาน์เตอร์ (ใบตัวอย่างของ Planet ที่ซื้อที่มิลาน ได้คืน 11.66% ของราคา) · เงินคืนได้ <strong>หลังทำเรื่องที่สนามบิน</strong> ตอนจ่ายที่ร้านยังจ่ายเต็ม · เรต 38 และค่าธรรมเนียม 2.5% เป็นค่าตัวอย่าง ปรับเป็นของจริงของบัตรคุณ
+            </div>
+        </section>
+    </div>
+
+    <!-- ===================== TAB: AUDIO GUIDE ===================== -->
+    <div id="tab-audio" class="tab-panel">
+        <section class="block" style="margin-bottom:0;">
+            <h2 class="section-title">🎧 ไกด์เสียงภาษาไทย: Duomo + Galleria</h2>
+            <p class="section-sub">กด ▶ ฟัง ทีละจุด เรียงตามลำดับที่เดินจริง ใช้หูฟังและเปิดเสียงเบาในมหาวิหาร</p>
+            <div id="ag-voice" class="mini-alert"></div>
+            <div class="ag-ctrl">
+                <label>ความเร็ว <input id="ag-rate" type="range" min="0.7" max="1.3" step="0.05" value="0.95" oninput="agSetRate()"> <span id="ag-rate-val">0.95</span></label>
+                <label><input id="ag-cont" type="checkbox" checked> เล่นต่อเนื่องจุดถัดไป</label>
+            </div>
+            <div id="ag-list"></div>
+            <div class="mini-alert">
+                📌 <strong>เกี่ยวกับข้อมูล:</strong> รวบรวมจากสารานุกรมและเว็บท่องเที่ยวทั่วไป ตัวเลขบางอย่างแต่ละแหล่งไม่ตรงกัน (ระบุไว้ในเนื้อหา) ถ้าป้ายในมหาวิหารระบุต่างออกไป ให้ยึดป้าย · เสียงมาจากระบบอ่านออกเสียงของมือถือ ไม่ใช่ไฟล์เสียงที่อัดไว้ ชื่อเฉพาะอาจออกเสียงไม่เป๊ะ อ่านข้อความประกอบได้ในปุ่ม "อ่านข้อความ"
             </div>
         </section>
     </div>
@@ -1449,6 +1481,149 @@
         }
         function calcAll() { calcTaxRefund(); calcSplit(); }
         buildSplit();
+        var AGS = [
+            {g:0, a:"เริ่มต้น", t:"ก่อนเริ่มฟัง", h:"ใส่หูฟัง เปิดเสียงเบา",
+             p:["ยินดีต้อนรับสู่ไกด์เสียงดูโอโมแห่งมิลานและกัลเลเรียที่อยู่ข้างๆ เรียงตามลำดับที่เดินจริง",
+                "ในมหาวิหารควรเปิดเสียงเบาหรือใช้หูฟัง เพราะเป็นสถานที่ทางศาสนา",
+                "เนื้อหามาจากแหล่งข้อมูลทั่วไป ตัวเลขบางอย่างแต่ละแหล่งไม่ตรงกัน ถ้าป้ายในมหาวิหารบอกต่างออกไป ให้ยึดป้ายเป็นหลัก"]},
+            {g:0, a:"Duomo · ภายนอก", t:"1. ภาพรวมจากจัตุรัส", h:"ยืนกลางจัตุรัส Piazza del Duomo มองด้านหน้ามหาวิหาร",
+             p:["ยืนกลางจัตุรัสแล้วมองด้านหน้า นี่คือดูโอโมแห่งมิลาน (Duomo di Milano) มหาวิหารแบบกอธิกขนาดใหญ่มาก",
+                "การก่อสร้างเริ่มในปี ค.ศ. 1386 สมัยดยุกจาน กาเลอาซโซ วิสคอนติ (Gian Galeazzo Visconti) ผู้ปกครองมิลาน และใช้เวลานานเกือบห้าร้อยปี",
+                "แหล่งข้อมูลทั่วไปถือว่าการก่อสร้างเสร็จอย่างเป็นทางการในปี 1965",
+                "ตัวอาคารยาวราวหนึ่งร้อยห้าสิบแปดเมตร สูงราวหนึ่งร้อยแปดเมตรถึงยอดสูงสุด และรองรับคนได้ราวสี่หมื่นคน"]},
+            {g:0, a:"Duomo · ภายนอก", t:"2. หินอ่อนสีชมพูและรูปปั้นนับพัน", h:"เงยมองยอดแหลมและรูปปั้นรอบอาคาร",
+             p:["สังเกตสีของอาคาร ไม่ใช่สีขาวล้วน แต่ออกอมชมพูอ่อน เพราะเป็นหินอ่อนจากเหมืองที่แคนโดเกลีย (Candoglia) ซึ่งมหาวิหารมีเหมืองใช้เฉพาะ",
+                "หน่วยงานชื่อเวเนรันดา ฟับบริกา (Veneranda Fabbrica) ก่อตั้งในปี 1387 ดูแลซ่อมบำรุงมหาวิหารต่อเนื่องมาจนถึงทุกวันนี้",
+                "ลองเงยหน้ามองยอดแหลมและรูปปั้นที่ประดับรอบอาคาร เว็บท่องเที่ยวบางแห่งบอกว่ามีรูปปั้นกว่าสามพันสี่ร้อยรูป แต่ตัวเลขนี้ไม่ใช่จำนวนทางการ"]},
+            {g:0, a:"Duomo · ภายนอก", t:"3. ด้านหน้ากับนโปเลียน", h:"มองด้านหน้าอาคาร ส่วนนี้เสร็จทีหลัง",
+             p:["ด้านหน้าของมหาวิหารสร้างเสร็จช้ากว่าส่วนอื่นมาก",
+                "มีเว็บท่องเที่ยวระบุว่านโปเลียนสั่งให้เร่งงานด้านหน้า ให้ทันพิธีสวมมงกุฎเป็นกษัตริย์แห่งอิตาลีในปี 1805 ข้อมูลนี้มาจากแหล่งเดียว ยังไม่ได้ยืนยันซ้ำ"]},
+            {g:0, a:"Duomo · ภายนอก", t:"4. มาดอนนินา", h:"มองขึ้นไปที่ยอดสูงสุด หาจุดสีทอง",
+             p:["ที่ปลายยอดสูงสุดของมหาวิหาร มีรูปปั้นสีทองของพระแม่มารี เรียกว่ามาดอนนินา (Madonnina)",
+                "เป็นสัญลักษณ์ของมิลานที่ทั้งชาวเมืองและนักท่องเที่ยวรักมาก"]},
+            {g:0, a:"Duomo · ภายใน", t:"5. ทางเดินและกระจกสี", h:"เข้าไปข้างใน ยืนกลางโถงยาวแล้วมองขึ้น",
+             p:["เมื่อเข้าไปข้างใน ให้ปรับสายตาสักครู่ เพราะภายในมืดกว่าข้างนอก",
+                "ภายในแบ่งเป็นห้าทางเดินยาว คั่นด้วยเสาขนาดมหึมาสูงราวยี่สิบสี่เมตรครึ่ง",
+                "กระจกสีมีกว่าห้าสิบบาน ส่วนหนึ่งมีอายุตั้งแต่ศตวรรษที่สิบห้าถึงสิบหก แต่หลายบานถูกเปลี่ยนเป็นสำเนาของเดิม ลองเงยหน้ามองแสงที่ผ่านกระจกลงมา"]},
+            {g:0, a:"Duomo · ภายใน", t:"6. เส้นเมริเดียนบนพื้น", h:"ก้มดูพื้นหินอ่อน หาแถบทองเหลืองและสัญลักษณ์ราศี",
+             p:["ก้มมองพื้นหินอ่อน ลองหาแถบทองเหลืองที่พาดบนพื้น มีสัญลักษณ์ราศีสิบสองราศีอยู่สองข้าง",
+                "นี่คือนาฬิกาแดดแบบเมริเดียน สร้างในปี 1786 โดยนักดาราศาสตร์จากหอดูดาวเบรรา (Brera)",
+                "แสงแดดลอดผ่านรูเล็กๆ ที่เพดานสูงราวยี่สิบสี่เมตร ไปตกบนเส้นนี้ มีรายงานว่ายังใช้งานได้ และมิลานเคยตั้งนาฬิกาของเมืองตามเส้นนี้จนถึงศตวรรษที่สิบเก้า"]},
+            {g:0, a:"Duomo · ภายใน", t:"7. นักบุญบาร์โทโลมิวที่ถูกถลกหนัง", h:"อยู่ที่ปีกขวางของมหาวิหาร (แหล่งข้อมูลระบุตำแหน่งต่างกัน ถามเจ้าหน้าที่ได้)",
+             p:["รูปปั้นนี้เป็นรูปนักบุญบาร์โทโลมิว (Saint Bartholomew) ที่ถูกถลกหนัง ผลงานของประติมากรมาร์โก ดากราเต (Marco d'Agrate) ปี 1562",
+                "ดูให้ดี นักบุญสวมหนังของตัวเองพาดบ่าเหมือนผ้าคลุม",
+                "มีข้อความภาษาละตินจารึกไว้ แปลได้ประมาณว่า ไม่ใช่แพรกซิเทเลส ประติมากรกรีกโบราณที่สร้างฉันขึ้นมา แต่เป็นมาร์โก ดากราเต",
+                "รูปปั้นนี้เดิมตั้งอยู่นอกมหาวิหาร และย้ายเข้ามาข้างในในปี 1664"]},
+            {g:0, a:"Duomo · ภายใน", t:"8. ตะปูศักดิ์สิทธิ์", h:"มองสูงเหนือแท่นบูชาใหญ่ ที่ปลายโถง หาไฟสีแดงดวงเล็ก",
+             p:["มองขึ้นไปสูงเหนือแท่นบูชาใหญ่ จะเห็นแสงสีแดงดวงเล็กๆ บอกตำแหน่งตะปูศักดิ์สิทธิ์",
+                "เชื่อกันว่าเป็นตะปูจากไม้กางเขนของพระเยซู แหล่งข้อมูลบอกความสูงไม่ตรงกัน ตั้งแต่ราวสี่สิบถึงหกสิบเมตรจากพื้น",
+                "ปีละครั้งใกล้วันที่ 14 กันยายน ซึ่งเป็นวันฉลองไม้กางเขน อาร์ชบิชอปจะนำตะปูลงมาให้ผู้คนแสดงความเคารพ โดยใช้ลิฟต์รูปก้อนเมฆที่เรียกว่านีโวลา (Nivola) ดังนั้นตอนนี้ตะปูน่าจะอยู่บนที่สูงตามเดิม"]},
+            {g:0, a:"Duomo · ดาดฟ้า (ถ้ามีตั๋ว)", t:"9. ดาดฟ้ามหาวิหาร", h:"ตั๋วดาดฟ้าต้องจองเวลาล่วงหน้า ข้ามจุดนี้ได้ถ้าไม่มีตั๋ว",
+             p:["ถ้าคุณมีตั๋วขึ้นดาดฟ้า จะได้เห็นยอดแหลมและรูปปั้นใกล้ๆ ในระยะที่มองจากพื้นไม่เห็น",
+                "ถ้าอากาศปลอดโปร่ง จะมองเห็นเมืองกว้างขึ้น ใช้เวลาเดินช้าๆ และระวังพื้นลื่น"]},
+            {g:1, a:"Galleria Vittorio Emanuele II", t:"10. เดินไปที่กัลเลเรีย", h:"ออกมาที่จัตุรัส หันหน้าเข้ามหาวิหาร ซุ้มโค้งใหญ่ทางซ้ายมือคือทางเข้า",
+             p:["ออกจากมหาวิหารมายังจัตุรัส หันหน้าเข้าด้านหน้ามหาวิหาร ซุ้มโค้งใหญ่ที่อยู่ทางซ้ายมือคือทางเข้ากัลเลเรีย วิตโตริโอ เอมานูเอเล ที่สอง (Galleria Vittorio Emanuele II)",
+                "เป็นทางเดินหลังคากระจกที่เชื่อมจัตุรัสดูโอโมกับโรงละครลา สกาลา (La Scala)",
+                "ผู้ชนะการประกวดแบบในปี 1860 คือสถาปนิกจูเซปเป เมนโกนี (Giuseppe Mengoni) พระเจ้าวิตตอริโอ เอมานูเอเล ที่สอง วางศิลาฤกษ์วันที่เจ็ดมีนาคม 1865 และเปิดอย่างเป็นทางการวันที่สิบห้ากันยายน 1867 งานส่วนที่เหลือ โดยเฉพาะซุ้มประตูชัย ทำต่ออีกประมาณสิบปี"]},
+            {g:1, a:"Galleria Vittorio Emanuele II", t:"11. เรื่องของสถาปนิก", h:"เงยมองซุ้มประตูชัยและโดมกระจก",
+             p:["ในเดือนธันวาคม 1877 เมนโกนีเสียชีวิตจากการตกลงมาจากที่สูงของโครงการนี้",
+                "แหล่งข้อมูลเล่าไม่ตรงกันว่าตกจากซุ้มประตูชัยหรือจากโดมกระจก และยังไม่มีข้อสรุปที่ชัดเจนเรื่องรายละเอียด"]},
+            {g:1, a:"Galleria Vittorio Emanuele II", t:"12. โมเสกวัวนำโชค", h:"ใต้โดมตรงทางแยกกลาง ดูที่พื้น หาโมเสกรูปวัว",
+             p:["ใต้โดมตรงทางแยกกลาง มองหาโมเสกรูปวัวบนพื้น นี่คือตราประจำเมืองตูริน (Turin)",
+                "ธรรมเนียมคือให้ยืนที่ตำแหน่งบริเวณระหว่างขาหลังของวัว แล้วหมุนตัวบนส้นเท้า เชื่อว่านำโชค",
+                "มีเรื่องเล่าว่าเดิมเป็นมุกล้อเลียนเมืองตูรินที่เป็นคู่แข่ง วิธีหมุนที่แหล่งข้อมูลต่างๆ ระบุไม่ตรงกัน บางแหล่งบอกให้หมุนสามรอบ",
+                "ผู้คนหมุนมากจนโมเสกสึกและต้องซ่อมแซมหลายครั้ง มีบันทึกว่าซ่อมในปี 2017 และมีรายงานว่ามีงานซ่อมในปี 2026"]},
+            {g:1, a:"Galleria Vittorio Emanuele II", t:"13. ปลายทางลา สกาลา", h:"เดินตรงต่อไปสุดทางอีกฝั่ง",
+             p:["เดินต่อไปสุดทางอีกฝั่งของกัลเลเรีย จะถึงจัตุรัสที่มีโรงละครลา สกาลา ซึ่งเป็นโรงอุปรากรชื่อดังของมิลาน",
+                "ดูโอโมกับลา สกาลา ถูกเชื่อมด้วยทางเดินนี้ ตามที่สถาปนิกออกแบบไว้ ขอให้เที่ยวมิลานอย่างสนุกและปลอดภัย"]}
+        ];
+        var ag = { i: -1, k: 0, on: false, utter: null };
+        function agClean(s) { return s.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim(); }
+        function agHasTTS() { return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window; }
+        function agVoice() {
+            if (!agHasTTS()) return null;
+            var vs = window.speechSynthesis.getVoices() || [];
+            for (var i = 0; i < vs.length; i++) { if (/^th/i.test(vs[i].lang) || /thai/i.test(vs[i].name)) return vs[i]; }
+            return null;
+        }
+        function agVoiceStatus() {
+            var el = document.getElementById('ag-voice');
+            if (!agHasTTS()) { el.style.background = '#fdecea'; el.style.borderLeftColor = '#c0392b'; el.style.color = '#7b241c'; el.textContent = '⚠️ เบราว์เซอร์นี้ไม่รองรับเสียงอ่านออกเสียง ใช้ปุ่ม "อ่านข้อความ" แทน ลองเปิดด้วย Safari (iPhone) หรือ Chrome (Android)'; return; }
+            var v = agVoice();
+            if (v) { el.style.background = '#e0f7ee'; el.style.borderLeftColor = '#00b894'; el.style.color = '#00543a'; el.textContent = '✅ พบเสียงภาษาไทยในเครื่อง: ' + v.name; }
+            else { el.style.background = '#fff3cd'; el.style.borderLeftColor = '#f39c12'; el.style.color = '#856404'; el.innerHTML = '⚠️ ยังไม่พบเสียงภาษาไทยในเครื่อง (บางเครื่องโหลดรายการเสียงช้า ลองรอสักครู่) ถ้าไม่มีจริง: iPhone ไปที่ การตั้งค่า > การเข้าถึง > เนื้อหาที่พูดได้ > เสียง > ไทย · Android ติดตั้งภาษาไทยในการตั้งค่า "ข้อความเป็นคำพูด" ของ Google'; }
+        }
+        function agSetRate() {
+            var r = document.getElementById('ag-rate').value;
+            document.getElementById('ag-rate-val').textContent = r;
+            try { localStorage.setItem('agrate', r); } catch (e) {}
+        }
+        function agRender() {
+            for (var i = 0; i < AGS.length; i++) {
+                var card = document.getElementById('ag-card-' + i), btn = document.getElementById('ag-btn-' + i);
+                if (!card) continue;
+                var active = ag.i === i;
+                card.className = 'ag-card' + (AGS[i].g ? ' gal' : '') + (active && ag.on ? ' active' : '');
+                var label = '▶ ฟัง';
+                if (active && ag.on) label = '⏸ หยุด';
+                else if (active && ag.k > 0 && ag.k < AGS[i].p.length) label = '▶ ฟังต่อ';
+                btn.textContent = label;
+            }
+        }
+        function agSpeakPart() {
+            if (!ag.on) return;
+            var st = AGS[ag.i];
+            if (ag.k >= st.p.length) { agFinish(); return; }
+            var u = new SpeechSynthesisUtterance(agClean(st.p[ag.k]));
+            u.lang = 'th-TH';
+            var v = agVoice(); if (v) u.voice = v;
+            u.rate = parseFloat(document.getElementById('ag-rate').value) || 0.95;
+            u.onend = function () { if (!ag.on || ag.utter !== u) return; ag.k++; agSpeakPart(); };
+            u.onerror = function (e) { if (ag.utter !== u) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; ag.on = false; agRender(); };
+            ag.utter = u;
+            window.speechSynthesis.speak(u);
+        }
+        function agFinish() {
+            var cont = document.getElementById('ag-cont').checked;
+            if (cont && ag.i < AGS.length - 1) {
+                ag.i++; ag.k = 0; agRender();
+                var el = document.getElementById('ag-card-' + ag.i);
+                if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                agSpeakPart();
+            } else { ag.on = false; ag.k = 0; agRender(); }
+        }
+        function agToggle(i) {
+            if (!agHasTTS()) { var d = document.getElementById('ag-det-' + i); if (d) d.open = true; return; }
+            if (ag.on && ag.i === i) { ag.on = false; ag.utter = null; window.speechSynthesis.cancel(); agRender(); return; }
+            ag.utter = null; window.speechSynthesis.cancel();
+            if (ag.i !== i) { ag.i = i; ag.k = 0; }
+            else if (ag.k >= AGS[i].p.length) { ag.k = 0; }
+            ag.on = true; agRender(); agSpeakPart();
+        }
+        function agRestart(i) {
+            if (!agHasTTS()) return;
+            ag.utter = null; window.speechSynthesis.cancel();
+            ag.i = i; ag.k = 0; ag.on = true; agRender(); agSpeakPart();
+        }
+        function agBuild() {
+            var h = '';
+            for (var i = 0; i < AGS.length; i++) {
+                var s = AGS[i];
+                h += '<div class="ag-card' + (s.g ? ' gal' : '') + '" id="ag-card-' + i + '"><div class="ag-head"><div><div class="ag-title">' + s.t + '</div><div class="ag-area">' + s.a + '</div></div></div>' +
+                    '<div class="ag-hint">👀 ' + s.h + '</div>' +
+                    '<div class="ag-btns"><button class="ag-btn" id="ag-btn-' + i + '" onclick="agToggle(' + i + ')">▶ ฟัง</button><button class="ag-btn sec" onclick="agRestart(' + i + ')">⟲ ฟังใหม่</button></div>' +
+                    '<details id="ag-det-' + i + '"' + (agHasTTS() ? '' : ' open') + '><summary>อ่านข้อความ</summary>' + s.p.join(' ') + '</details></div>';
+            }
+            document.getElementById('ag-list').innerHTML = h;
+        }
+        (function () {
+            try { var r = localStorage.getItem('agrate'); if (r) { document.getElementById('ag-rate').value = r; document.getElementById('ag-rate-val').textContent = r; } } catch (e) {}
+            agBuild(); agVoiceStatus();
+            if (agHasTTS()) {
+                if ('onvoiceschanged' in window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = agVoiceStatus; }
+                setTimeout(agVoiceStatus, 1000);
+            }
+        })();
         function showDay(id) {
             document.querySelectorAll('.day-panel').forEach(function(p) { p.classList.remove('active'); });
             document.querySelectorAll('.day-tab-btn').forEach(function(b) { b.classList.remove('active'); });
