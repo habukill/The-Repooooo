@@ -131,6 +131,9 @@
         .ag-btn.sec { background: #e6e9ee; color: #2d3436; }
         .ag-card details { margin-top: 8px; font-size: 0.85rem; line-height: 1.75; }
         .ag-card summary { cursor: pointer; color: #6c5ce7; font-weight: 700; }
+        .ag-fig { margin: 8px 0 4px; }
+        .ag-fig img { display: block; width: 100%; max-height: 260px; object-fit: cover; border-radius: 10px; background: #f1f2f6; }
+        .ag-fig figcaption { font-size: 0.72rem; color: #95a5a6; margin-top: 3px; }
         .ag-links { font-size: 0.8rem; margin-top: 8px; line-height: 1.8; color: #636e72; }
         .ag-links a { color: #6c5ce7; font-weight: 700; text-decoration: none; }
         .split-row { background: #f8f9fb; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #e6e9ee; }
@@ -1667,6 +1670,34 @@
             ag.utter = null; window.speechSynthesis.cancel();
             ag.i = i; ag.k = 0; ag.on = true; agRender(); agSpeakPart();
         }
+        // รูปจาก Wikimedia Commons: เลือกเฉพาะไฟล์ที่ชื่อ/คำอธิบายระบุว่าเป็น Duomo di Milano (หรือ Galleria มิลาน) ดัชนีตรงกับลำดับใน AGS
+        var AGIMG = {
+            1: "Milan_Cathedral_from_Piazza_del_Duomo.jpg",
+            2: "Duomo_Milano_guglie_di_notte.JPG",
+            4: "Madonnina,_Duomo_di_Milano.jpg",
+            5: "Nave_of_Milan_Cathedral.jpg",
+            9: "Archbishop_Giovanni_Visconti's_grave,_Cathedral_of_Milan.jpg",
+            10: "Duomo_di_Milano._La_tomba_di_Marco_Carelli.JPG",
+            11: "San_Bartolomeo_Flayed,_Duomo,_Milano_(1562).jpg",
+            12: "IMG_3714_-_Milano_-_Duomo_-_Monumento_Gian_Giacomo_Medici_-_Foto_di_Giovanni_Dall'Orto_-_13-jan-2007.jpg",
+            13: "Milano,_Duomo,_Presbiterio_di_Pellegrino_Tibaldi,_XVI_secolo_02.JPG",
+            16: "Duomo_di_Milano._Jacopino_da_Tradate,_monumento_a_Martino_V_Colonna.jpg",
+            17: "4206_-_Milano,_Duomo_-_Deambulatorio_-_Portale_sagrestia_sud_(1389)_-_Foto_Giovanni_Dall'Orto,_6-Dec-2007.jpg",
+            19: "Milano,_Duomo,Vetrate_absidali_dell'Apocalisse,_XV_secolo_09.jpg",
+            20: "The-Crypt-of-Saint-Charles-Borromeo-in-Milan-Duomo.jpg",
+            21: "MI-Milano-1963-Duomo.candelabro-Trivulzio.jpg",
+            22: "Baptistery_of_San_Giovanni_alle_Fonti_3r.jpg",
+            23: "Tourists_looking_at_flying_buttresses_on_roof_of_Milan_Duomo.jpg",
+            25: "Galleria_Vittorio_Emanuele_II_-_Ottagono.jpg",
+            26: "Galleria_Vittorio_Emanuele_\"palle_del_toro\"_(6036375024).jpg"
+        };
+        function agImg(i) {
+            var f = AGIMG[i];
+            if (!f) { return ''; }
+            var src = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(f) + '?width=640';
+            var page = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(f);
+            return '<figure class="ag-fig"><a href="' + page + '" target="_blank" rel="noopener"><img src="' + src + '" loading="lazy" alt="' + AGS[i].t.replace(/"/g, '') + '" onerror="this.closest(\'figure\').style.display=\'none\'"></a><figcaption>ภาพ: Wikimedia Commons (แตะเพื่อดูภาพเต็มและเครดิต)</figcaption></figure>';
+        }
         function agLinks(s) {
             var h = '<div class="ag-links">🖼️ ';
             var l = s.l || [];
@@ -1683,6 +1714,7 @@
             for (var i = 0; i < AGS.length; i++) {
                 var s = AGS[i];
                 h += '<div class="ag-card' + (s.g ? ' gal' : '') + '" id="ag-card-' + i + '"><div class="ag-head"><div><div class="ag-title">' + s.t + '</div><div class="ag-area">' + s.a + '</div></div></div>' +
+                    agImg(i) +
                     '<div class="ag-hint">👀 ' + s.h + '</div>' +
                     '<div class="ag-btns"><button class="ag-btn" id="ag-btn-' + i + '" onclick="agToggle(' + i + ')">▶ ฟัง</button><button class="ag-btn sec" onclick="agRestart(' + i + ')">⟲ ฟังใหม่</button></div>' +
                     agLinks(s) +
